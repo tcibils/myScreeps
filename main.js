@@ -1,4 +1,5 @@
 // ADDED COMMENT TO TRACK IN GIT
+// Added comment to track in git, in a branch merged in master
 
 // STATUS - 11-03-2018 - Thomas Cibils
 // Using parameter dashboard to get infos in the console.
