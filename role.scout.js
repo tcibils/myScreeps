@@ -41,7 +41,7 @@ var scout = {
         // MOVING CREEP
         
         if(creep.room.controller != undefined) {
-            if(creep.room.controller.sign.username != "Blaugaard") {
+            if(creep.room.controller.sign.username != "Blaugaard" && creep.room.controller.sign.username != "Ringo86") {
                 if(creep.signController(creep.room.controller, "Join #overlords alliance, find us on Slack! Also, fuck Quorum's auto-signing room bot.") == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
                 }
