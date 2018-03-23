@@ -5,21 +5,21 @@
 
 var withdrawSource = {
     run: function(creep) {
-        
+
                 creep.memory.targetRefill = null;
         var spawningPoints = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}} );
 
-        
-        // Control variable : if set to true, if 
+
+        // Control variable : if set to true, if
         // 1. All containers and storage are empty OR
         // 2. There is no container in the room,
         // Then we will withdraw from spawns and extensions
         // The goal of this mechanism is to allow the very first buildings to be build, when creating the room.
-        var takeFromSpawnAndExtensionsIfNeeded = false;
-        
+        var takeFromSpawnAndExtensionsIfNeeded = true;
+
         // We first manage the case of not having any targetRefill in memory
-       if(Game.getObjectById(creep.memory.targetRefill) == null) { 
-           
+       if(Game.getObjectById(creep.memory.targetRefill) == null) {
+
            var primaryTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                filter: (i) => (i.structureType == STRUCTURE_STORAGE || i.structureType == STRUCTURE_CONTAINER) &&
                               i.store[RESOURCE_ENERGY] > 0
@@ -27,9 +27,9 @@ var withdrawSource = {
            if(primaryTarget != null) {
                creep.memory.targetRefill = primaryTarget.id;
            }
-           // If we did not find storage,then we seach a container
+           // If we did not find storage,then we search a container
            if(primaryTarget == null) {
-                // Carfeull here : not FIND_Y_STRUCTURES, but FIND_STRUCTURES, as containers do not belong to anyone
+                // Carfeull here : not FIND_MY_STRUCTURES, but FIND_STRUCTURES, as containers do not belong to anyone
                 var secondaryTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: (i) => i.structureType == STRUCTURE_CONTAINER &&
                                    i.store[RESOURCE_ENERGY] > 0
@@ -53,10 +53,10 @@ var withdrawSource = {
                 }
             }
         }
-        
+
         // Now if we already have one, we'll have to go through each "empty" case to find a new one
         if(Game.getObjectById(creep.memory.targetRefill) != null) {
-            
+
             // For containers and storage
             if(Game.getObjectById(creep.memory.targetRefill).structureType == STRUCTURE_CONTAINER || Game.getObjectById(creep.memory.targetRefill).structureType == STRUCTURE_STORAGE) {
                 // We have to use the ".store[RESOURCE_ENERGY]"
@@ -68,7 +68,7 @@ var withdrawSource = {
                    if(primaryTarget != null) {
                        creep.memory.targetRefill = primaryTarget.id;
                    }
-           
+
                    if(primaryTarget == null) {
                         // Carfeull here : not FIND_Y_STRUCTURES, but FIND_STRUCTURES, as containers do not belong to anyone
                         var secondaryTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -94,7 +94,7 @@ var withdrawSource = {
                     }
                 }
             }
-            
+
             // For spawns and extensions
             if(Game.getObjectById(creep.memory.targetRefill).structureType == STRUCTURE_SPAWN || Game.getObjectById(creep.memory.targetRefill).structureType == STRUCTURE_EXTENSION) {
                 // We have to use the ".energy"
@@ -106,7 +106,7 @@ var withdrawSource = {
                    if(primaryTarget != null) {
                        creep.memory.targetRefill = primaryTarget.id;
                    }
-           
+
                    if(primaryTarget == null) {
                         // Carfeull here : not FIND_Y_STRUCTURES, but FIND_STRUCTURES, as containers do not belong to anyone
                         var secondaryTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
