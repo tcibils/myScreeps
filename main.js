@@ -917,6 +917,17 @@ module.exports.loop = function () {
                                     creepBody.push(MOVE);
                                 }
 
+                                if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceBuilder') {
+                                    creepBody.push(WORK);
+                                    creepBody.push(WORK);
+                                    creepBody.push(WORK);
+                                    creepBody.push(CARRY);
+                                    creepBody.push(CARRY);
+                                    creepBody.push(CARRY);
+                                    creepBody.push(MOVE);
+                                    creepBody.push(MOVE);
+                                    creepBody.push(MOVE);
+                                }
 
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
