@@ -68,6 +68,13 @@ module.exports.loop = function () {
     // Cannot compute automatically carry needed, due to visibility. Please input manually here.
     var longDistancePillageRoomsCarryNeeded = [];
 
+    // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
+    var longDistanceBuildRooms = ['W43N51','W41N51'];
+    // Pas s'emmerder avec l'automatique, c'est à changer anyway
+    var longDistanceBuildRoomsHomeRooms = ['W39N51','W39N51'];
+    // Number of builders to use.
+    var longDistanceBuildRoomsBuilders = [2,2];
+
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -218,6 +225,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
         myRooms[currentRoomIndex].memory.priorities.push('builder');
+        myRooms[currentRoomIndex].memory.priorities.push('longDistanceBuilder');
         myRooms[currentRoomIndex].memory.priorities.push('repairer');
         myRooms[currentRoomIndex].memory.priorities.push('extractor');
         myRooms[currentRoomIndex].memory.priorities.push('upgrader');
@@ -736,6 +744,24 @@ module.exports.loop = function () {
                 myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
                 myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
                 myRooms[currentRoomIndex].memory.criticalNeed.push(false);
+            }
+        }
+
+        // Long distance builders table filling
+        for(let currentLongDistanceBuildRoomIndex = 0; currentLongDistanceBuildRoomIndex < longDistanceBuildRooms.length; currentLongDistanceBuildRoomIndex++) {
+            if(myRoomsNames[currentRoomIndex] == longDistanceBuildRoomsHomeRooms[currentLongDistanceBuildRoomIndex]) {
+                myRooms[currentRoomIndex].memory.labels.push('Builder target room ' + longDistanceBuildRooms[currentLongDistanceBuildRoomIndex]);
+                myRooms[currentRoomIndex].memory.need.push(longDistanceBuildRoomsBuilders[currentLongDistanceBuildRoomIndex]);
+
+                var longDistanceBuildersAdhoc = _.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceBuilder' && creep.memory.targetRoom == longDistanceBuildRooms[currentLongDistanceBuildRoomIndex]);
+                myRooms[currentRoomIndex].memory.attached.push(longDistanceBuildersAdhoc.length);
+
+                myRooms[currentRoomIndex].memory.role.push('longDistanceBuilder');
+                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
+                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceBuildRooms[currentLongDistanceBuildRoomIndex]);
+                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
+                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
+
             }
         }
 
