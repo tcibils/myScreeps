@@ -15,8 +15,10 @@ var withdrawSource = {
         // 2. There is no container in the room,
         // Then we will withdraw from spawns and extensions
         // The goal of this mechanism is to allow the very first buildings to be build, when creating the room.
-        var takeFromSpawnAndExtensionsIfNeeded = true;
-
+        var takeFromSpawnAndExtensionsIfNeeded = false;
+        if(creep.room.energyAvailable > 1000) {
+           takeFromSpawnAndExtensionsIfNeeded = true;
+        }
         // We first manage the case of not having any targetRefill in memory
        if(Game.getObjectById(creep.memory.targetRefill) == null) {
 
