@@ -263,7 +263,7 @@ module.exports.loop = function () {
                 myRooms[currentRoomIndex].memory.need.push(workPartsNeeded);
 
                 // Work parts attached is computed and stocked
-                var fatHarvestersOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fatHarvester' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.attachedSource == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
+                var fatHarvestersOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fatHarvester' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.needOrigin == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
 
 
                 var counterOfCurrentWorkBodyParts = 0;
@@ -323,7 +323,7 @@ module.exports.loop = function () {
                 }
 
 
-                var fastMoversOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fastMover' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.attachedSource == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
+                var fastMoversOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fastMover' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.needOrigin == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
 
                 let counterOfCurrentCarryBodyParts = 0;
                 if(fastMoversOfSource.length > 0) {
