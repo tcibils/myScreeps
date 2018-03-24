@@ -71,7 +71,7 @@ module.exports.loop = function () {
     var longDistancePillageRoomsCarryNeeded = [];
 
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
-    var longDistanceBuildRooms = ['W36N48'];
+    var longDistanceBuildRooms = ['W37N46'];
     // Pas s'emmerder avec l'automatique, c'est à changer anyway
     var longDistanceBuildRoomsHomeRooms = ['W42N48'];
     // Number of builders to use.
