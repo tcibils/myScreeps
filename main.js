@@ -837,26 +837,23 @@ module.exports.loop = function () {
        // Then we start with the spawning queue
 
         if(myRooms[currentRoomIndex].memory.spawningPoints.length > 0) {
+            // This first variable checks if we took a decision to spawn a creep this turn already.
+            // The goal here is to avoid to have two spawns wanting to spawn the same creep, but not enough energy for both creeps
             let spawnDecisionTakenForRoomForTurn = false;
 
-            // The first variable ensures that we stop the loop once we found our priority
-            let spawningDecisionTaken = [];
-
             // This second variable is to be used to store the spawning results, in order to be able to use a potential 2nd spawn
-            let spawningResult = [];
+            let spawningResult = 1;
 
             // Are both really needed ? Can I use the second one only ? Do I use ERR_BUSY but also ERR_NOT_ENOUGH_ENERGY ?
 
             // For each spawn
             for(let spawnIndex = 0; spawnIndex < myRooms[currentRoomIndex].memory.spawningPoints.length && !spawnDecisionTakenForRoomForTurn; spawnIndex++) {
-                spawningDecisionTaken.push(false);
-                spawningResult.push('null');
 
-                // As long as
+
                 // We check the priorities
-                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length && !spawningDecisionTaken[spawnIndex]; priorityIndex++) {
+                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length; priorityIndex++) {
                     // And for each prioritiy, we will check the needs
-                    for(let needIndex = 0; needIndex < myRooms[currentRoomIndex].memory.need.length && !spawningDecisionTaken[spawnIndex]; needIndex++) {
+                    for(let needIndex = 0; needIndex < myRooms[currentRoomIndex].memory.need.length; needIndex++) {
                         // If the priority matches the role need (ie we found our entry in the room memory tables)
                         if(myRooms[currentRoomIndex].memory.priorities[priorityIndex] == myRooms[currentRoomIndex].memory.role[needIndex]) {
                             // If the need is greater than the attached, we spawn a creep
@@ -1029,52 +1026,51 @@ module.exports.loop = function () {
                                     }
                                 }
 
-                                // ISSUE HERE : not using all spawns ! Would need spawnindex, but need also take into account creep being spawned. Their counting method parses game.creeps, but then counts them and it fails
-                                spawningResult[spawnIndex] = (Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[0]).spawnCreep(
+                                spawningResult = (Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).spawnCreep(
                                     creepBody,
                                     myRooms[currentRoomIndex].memory.role[needIndex] + Game.time,
-                                    {memory: {
-                                        role: myRooms[currentRoomIndex].memory.role[needIndex],
-                                        targetRoom : myRooms[currentRoomIndex].memory.targetRoom[needIndex],
-                                        homeRoom: myRooms[currentRoomIndex].name,
-                                        needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex],
-                                        creepSpawning: true
-                                    }}));
+                                        {memory: {
+                                            role: myRooms[currentRoomIndex].memory.role[needIndex],
+                                            targetRoom : myRooms[currentRoomIndex].memory.targetRoom[needIndex],
+                                            homeRoom: myRooms[currentRoomIndex].name,
+                                            needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex],
+                                            creepSpawning: true}
+                                }));
 
-                                spawningDecisionTaken[spawnIndex] = true;
-                                if(spawningResult[spawnIndex] == 0) {
+                                if(spawningResult == 0) {
                                     spawnDecisionTakenForRoomForTurn = true;
                                 }
                                 // We make a console log for tracking
                                 if(showRoomSpawn) {
-                                    console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', spawning ' + myRooms[currentRoomIndex].memory.role[needIndex] + ', result : ' + spawningResult[spawnIndex] + '. Need ' + myRooms[currentRoomIndex].memory.need[needIndex] + ', attached ' + myRooms[currentRoomIndex].memory.attached[needIndex] + ', target room : ' + myRooms[currentRoomIndex].memory.targetRoom[needIndex] + ', priority ' + priorityIndex + '. Critical : ' + myRooms[currentRoomIndex].memory.criticalNeed[needIndex] + '.')
+                                    console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', spawning ' + myRooms[currentRoomIndex].memory.role[needIndex] + ', result : ' + spawningResult + '. Need ' + myRooms[currentRoomIndex].memory.need[needIndex] + ', attached ' + myRooms[currentRoomIndex].memory.attached[needIndex] + ', target room : ' + myRooms[currentRoomIndex].memory.targetRoom[needIndex] + ', priority ' + priorityIndex + '. Critical : ' + myRooms[currentRoomIndex].memory.criticalNeed[needIndex] + '.')
                                 }
                             }
                         }
                     }
                 }
-                if(!spawningDecisionTaken[spawnIndex]) {
-                    if(showRoomSpawn) {
+                if(showRoomSpawn) {
+                    if(!spawnDecisionTakenForRoomForTurn) {
                         console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', no creep spawning.')
                     }
                 }
             }
 
-            if(myRooms[currentRoomIndex].memory.towers.length > 0) {
-                for(let i = 0; i< myRooms[currentRoomIndex].memory.towers.length; i++) {
-                    functionTower.run(Game.getObjectById(myRooms[currentRoomIndex].memory.towers[i]));
-                }
-            }
-            if(myRooms[currentRoomIndex].memory.links.length > 0) {
-                for(let i = 0; i< myRooms[currentRoomIndex].memory.links.length; i++) {
-                    functionLink.run(Game.getObjectById(myRooms[currentRoomIndex].memory.links[i]));
-                }
-            }
-            if(myRooms[currentRoomIndex].terminal) {
-                functionTerminal.run(myRooms[currentRoomIndex].terminal);
+
+        }
+        
+        if(myRooms[currentRoomIndex].memory.towers.length > 0) {
+            for(let i = 0; i< myRooms[currentRoomIndex].memory.towers.length; i++) {
+                functionTower.run(Game.getObjectById(myRooms[currentRoomIndex].memory.towers[i]));
             }
         }
-
+        if(myRooms[currentRoomIndex].memory.links.length > 0) {
+            for(let i = 0; i< myRooms[currentRoomIndex].memory.links.length; i++) {
+                functionLink.run(Game.getObjectById(myRooms[currentRoomIndex].memory.links[i]));
+            }
+        }
+        if(myRooms[currentRoomIndex].terminal) {
+            functionTerminal.run(myRooms[currentRoomIndex].terminal);
+        }
         /*
         if(myRooms[currentRoomIndex].name == 'W42N48' && longDistanceSecurityW42N45.length < 1) {
             // Game.spawns['Spawn5'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W42N45', originRoom: 'W42N48'}});
