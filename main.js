@@ -268,7 +268,7 @@ module.exports.loop = function () {
 
                 var counterOfCurrentWorkBodyParts = 0;
                 for(var i = 0; i<fatHarvestersOfSource.length; i++) {
-                    if(fatHarvestersOfSource[i].ticksToLive >= naturallyDeadTime) {
+                    if(fatHarvestersOfSource[i].ticksToLive >= naturallyDeadTime || fatHarvestersOfSource[i].memory.creepSpawning) {
                         counterOfCurrentWorkBodyParts += fatHarvestersOfSource[i].getActiveBodyparts(WORK);
                     }
                 }
@@ -328,7 +328,7 @@ module.exports.loop = function () {
                 let counterOfCurrentCarryBodyParts = 0;
                 if(fastMoversOfSource.length > 0) {
                     for(let fastMoverIndex = 0; fastMoverIndex < fastMoversOfSource.length; fastMoverIndex++) {
-                        if(fastMoversOfSource[fastMoverIndex].ticksToLive > naturallyDeadTime) {
+                        if(fastMoversOfSource[fastMoverIndex].ticksToLive > naturallyDeadTime || fastMoversOfSource[fastMoverIndex].memory.creepSpawning) {
                             counterOfCurrentCarryBodyParts += fastMoversOfSource[fastMoverIndex].getActiveBodyparts(CARRY);
                         }
 
@@ -370,7 +370,7 @@ module.exports.loop = function () {
 
                 var counterOfSlackerForReceiverLink = 0;
                 for(let i = 0; i<slackersOfLink.length; i++) {
-                    if(slackersOfLink[i].ticksToLive > naturallyDeadTime) {
+                    if(slackersOfLink[i].ticksToLive > naturallyDeadTime || slackersOfLink[i].memory.creepSpawning) {
                         counterOfSlackerForReceiverLink++;
                     }
                 }
@@ -405,7 +405,7 @@ module.exports.loop = function () {
                 var counterOfSpreadersOfStorage = 0;
                 if(spreadersEfficientsOfStorage.length > 0) {
                     for(let i = 0; i<spreadersEfficientsOfStorage.length; i++) {
-                        if(spreadersEfficientsOfStorage[i].ticksToLive > naturallyDeadTime) {
+                        if(spreadersEfficientsOfStorage[i].ticksToLive > naturallyDeadTime || spreadersEfficientsOfStorage[i].memory.creepSpawning) {
                             counterOfAliveSpreadersOfStorage++;
                         }
                         counterOfSpreadersOfStorage++;
@@ -690,10 +690,18 @@ module.exports.loop = function () {
         // longDistanceTargetRoomsCarryNeeded.push(2*closestRoomDistance*longDistanceTargetRoomsSources[i] -1);
 
         // Push on the fattys attached
-        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceFatHarvester' && creep.memory.targetRoom == longDistanceTargetRooms[i] && creep.ticksToLive > 150).length);
+        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) => 
+            creep.memory.role == 'longDistanceFatHarvester' && 
+            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
+        ).length);
 
         // Push on the carry attached
-        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceFastMover' && creep.memory.targetRoom == longDistanceTargetRooms[i] && creep.ticksToLive > 150).length);
+        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) => 
+            creep.memory.role == 'longDistanceFastMover' && 
+            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
+        ).length);
 
         if(_.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == longDistanceTargetRooms[i] && creep.memory.underAttack == true && creep.getActiveBodyparts(MOVE) > 0).length > 0) {
             longDistanceTargetRoomsSecurityNeeded.push(1);
@@ -702,7 +710,11 @@ module.exports.loop = function () {
             longDistanceTargetRoomsSecurityNeeded.push(0);
         }
 
-        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceSecurity' && creep.memory.targetRoom == longDistanceTargetRooms[i] && creep.ticksToLive > 50).length);
+        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) => 
+            creep.memory.role == 'longDistanceSecurity' && 
+            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+            (creep.ticksToLive > 50 || creep.memory.creepSpawning)
+        ).length);
 
     }
 
@@ -1025,7 +1037,8 @@ module.exports.loop = function () {
                                         role: myRooms[currentRoomIndex].memory.role[needIndex],
                                         targetRoom : myRooms[currentRoomIndex].memory.targetRoom[needIndex],
                                         homeRoom: myRooms[currentRoomIndex].name,
-                                        needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex]
+                                        needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex],
+                                        creepSpawning: true
                                     }}));
 
                                 spawningDecisionTaken[spawnIndex] = true;
@@ -1078,6 +1091,17 @@ module.exports.loop = function () {
     // On attribue les rôles en fonction de la memory
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
+
+        if(creep.memory.creepSpawning == undefined) {
+            creep.memory.creepSpawning = false;
+        }
+
+        if(creep.memory.creepSpawning) {
+            if(creep.say("Spawned!") != ERR_BUSY) {
+                creep.memory.creepSpawning = false;
+            }
+        }
+
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
