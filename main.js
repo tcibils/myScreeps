@@ -27,6 +27,8 @@ var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
+Game.spawns['Spawn11'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W36N48', originRoom: 'W42N48'}});
+
 */
 
 module.exports.loop = function () {
@@ -69,11 +71,11 @@ module.exports.loop = function () {
     var longDistancePillageRoomsCarryNeeded = [];
 
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
-    var longDistanceBuildRooms = ['W43N51','W41N51'];
+    var longDistanceBuildRooms = ['W36N48'];
     // Pas s'emmerder avec l'automatique, c'est à changer anyway
-    var longDistanceBuildRoomsHomeRooms = ['W39N51','W39N51'];
+    var longDistanceBuildRoomsHomeRooms = ['W42N48'];
     // Number of builders to use.
-    var longDistanceBuildRoomsBuilders = [0,0];
+    var longDistanceBuildRoomsBuilders = [2];
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
