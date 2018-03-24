@@ -33,7 +33,8 @@ module.exports = {
                                 creep.memory.targetBuilding = secondaryTarget.id;
                             }
                             if(secondaryTarget == null) {
-                                creep.memory.role = 'harvester';
+                                // Is an issue : home room was spamming creeps to compensate this
+                                // creep.memory.role = 'harvester';
                             }
                         }
                     }
