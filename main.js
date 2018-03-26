@@ -47,7 +47,7 @@ module.exports.loop = function () {
     var showLongDistanceDashboard = false;
     var showRoomSpawn = true;
     var showRoomDashboard = true;
-    var showRoomDashboardToDisplay = 'W39N51';
+    var showRoomDashboardToDisplay = 'W46N51';
     var naturallyDeadTime = 100;
 
 
@@ -860,6 +860,9 @@ module.exports.loop = function () {
                         if(myRooms[currentRoomIndex].memory.priorities[priorityIndex] == myRooms[currentRoomIndex].memory.role[needIndex]) {
                             // If the need is greater than the attached, we spawn a creep
                             if(myRooms[currentRoomIndex].memory.need[needIndex] > myRooms[currentRoomIndex].memory.attached[needIndex]) {
+                                // We found the creep we needed to spawn, so we will stop there.
+                                spawnDecisionTakenForRoomForTurn = true;
+
                                 let capacityToBeUsed = 0;
 
                                 if(myRooms[currentRoomIndex].memory.criticalNeed[needIndex]) {
@@ -1039,9 +1042,6 @@ module.exports.loop = function () {
                                             creepSpawning: true}
                                 }));
 
-                                if(spawningResult == 0) {
-                                    spawnDecisionTakenForRoomForTurn = true;
-                                }
                                 // We make a console log for tracking
                                 if(showRoomSpawn) {
                                     console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', spawning ' + myRooms[currentRoomIndex].memory.role[needIndex] + ', result : ' + spawningResult + '. Need ' + myRooms[currentRoomIndex].memory.need[needIndex] + ', attached ' + myRooms[currentRoomIndex].memory.attached[needIndex] + ', target room : ' + myRooms[currentRoomIndex].memory.targetRoom[needIndex] + ', priority ' + priorityIndex + '. Critical : ' + myRooms[currentRoomIndex].memory.criticalNeed[needIndex] + '.')
