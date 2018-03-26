@@ -1050,11 +1050,13 @@ module.exports.loop = function () {
                         }
                     }
                 }
+                /*
                 if(showRoomSpawn) {
                     if(!spawnDecisionTakenForRoomForTurn) {
                         console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', no creep spawning.')
                     }
                 }
+                */
             }
 
 
