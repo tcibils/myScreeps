@@ -71,9 +71,9 @@ module.exports.loop = function () {
     var longDistancePillageRoomsCarryNeeded = [];
 
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
-    var longDistanceBuildRooms = ['W37N46'];
-    // Pas s'emmerder avec l'automatique, c'est à changer anyway
-    var longDistanceBuildRoomsHomeRooms = ['W42N48'];
+    var longDistanceBuildRooms = ['W46N51'];
+    // Pas s'emmerder avec l'automatique, c'est Ã  changer anyway
+    var longDistanceBuildRoomsHomeRooms = ['W43N51'];
     // Number of builders to use.
     var longDistanceBuildRoomsBuilders = [2];
 
@@ -577,7 +577,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.targetRoom.push('undefined');
         myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
         myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-        myRooms[currentRoomIndex].memory.need.push(1);
+        myRooms[currentRoomIndex].memory.need.push(0);
         myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'scout' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
 
 
