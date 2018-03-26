@@ -853,7 +853,7 @@ module.exports.loop = function () {
 
 
                 // We check the priorities
-                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length; priorityIndex++) {
+                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length && !spawnDecisionTakenForRoomForTurn; priorityIndex++) {
                     // And for each prioritiy, we will check the needs
                     for(let needIndex = 0; needIndex < myRooms[currentRoomIndex].memory.need.length; needIndex++) {
                         // If the priority matches the role need (ie we found our entry in the room memory tables)
