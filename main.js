@@ -92,13 +92,6 @@ module.exports.loop = function () {
     }
 
 
-    // console.log('Step 1 : ' + Game.cpu.getUsed() + ', after deleting memories')
-
-    var longDistanceBuildersW42N45 = _.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceBuilder' && creep.memory.targetRoom == 'W42N45');
-    var longDistanceSecurityW42N45 = _.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceSecurity' && creep.memory.targetRoom == 'W42N45');
-    var longDistanceFastMoversW42N45 = _.filter(Game.creeps, (creep) => creep.memory.role == 'longDistanceFastMover' && creep.memory.targetRoom == 'W42N45');
-
-
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- ROOM MANAGEMENT ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -1074,13 +1067,6 @@ module.exports.loop = function () {
         if(myRooms[currentRoomIndex].terminal) {
             functionTerminal.run(myRooms[currentRoomIndex].terminal);
         }
-        /*
-        if(myRooms[currentRoomIndex].name == 'W42N48' && longDistanceSecurityW42N45.length < 1) {
-            // Game.spawns['Spawn5'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W42N45', originRoom: 'W42N48'}});
-            Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[0]).spawnCreep([TOUGH,MOVE,ATTACK,MOVE,ATTACK,MOVE,ATTACK,MOVE,ATTACK,MOVE], 'LDSecurity' + Game.time, {memory: {role: 'longDistanceSecurity', targetRoom: 'W42N45'}});
-            console.log('spwning LDBuilder creep in room W42N48')
-        }
-        */
 
         }
     }
