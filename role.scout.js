@@ -107,6 +107,7 @@ var scout = {
                 }
             }
             // If it is already signed, we move towards the exit.
+            // TO BE IMPROVED; CPU EXPENSIVE TO FIND EACH TURN THE EXIT
             else {
                 creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
             }

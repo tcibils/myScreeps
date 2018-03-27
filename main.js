@@ -102,8 +102,18 @@ module.exports.loop = function () {
     var myRooms = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my);
     var myRoomsNames = [];
 
-    for(let i = 0; i < myRooms.length; i++) {
-        myRoomsNames.push(myRooms[i].name);
+    for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
+        myRoomsNames.push(myRooms[currentRoomIndex].name);
+
+        let roomIsInMemory = false;
+        for(let currentMemoryRoomIndex = 0; currentMemoryRoomIndex < Memory.rooms.length; currentMemoryRoomIndex++) {
+            if(Memory.rooms[currentMemoryRoomIndex].name == myRooms[currentRoomIndex].name) {
+                roomIsInMemory = true;
+            }
+        }
+        if(!roomIsInMemory) {
+
+        }
     }
 
 
