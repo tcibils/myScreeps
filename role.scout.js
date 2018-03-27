@@ -64,9 +64,32 @@ var scout = {
         }
 
 
-        // HERE WILL BE THE MEMORY PUSHING FOR ROOMS
+        // Storing sources of the room : ID, position and maxEnergy
+        if(creep.room.memory.sources == undefined || creep.room.memory.sourcesPos == undefined || creep.room.memory.sourcesMaxEnergy == undefined) {
+            creep.room.memory.sources = [];
+            creep.room.memory.sourcesPos = [];
+            creep.room.memory.sourcesMaxEnergy = [];
 
+            var sourcesOfRoom = creep.room.find(FIND_SOURCES);
+            if(sourcesOfRoom.length > 0) {
+                for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
+                    creep.room.memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
+                    creep.room.memory.sourcesMaxEnergy.push(sourcesOfRoom[currentSourceIndex].energyCapacity);
+                    creep.room.memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
+                }
+            }
+        }
 
+        // Storing the owner of the room, if undefined or out of date
+        if(creep.room.memory.roomOwner == undefined) {
+            creep.room.memory.roomOwner = creep.room.controller.owner;
+        }
+        if(creep.room.memory.roomOwner != creep.room.controller.owner) {
+            creep.room.memory.roomOwner = creep.room.controller.owner;
+        }
+
+        // ASSESSING ROOM POWER INFORMATION
+        // Will have to be updated somewhere...
 
     }
 }
