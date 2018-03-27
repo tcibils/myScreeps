@@ -692,16 +692,16 @@ module.exports.loop = function () {
         // longDistanceTargetRoomsCarryNeeded.push(2*closestRoomDistance*longDistanceTargetRoomsSources[i] -1);
 
         // Push on the fattys attached
-        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) => 
-            creep.memory.role == 'longDistanceFatHarvester' && 
-            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) =>
+            creep.memory.role == 'longDistanceFatHarvester' &&
+            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
             (creep.ticksToLive > 150 || creep.memory.creepSpawning)
         ).length);
 
         // Push on the carry attached
-        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) => 
-            creep.memory.role == 'longDistanceFastMover' && 
-            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) =>
+            creep.memory.role == 'longDistanceFastMover' &&
+            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
             (creep.ticksToLive > 150 || creep.memory.creepSpawning)
         ).length);
 
@@ -712,9 +712,9 @@ module.exports.loop = function () {
             longDistanceTargetRoomsSecurityNeeded.push(0);
         }
 
-        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) => 
-            creep.memory.role == 'longDistanceSecurity' && 
-            creep.memory.targetRoom == longDistanceTargetRooms[i] && 
+        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) =>
+            creep.memory.role == 'longDistanceSecurity' &&
+            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
             (creep.ticksToLive > 50 || creep.memory.creepSpawning)
         ).length);
 
@@ -841,27 +841,23 @@ module.exports.loop = function () {
         if(myRooms[currentRoomIndex].memory.spawningPoints.length > 0) {
             // This first variable checks if we took a decision to spawn a creep this turn already.
             // The goal here is to avoid to have two spawns wanting to spawn the same creep, but not enough energy for both creeps
-            let spawnDecisionTakenForRoomForTurn = false;
-
+            let priorityFoundForTurn = false;
+            let spawnFoundForTurn = false;
             // This second variable is to be used to store the spawning results, in order to be able to use a potential 2nd spawn
             let spawningResult = 1;
 
-            // Are both really needed ? Can I use the second one only ? Do I use ERR_BUSY but also ERR_NOT_ENOUGH_ENERGY ?
-
-            // For each spawn
-            for(let spawnIndex = 0; spawnIndex < myRooms[currentRoomIndex].memory.spawningPoints.length && !spawnDecisionTakenForRoomForTurn; spawnIndex++) {
-
-
                 // We check the priorities
-                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length && !spawnDecisionTakenForRoomForTurn; priorityIndex++) {
+                for(let priorityIndex = 0; priorityIndex < myRooms[currentRoomIndex].memory.priorities.length && !priorityFoundForTurn; priorityIndex++) {
                     // And for each prioritiy, we will check the needs
                     for(let needIndex = 0; needIndex < myRooms[currentRoomIndex].memory.need.length; needIndex++) {
                         // If the priority matches the role need (ie we found our entry in the room memory tables)
                         if(myRooms[currentRoomIndex].memory.priorities[priorityIndex] == myRooms[currentRoomIndex].memory.role[needIndex]) {
                             // If the need is greater than the attached, we spawn a creep
                             if(myRooms[currentRoomIndex].memory.need[needIndex] > myRooms[currentRoomIndex].memory.attached[needIndex]) {
-                                // We found the creep we needed to spawn, so we will stop there.
-                                spawnDecisionTakenForRoomForTurn = true;
+                                priorityFoundForTurn = true;
+                                // For each spawn
+                                for(let spawnIndex = 0; spawnIndex < myRooms[currentRoomIndex].memory.spawningPoints.length && !spawnFoundForTurn; spawnIndex++) {
+
 
                                 let capacityToBeUsed = 0;
 
@@ -1042,6 +1038,11 @@ module.exports.loop = function () {
                                             creepSpawning: true}
                                 }));
 
+                                if(spawningResult == 0) {
+                                    spawnFoundForTurn = true;
+                                }
+
+
                                 // We make a console log for tracking
                                 if(showRoomSpawn) {
                                     console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', spawning ' + myRooms[currentRoomIndex].memory.role[needIndex] + ', result : ' + spawningResult + '. Need ' + myRooms[currentRoomIndex].memory.need[needIndex] + ', attached ' + myRooms[currentRoomIndex].memory.attached[needIndex] + ', target room : ' + myRooms[currentRoomIndex].memory.targetRoom[needIndex] + ', priority ' + priorityIndex + '. Critical : ' + myRooms[currentRoomIndex].memory.criticalNeed[needIndex] + '.')
@@ -1052,16 +1053,14 @@ module.exports.loop = function () {
                 }
                 /*
                 if(showRoomSpawn) {
-                    if(!spawnDecisionTakenForRoomForTurn) {
-                        console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', no creep spawning.')
-                    }
+                    console.log('Room ' + myRooms[currentRoomIndex].name + ', spawn ' + Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).name + ', no creep spawning.')
                 }
                 */
             }
 
 
         }
-        
+
         if(myRooms[currentRoomIndex].memory.towers.length > 0) {
             for(let i = 0; i< myRooms[currentRoomIndex].memory.towers.length; i++) {
                 functionTower.run(Game.getObjectById(myRooms[currentRoomIndex].memory.towers[i]));
