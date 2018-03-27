@@ -17,6 +17,59 @@ var scout = {
             creep.memory.currentRoom = creep.room.name;
         }
 
+        // We only try to update the room memory if we just arrived in it
+        // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
+        if(creep.memory.currentRoom != creep.room.name) {
+            // Storing sources of the room : ID, position and maxEnergy
+            if(creep.room.memory.sources == undefined || creep.room.memory.sourcesPos == undefined || creep.room.memory.sourcesMax == undefined) {
+                creep.room.memory.sources = [];
+                creep.room.memory.sourcesPos = [];
+                creep.room.memory.sourcesMax = [];
+
+                var sourcesOfRoom = creep.room.find(FIND_SOURCES);
+                if(sourcesOfRoom.length > 0) {
+                    for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
+                        creep.room.memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
+                        creep.room.memory.sourcesMax.push(sourcesOfRoom[currentSourceIndex].energyCapacity);
+                        creep.room.memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
+                    }
+                }
+            }
+
+            // Storing the owner of the room, if undefined or out of date
+            if(creep.room.memory.roomOwner == undefined) {
+                creep.room.memory.roomOwner = creep.room.controller.owner;
+            }
+            if(creep.room.memory.roomOwner != creep.room.controller.owner) {
+                creep.room.memory.roomOwner = creep.room.controller.owner;
+            }
+
+            // No "if" on power memory as we want to update it anyway
+
+            creep.room.memory.powerSources = [];
+            creep.room.memory.powerSourcesPos = [];
+            creep.room.memory.powerSourcesMax = [];
+            creep.room.memory.powerSourcesHits = [];
+            creep.room.memory.powerSourcesHitsMax = [];
+            creep.room.memory.powerSourcesTime = [];
+
+            var powerSourcesOfRoom = creep.room.find(FIND_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_BANK}});
+
+            if(powerSourceOfRoom.length > 0) {
+                for(let currentPowerSourceIndex = 0; currentPowerSourceIndex < powerSourceOfRoom.length; currentPowerSourceIndex++) {
+                    creep.room.memory.powerSources.push(powerSourcesOfRoom[powerSourceOfRoom].id);
+                    creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[powerSourceOfRoom].pos);
+                    creep.room.memory.powerSourcesMax.push(powerSourcesOfRoom[powerSourceOfRoom].power);
+                    creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[powerSourceOfRoom].hits);
+                    creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[powerSourceOfRoom].hitsMax);
+                    creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[powerSourceOfRoom].ticksToDecay);
+                }
+            }
+
+        }
+
+
+
         // If we just arrived in a new room, or don't know where to go
         if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined) {
             // We define the possibilities, checking which exit exist
@@ -64,32 +117,7 @@ var scout = {
         }
 
 
-        // Storing sources of the room : ID, position and maxEnergy
-        if(creep.room.memory.sources == undefined || creep.room.memory.sourcesPos == undefined || creep.room.memory.sourcesMaxEnergy == undefined) {
-            creep.room.memory.sources = [];
-            creep.room.memory.sourcesPos = [];
-            creep.room.memory.sourcesMaxEnergy = [];
 
-            var sourcesOfRoom = creep.room.find(FIND_SOURCES);
-            if(sourcesOfRoom.length > 0) {
-                for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
-                    creep.room.memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
-                    creep.room.memory.sourcesMaxEnergy.push(sourcesOfRoom[currentSourceIndex].energyCapacity);
-                    creep.room.memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
-                }
-            }
-        }
-
-        // Storing the owner of the room, if undefined or out of date
-        if(creep.room.memory.roomOwner == undefined) {
-            creep.room.memory.roomOwner = creep.room.controller.owner;
-        }
-        if(creep.room.memory.roomOwner != creep.room.controller.owner) {
-            creep.room.memory.roomOwner = creep.room.controller.owner;
-        }
-
-        // ASSESSING ROOM POWER INFORMATION
-        // Will have to be updated somewhere...
 
     }
 }
