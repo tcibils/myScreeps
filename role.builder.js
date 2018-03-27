@@ -4,26 +4,26 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        
+
 
 	    if(creep.memory.building && creep.carry.energy == 0) {
 	        creep.memory.targetRepair = null;
             creep.memory.building = false;
-            creep.say('🔄 Builder Gather');
+            creep.say('Gathering');
 	    }
 	    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity ) {
 	        creep.memory.building = true;
-	        creep.say('🚧 build');
+	        creep.say('Building');
 	    }
-	    
+
 	    if(creep.room.find(FIND_CONSTRUCTION_SITES).length == 0) {
 	        creep.memory.role = 'upgrader';
 	    }
-	    
+
 	    if(creep.memory.building == undefined) {
 	        creep.memory.building = false;
 	    }
-	    
+
 	    if(creep.memory.targetRefill == undefined) {
 	        creep.memory.targetRefill = null;
 	    }
@@ -33,8 +33,8 @@ var roleBuilder = {
 	    if(creep.memory.targetRepair == undefined) {
 	        creep.memory.targetRepair = null;
 	    }
-	    
-	    
+
+
 	    if(creep.memory.building) {
 	        // First we find a target to build, if we don't have one
 	        if(Game.getObjectById(creep.memory.targetBuild) == null) {
@@ -43,16 +43,16 @@ var roleBuilder = {
 	                creep.memory.targetBuild = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES).id;
 	            }
 	        }
-	        
+
 	        // We also look for a repairing target, if we don't have one, or if our target is full HP
 	        if(Game.getObjectById(creep.memory.targetRepair) == null || Game.getObjectById(creep.memory.targetRepair).hits == Game.getObjectById(creep.memory.targetRepair).hitsMax) {
-                
+
                 // First we take our structures to repair them, but not the controller or the ramparts
 	            if(creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {filter: (s) => (s.hits < s.hitsMax && s.structureType != STRUCTURE_CONTROLLER  && s.structureType != STRUCTURE_RAMPART && s.structureType != STRUCTURE_WALL)}) != null){
 	                creep.memory.targetRepair = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_CONTROLLER && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART}).id;
 	            }
-	            
-	            
+
+
 	            // And if all our structures are fine, then we repair the rest - roads for instance
 	            if(Game.getObjectById(creep.memory.targetRepair) == null || Game.getObjectById(creep.memory.targetRepair).hits == Game.getObjectById(creep.memory.targetRepair).hitsMax) {
 	                if(creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => (s.hits < s.hitsMax  && s.structureType != STRUCTURE_CONTROLLER && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART)}) != null){
@@ -66,7 +66,7 @@ var roleBuilder = {
 	                    creep.memory.targetRepair = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => s.hits < 15000 && s.structureType == STRUCTURE_RAMPART}).id;
 	                }
 	            }
-	            
+
 	            // And finally walls
 	            if(Game.getObjectById(creep.memory.targetRepair) == null || (Game.getObjectById(creep.memory.targetRepair).hits >= 15000 && Game.getObjectById(creep.memory.targetRepair).structureType == STRUCTURE_RAMPART)) {
 	                if(creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => (s.hits < 15000  && s.structureType == STRUCTURE_WALL)}) != null){
@@ -74,7 +74,7 @@ var roleBuilder = {
 	                }
 	            }*/
 	        }
-	        
+
 	        // If we have a target to repair, now
 	        if(Game.getObjectById(creep.memory.targetRepair) != null) {
 	            // But it is full HP
@@ -85,7 +85,7 @@ var roleBuilder = {
 	                }
 	            }
 	        }
-	        
+
 	        // And after all that, if we have a target to repair, we go repair it
             if(Game.getObjectById(creep.memory.targetBuild) != null) {
                 creep.memory.targetRefill = null;
@@ -101,7 +101,7 @@ var roleBuilder = {
             }
 
 	    }
-	    
+
 	    if(!creep.memory.building) {
             withdrawSource.run(creep);
             if(Game.getObjectById(creep.memory.targetRefill) != null) {
@@ -109,7 +109,7 @@ var roleBuilder = {
                     creep.moveTo(Game.getObjectById(creep.memory.targetRefill), {visualizePathStyle: {stroke: '#ffaa00'}});
                 }
             }
-            
+
 	    }
 	}
 };

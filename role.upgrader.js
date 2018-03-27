@@ -7,18 +7,18 @@ var roleUpgrader = {
 
         if(creep.memory.upgrading && creep.carry.energy == 0) {
             creep.memory.upgrading = false;
-            creep.say('🔄 Upgrader harvest');
+            creep.say('Gathering');
 	    }
 	    if(!creep.memory.upgrading && creep.carry.energy > 0) {
 	        creep.memory.targetRefill = null;
 	        creep.memory.upgrading = true;
-	        creep.say('⚡ upgrade');
+	        creep.say('Upgrading');
 	    }
-	    
+
 	    if(creep.memory.targetRefill == undefined) {
 	        creep.memory.targetRefill = null;
 	    }
-	    
+
 	    if(creep.memory.upgrading == undefined) {
 	        creep.memory.upgrading = false;
 	    }
@@ -26,7 +26,7 @@ var roleUpgrader = {
 	    if(creep.memory.upgrading) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE/* || creep.signController(creep.room.controller, 'Member of alliance #overlords.') == ERR_NOT_IN_RANGE*/) {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
-                
+
             }
         }
         if(!creep.memory.upgrading) {

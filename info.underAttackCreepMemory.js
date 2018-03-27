@@ -11,23 +11,23 @@ var underAttackCreepMemory = {
         if(creep.memory.underAttack == undefined) {
             creep.memory.underAttack = false;
         }
-        
+
         if(creep.memory.underAttackRoom == undefined) {
             creep.memory.underAttackRoom = null;
         }
-        
+
         if(creep.hits < creep.hitsMax && !creep.memory.underAttack && creep.room.find(FIND_HOSTILE_CREEPS).length > 0) {
-            creep.say('😡', true);
+            creep.say('HEY!!', true);
             creep.memory.underAttack = true;
             creep.memory.underAttackRoom = creep.room.name;
         }
-        
+
         if(creep.memory.underAttack) {
-            creep.say('😡');
+            creep.say('Im hit');
         }
-        
+
         if(creep.memory.underAttack && creep.room.name == creep.memory.underAttackRoom && creep.room.find(FIND_HOSTILE_CREEPS).length == 0) {
-            creep.say('✌');
+            creep.say('Safe =)');
             creep.memory.underAttack = false;
             creep.memory.underAttackRoom = null;
         }

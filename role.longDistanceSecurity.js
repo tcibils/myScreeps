@@ -6,15 +6,15 @@
  * var mod = require('role.longDistanceSecurity');
  * mod.thing == 'a thing'; // true
  */
- 
- 
+
+
 var underAttackCreepMemory = require('info.underAttackCreepMemory');
 
 var longDistanceSecurity = {
     run: function(creep) {
-        
+
         underAttackCreepMemory.run(creep);
-        
+
         if(creep.memory.targetRoom == undefined) {
             console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', ISSUE : NO TARGET ROOM')
         }
@@ -22,9 +22,9 @@ var longDistanceSecurity = {
             if(creep.room.name != creep.memory.targetRoom) {
                 var localExit = creep.room.findExitTo(creep.memory.targetRoom);
                 creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#ff0000'}, reusePath: 5});
-                creep.say('⛑️');
+                creep.say('Helping');
             }
-            
+
             if(creep.room.name == creep.memory.targetRoom) {
                 if(Game.getObjectById(creep.memory.attackTarget) == undefined || Game.time % 10 == 0) {
                     var mainTarget = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {filter: function(object) {return object.getActiveBodyparts(HEAL) > 0}});
@@ -39,23 +39,23 @@ var longDistanceSecurity = {
                     }
                 }
                 if(Game.getObjectById(creep.memory.attackTarget) != undefined) {
-                    creep.say('⚔️');
+                    creep.say('Attacking!');
                     if(creep.rangedAttack(Game.getObjectById(creep.memory.attackTarget)) == ERR_NOT_IN_RANGE || creep.attack(Game.getObjectById(creep.memory.attackTarget)) == ERR_NOT_IN_RANGE) {
                         if(creep.moveTo(Game.getObjectById(creep.memory.attackTarget), {visualizePathStyle: {stroke: '#ff0000'}}) == ERR_NO_PATH) {
                             creep.move(RIGHT);
                         }
                     }
-                    
-                    
+
+
                 }
                 if(Game.getObjectById(creep.memory.attackTarget) == undefined) {
-                    creep.say('PACIFIED', true)
+                    creep.say('PACIFIED')
                 }
 
             }
         }
-        
-        
+
+
     }
 };
 
