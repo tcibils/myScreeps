@@ -109,17 +109,22 @@ module.exports.loop = function () {
 
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
         // BUILDINGS
-        // For each index, the ID the said buildings in the room
+        // For each index, the ID the said buildings in the room, and their position for some of them
         myRooms[currentRoomIndex].memory.spawningPoints = [];
+        myRooms[currentRoomIndex].memory.spawningPointsPos = [];
+
         myRooms[currentRoomIndex].memory.links = [];
         myRooms[currentRoomIndex].memory.storages = [];
         myRooms[currentRoomIndex].memory.towers = [];
+
         myRooms[currentRoomIndex].memory.sources = [];
+        myRooms[currentRoomIndex].memory.sourcesPos = [];
 
         var spawningPointsOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}} );
         if(spawningPointsOfRoom.length > 0) {
             for(let currentSpawningPointIndex= 0; currentSpawningPointIndex<spawningPointsOfRoom.length; currentSpawningPointIndex++) {
                 myRooms[currentRoomIndex].memory.spawningPoints.push(spawningPointsOfRoom[currentSpawningPointIndex].id);
+                myRooms[currentRoomIndex].memory.spawningPointsPos.push(spawningPointsOfRoom[currentSpawningPointIndex].pos);
             }
         }
 
@@ -141,6 +146,7 @@ module.exports.loop = function () {
         if(sourcesOfRoom.length > 0) {
             for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
                 myRooms[currentRoomIndex].memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
+                myRooms[currentRoomIndex].memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
             }
         }
 
