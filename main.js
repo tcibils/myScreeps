@@ -998,8 +998,11 @@ module.exports.loop = function () {
                                 // Ok for spawning prototype
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'upgrader') {
                                     if(myRooms[currentRoomIndex].controller.level == 8) {
-                                        creepBody.push(WORK);
-                                        creepBody.push(CARRY);
+										for(let i=0; i<15; i++) {
+											creepBody.push(WORK);
+                                        }
+										creepBody.push(CARRY);
+                                        creepBody.push(MOVE);
                                         creepBody.push(MOVE);
                                     }
                                     else {
