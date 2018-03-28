@@ -104,16 +104,6 @@ module.exports.loop = function () {
 
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
         myRoomsNames.push(myRooms[currentRoomIndex].name);
-
-        let roomIsInMemory = false;
-        for(let currentMemoryRoomIndex = 0; currentMemoryRoomIndex < Memory.rooms.length; currentMemoryRoomIndex++) {
-            if(Memory.rooms[currentMemoryRoomIndex].name == myRooms[currentRoomIndex].name) {
-                roomIsInMemory = true;
-            }
-        }
-        if(!roomIsInMemory) {
-
-        }
     }
 
 
@@ -126,9 +116,6 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.links = [];
         myRooms[currentRoomIndex].memory.storages = [];
         myRooms[currentRoomIndex].memory.towers = [];
-
-        myRooms[currentRoomIndex].memory.sources = [];
-        myRooms[currentRoomIndex].memory.sourcesPos = [];
 
         var spawningPointsOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}} );
         if(spawningPointsOfRoom.length > 0) {
@@ -152,14 +139,19 @@ module.exports.loop = function () {
             }
         }
 
-        var sourcesOfRoom = myRooms[currentRoomIndex].find(FIND_SOURCES);
-        if(sourcesOfRoom.length > 0) {
-            for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
-                myRooms[currentRoomIndex].memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
-                myRooms[currentRoomIndex].memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
+        // Sources will never move in the room
+        if(myRooms[currentRoomIndex].memory.sources == undefined || myRooms[currentRoomIndex].memory.sourcesPos == undefined) {
+            myRooms[currentRoomIndex].memory.sources = [];
+            myRooms[currentRoomIndex].memory.sourcesPos = [];
+
+            var sourcesOfRoom = myRooms[currentRoomIndex].find(FIND_SOURCES);
+            if(sourcesOfRoom.length > 0) {
+                for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
+                    myRooms[currentRoomIndex].memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
+                    myRooms[currentRoomIndex].memory.sourcesPos.push(sourcesOfRoom[currentSourceIndex].pos);
+                }
             }
         }
-
 
 
         if(Game.time % 500 == 0) {
