@@ -1024,7 +1024,7 @@ module.exports.loop = function () {
                                             upgraderCarryMoveParts = 5;
                                         }
 
-                                        for(let j = 0; j< Math.floor((capacityToBeUsed - (upgraderCarryMoveParts * 100)) / 100); j++) {
+                                        for(let j = 0; j< Math.floor((capacityToBeUsed - (upgraderCarryMoveParts * 100)) / 100) && j< (50 - upgraderCarryMoveParts); j++) {
                                             creepBody.push(WORK);
                                         }
                                         for(let j = 0; j<upgraderCarryMoveParts; j++) {
