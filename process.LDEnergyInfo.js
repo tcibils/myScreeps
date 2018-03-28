@@ -35,8 +35,10 @@ var processLDEnergyInfo = {
 						let closestRoom = null;
 						
 						for(let myRoomIndex = 0; myRoomIndex < myRooms.length; myRoomIndex++) {
-							
-							
+							if(myRooms[myRoomIndex].memory.storageOfRoom > 0) {
+								// HOW DO I COMPUTE DISTANCE BETWEEN TWO POSITIONS
+								
+							}
 						}
 					}
 				}	
