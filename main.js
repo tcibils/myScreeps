@@ -57,7 +57,7 @@ module.exports.loop = function () {
     // Number of source to harvest in each room
     var longDistanceTargetRoomsSources = [1,1,1,1,1,1,1,2,1,1,2,2,1,1,1,2];
     // Carrys needed for each room
-    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,2];
+    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,4];
     // If the harvesters should be able to defend themselves
     var longDistanceTargetRoomsAgressive = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
     // Home rooms spawning creeps. If "null", then automatically computed.
@@ -386,8 +386,11 @@ module.exports.loop = function () {
 
 
                 // Need a spreader efficient as long as we have a storage
-                if(myRooms[currentRoomIndex].name == 'W42N48' || myRooms[currentRoomIndex].name == 'W43N51') {
+                if(myRooms[currentRoomIndex].name == 'W43N51') {
                     myRooms[currentRoomIndex].memory.need.push(2);
+                }
+                else if(myRooms[currentRoomIndex].name == 'W42N48') {
+                    myRooms[currentRoomIndex].memory.need.push(3);
                 }
                 else {
                     myRooms[currentRoomIndex].memory.need.push(1);
