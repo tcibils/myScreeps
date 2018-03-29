@@ -43,6 +43,7 @@ var processLDEnergyInfo = {
 						
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithStorage.length; myRoomIndex++) {
 							
+							// Check if path is not empty
 							let currentDistance = PathFinder.search(
 								Game.getObjectById(myRoomsWithStorage[myRoomIndex].memory.storages[0]).pos,
 								Memory.rooms[roomInMemory].sources[sourceIndex].pos).path.length;
