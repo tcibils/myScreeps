@@ -81,12 +81,12 @@ var processLDEnergyInfo = {
 						let distantRoomDiplomacy = false;
 
 						// We check if the room isn't too far - arbitrary parameter here
-						if(closestRoomDistance > 210) {
+						if(closestRoomDistance > 68) {
 							closestRoomTooFar = true;
 						}
 
 						// We check if the room has ownership
-						if(Memory.rooms[roomInMemory].roomOwner != "none") {
+						if(Memory.rooms[roomInMemory].roomOwner != undefined) {
 							distantRoomOccupied = true;
 						}
 
@@ -124,7 +124,7 @@ var processLDEnergyInfo = {
 							// typical LDFH have 3 work parts, thus produce 6 per turn
 							// As LDFM move 1 tile per turn, we want one creep per 400/6 = 66 tiles of distance
 							
-							let carryNeeded = Math.ceil(closestRoomDistance / (400/6));
+							let carryNeeded = Math.ceil(closestRoomDistance / (30));
 							Memory.rooms[roomInMemory].sourcesCarryNeed.push(carryNeeded);
 						}
 						// If one of the event is met
