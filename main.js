@@ -53,15 +53,15 @@ module.exports.loop = function () {
 
     // INPUT TABLES for long distance harvesting. Just add the room in the first table, and the number of sources in the second.
     // Long distance target rooms
-    var longDistanceTargetRooms = ['W42N51','W44N51','W41N52','W44N52','W43N52','W43N49','W42N49','W43N48','W41N49','W41N48','W42N46','W42N44','W41N45','W43N45','W42N47','W45N51','W46N52'];
+    var longDistanceTargetRooms = ['W42N51','W44N51','W41N52','W44N52','W43N52','W43N49','W42N49','W43N48','W41N49','W41N48','W42N46','W42N44','W41N45','W43N45','W42N47','W45N51','W46N52','W47N52'];
     // Number of source to harvest in each room
-    var longDistanceTargetRoomsSources = [1,1,1,1,1,1,1,2,1,1,2,2,1,1,1,2,1];
+    var longDistanceTargetRoomsSources = [1,1,1,1,1,1,1,2,1,1,2,2,1,1,1,2,1,1];
     // Carrys needed for each room
-    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,4,2];
+    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,4,2,2];
     // If the harvesters should be able to defend themselves
-    var longDistanceTargetRoomsAgressive = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+    var longDistanceTargetRoomsAgressive = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
     // Home rooms spawning creeps. If "null", then automatically computed.
-    var longDistanceTargetRoomsHomeRooms = ['null','null','null','null','null','null','null','null','W42N48','null','null','null','null','null','null','null','null'];
+    var longDistanceTargetRoomsHomeRooms = ['null','null','null','null','null','null','null','null','W42N48','null','null','null','null','null','null','null','null','null'];
 
     // Room to pillage. To be emptied manually when finished.
     var longDistancePillageRooms = [];
