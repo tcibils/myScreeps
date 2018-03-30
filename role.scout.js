@@ -46,12 +46,24 @@ var scout = {
             
             // Same with the reservation, we update our info
             if(creep.room.memory.roomOwnerReservation == undefined) {
-                creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
-            }
-            if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
-                creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
-            }
-
+				if(creep.room.controller.reservation == undefined) {
+					creep.room.memory.roomOwnerReservation = undefined;
+				}
+				else {
+					creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+				}
+			}
+			else {
+				if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
+					if(creep.room.controller.reservation == undefined) {
+						creep.room.memory.roomOwnerReservation = undefined;
+					}
+					else {
+						creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+					}
+				}
+			}
+			
             // if room reserved ?
 
             // No "if" on power memory as we want to update it anyway
@@ -65,14 +77,14 @@ var scout = {
 
             var powerSourcesOfRoom = creep.room.find(FIND_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_BANK}});
 
-            if(powerSourceOfRoom.length > 0) {
-                for(let currentPowerSourceIndex = 0; currentPowerSourceIndex < powerSourceOfRoom.length; currentPowerSourceIndex++) {
-                    creep.room.memory.powerSources.push(powerSourcesOfRoom[powerSourceOfRoom].id);
-                    creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[powerSourceOfRoom].pos);
-                    creep.room.memory.powerSourcesMax.push(powerSourcesOfRoom[powerSourceOfRoom].power);
-                    creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[powerSourceOfRoom].hits);
-                    creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[powerSourceOfRoom].hitsMax);
-                    creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[powerSourceOfRoom].ticksToDecay);
+            if(powerSourcesOfRoom.length > 0) {
+                for(let currentPowerSourceIndex = 0; currentPowerSourceIndex < powerSourcesOfRoom.length; currentPowerSourceIndex++) {
+                    creep.room.memory.powerSources.push(powerSourcesOfRoom[powerSourcesOfRoom].id);
+                    creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[powerSourcesOfRoom].pos);
+                    creep.room.memory.powerSourcesMax.push(powerSourcesOfRoom[powerSourcesOfRoom].power);
+                    creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[powerSourcesOfRoom].hits);
+                    creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[powerSourcesOfRoom].hitsMax);
+                    creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[powerSourcesOfRoom].ticksToDecay);
                 }
             }
 

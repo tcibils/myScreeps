@@ -1178,6 +1178,6 @@ module.exports.loop = function () {
         }
 
     }
-    processLDEnergyInfo();
+    processLDEnergyInfo.run();
     // console.log('Step 21 : ' + Game.cpu.getUsed() + ', after setting ALL roles')
 }
