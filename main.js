@@ -24,6 +24,7 @@ var roleSpreaderEfficient = require('role.spreaderEfficient');
 var roleExtractor = require('role.extractor');
 var roleLongDistanceReserver = require('role.longDistanceReserver');
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
+var processLDEnergyInfo = require('process.LDEnergyInfo');
 
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
@@ -581,7 +582,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.targetRoom.push('undefined');
         myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
         myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-        myRooms[currentRoomIndex].memory.need.push(0);
+        myRooms[currentRoomIndex].memory.need.push(1);
         myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'scout' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
 
 
@@ -1177,5 +1178,6 @@ module.exports.loop = function () {
         }
 
     }
+    processLDEnergyInfo();
     // console.log('Step 21 : ' + Game.cpu.getUsed() + ', after setting ALL roles')
 }
