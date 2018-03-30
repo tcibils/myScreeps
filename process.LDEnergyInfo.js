@@ -12,8 +12,6 @@ var processLDEnergyInfo = {
 			// variable array with my rooms names HAVING A STORAGE
 			let myRoomsWithSenderLink = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my && currentRoom.memory.senderLinks.length > 0);
 			
-			// if room reserved or exception ?
-
 			// for each of rooms having a memory
 			for(var roomInMemory in Memory.rooms) {
 				// First, we check if the room is mine or not
@@ -31,24 +29,27 @@ var processLDEnergyInfo = {
 				// if the room is not mine
 				if(!roomIsMine) {
 					
-					// we first reset all variables in memory
-					Memory.rooms[roomInMemory].memory.sourcesHomeRooms = [];
-					Memory.rooms[roomInMemory].memory.sourcesWorkNeed = [];
-					Memory.rooms[roomInMemory].memory.sourcesCarryNeed = [];
+					// we first reset all variables in memory. To each source :
+					// 1. A Home room
+					Memory.rooms[roomInMemory].sourcesHomeRooms = [];
+					// 2. A number of harvesters needed (currently number of creeps rather than work body parts)
+					Memory.rooms[roomInMemory].sourcesWorkNeed = [];
+					// 3. A number of carriers needed (currently number of creeps as well)
+					Memory.rooms[roomInMemory].sourcesCarryNeed = [];
 					
-					// for each source in the room
+					// So, for each source in the room
 					for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
-						// we find the room with the closest storage to the said source
+						// we find the room with the closest sender link to the said source (rather than storage)
 						let closestRoomDistance = 10000;
 						let closestRoom = null;
 						
-						// FOr each of my room having sender links
+						// For each of my room having sender links
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 							// We check the closeness of each source with each sender link
 							for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 								let idealPath = PathFinder.search(
-									Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.storages[senderLinkIndex]).pos,
-									Memory.rooms[roomInMemory].sources[sourceIndex].pos);
+									Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos,
+									Memory.rooms[roomInMemory].sourcesPos[sourceIndex]);
 								
 								let currentDistance = 10000;
 								if(idealPath != undefined) {
@@ -65,7 +66,7 @@ var processLDEnergyInfo = {
 
 						// Now we have the "raw" information. But certain elements might make us decide that no harvesting is needed :
 						// 1. Room is too far
-						// 2. ROom is occupied by some onlse
+						// 2. Room is occupied by some onlse
 						// 3. Room is reserved by someone else
 						// 4. We specifically agreed not to harvest it for diplomatic reasons
 
@@ -101,15 +102,15 @@ var processLDEnergyInfo = {
 						// If we encounter none of these events, we add the info
 						if(!closestRoomTooFar && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
 							// we define it as the home room of the source
-							Memory.rooms[roomInMemory].memory.sourcesHomeRooms.push(closestRoom);
+							Memory.rooms[roomInMemory].sourcesHomeRooms.push(closestRoom);
 										
 							// define the number of work parts needed, in function of size of source. Now only in number of creeps.
-							Memory.rooms[roomInMemory].memory.sourcesWorkNeed.push(1);
+							Memory.rooms[roomInMemory].sourcesWorkNeed.push(1);
 						
 							// Commented formula for number of working creeps parts :
 							// time it takes to get refilled, divided by 2 because each work body part takes 2 per turn
 							// let workPartsNeeded = (Math.ceil(Memory.rooms[roomInMemory].sources[sourceIndex].energyCapacity / 300) / 2);
-							// Memory.rooms[roomInMemory].memory.sourcesWorkNeed.push(workPartsNeeded);
+							// Memory.rooms[roomInMemory].sourcesWorkNeed.push(workPartsNeeded);
 							
 							// Number of carrying creeps needed, assumed that they each carry 400 units of ressource
 							// We want that by the time they go and come back, 400 units of ressources have been produced
@@ -117,14 +118,14 @@ var processLDEnergyInfo = {
 							// As LDFM move 1 tile per turn, we want one creep per 400/6 = 66 tiles of distance
 							
 							let carryNeeded = Math.ceil(closestRoomDistance / (400/6));
-							Memory.rooms[roomInMemory].memory.sourcesCarryNeed.push(carryNeeded);
+							Memory.rooms[roomInMemory].sourcesCarryNeed.push(carryNeeded);
 						}
 						// If one of the event is met
 						else {
 							// Then LD harvesting will not have to take place.
-							Memory.rooms[roomInMemory].memory.sourcesHomeRooms.push('null');
-							Memory.rooms[roomInMemory].memory.sourcesWorkNeed.push(0);
-							Memory.rooms[roomInMemory].memory.sourcesCarryNeed.push(0);
+							Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
+							Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
+							Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 						}
 					}	
 				}
