@@ -38,10 +38,20 @@ var scout = {
 
             // Storing the owner of the room, if undefined or out of date
             if(creep.room.memory.roomOwner == undefined) {
-                creep.room.memory.roomOwner = creep.room.controller.owner;
-            }
+				if(creep.room.controller.owner != undefined) {
+					creep.room.memory.roomOwner = creep.room.controller.owner;
+				}
+				else {
+					creep.room.memory.roomOwner = undefined;
+				}
+			}
             if(creep.room.memory.roomOwner != creep.room.controller.owner) {
-                creep.room.memory.roomOwner = creep.room.controller.owner;
+				if(creep.room.controller.owner != undefined) {
+					creep.room.memory.roomOwner = creep.room.controller.owner;
+				}
+				else {
+					creep.room.memory.roomOwner = undefined;
+				}	
             }
             
             // Same with the reservation, we update our info
