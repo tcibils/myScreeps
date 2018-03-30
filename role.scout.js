@@ -43,6 +43,14 @@ var scout = {
             if(creep.room.memory.roomOwner != creep.room.controller.owner) {
                 creep.room.memory.roomOwner = creep.room.controller.owner;
             }
+            
+            // Same with the reservation, we update our info
+            if(creep.room.memory.roomOwnerReservation == undefined) {
+                creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+            }
+            if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
+                creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+            }
 
             // if room reserved ?
 

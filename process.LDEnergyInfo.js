@@ -62,9 +62,44 @@ var processLDEnergyInfo = {
 								}
 							}	
 						}
+
+						// Now we have the "raw" information. But certain elements might make us decide that no harvesting is needed :
+						// 1. Room is too far
+						// 2. ROom is occupied by some onlse
+						// 3. Room is reserved by someone else
+						// 4. We specifically agreed not to harvest it for diplomatic reasons
+
+						let closestRoomTooFar = false;
+						let distantRoomOccupied = false;
+						let distantRoomReserved = false;
+						let distantRoomDiplomacy = false;
+
+						// We check if the room isn't too far - arbitrary parameter here
+						if(closestRoomDistance > 210) {
+							closestRoomTooFar = true;
+						}
+
+						// We check if the room has ownership
+						if(Memory.rooms[roomInMemory].roomOwner != "none") {
+							distantRoomOccupied = true;
+						}
+
+						// We check if there's a reservation saved
+						if(Memory.rooms[roomInMemory].roomOwnerReservation != undefined) {
+							distantRoomReserved = true;
+						}
 						
-						// If the source is close enough to a deposit, then we define the home room and all (arbitrary value)
-						if(closestRoomDistance <= 210) {
+						// We check all registered exceptions to see if one is true
+						if(roomsExceptions.length > 0) {
+							for(let exceptionIndex = 0; exceptionIndex < roomsExceptions.length; exceptionIndex++) {
+								if(roomsExceptions[exceptionIndex] == roomInMemory) {
+									distantRoomDiplomacy = true;
+								}
+							}
+						}
+						
+						// If we encounter none of these events, we add the info
+						if(!closestRoomTooFar && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
 							// we define it as the home room of the source
 							Memory.rooms[roomInMemory].memory.sourcesHomeRooms.push(closestRoom);
 										
@@ -84,8 +119,9 @@ var processLDEnergyInfo = {
 							let carryNeeded = Math.ceil(closestRoomDistance / (400/6));
 							Memory.rooms[roomInMemory].memory.sourcesCarryNeed.push(carryNeeded);
 						}
-						// If the source is too far from a deposit, we ignore it
+						// If one of the event is met
 						else {
+							// Then LD harvesting will not have to take place.
 							Memory.rooms[roomInMemory].memory.sourcesHomeRooms.push('null');
 							Memory.rooms[roomInMemory].memory.sourcesWorkNeed.push(0);
 							Memory.rooms[roomInMemory].memory.sourcesCarryNeed.push(0);
