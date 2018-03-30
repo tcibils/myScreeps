@@ -44,6 +44,8 @@ var scout = {
                 creep.room.memory.roomOwner = creep.room.controller.owner;
             }
 
+            // if room reserved ?
+
             // No "if" on power memory as we want to update it anyway
 
             creep.room.memory.powerSources = [];
