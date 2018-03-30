@@ -37,44 +37,46 @@ var scout = {
             }
 
             // Storing the owner of the room, if undefined or out of date
-            if(creep.room.memory.roomOwner == undefined) {
-				if(creep.room.controller.owner != undefined) {
-					creep.room.memory.roomOwner = creep.room.controller.owner;
-				}
-				else {
-					creep.room.memory.roomOwner = undefined;
-				}
-			}
-            if(creep.room.memory.roomOwner != creep.room.controller.owner) {
-				if(creep.room.controller.owner != undefined) {
-					creep.room.memory.roomOwner = creep.room.controller.owner;
-				}
-				else {
-					creep.room.memory.roomOwner = undefined;
-				}	
-            }
-            
-            // Same with the reservation, we update our info
-            if(creep.room.memory.roomOwnerReservation == undefined) {
-				if(creep.room.controller.reservation == undefined) {
-					creep.room.memory.roomOwnerReservation = undefined;
-				}
-				else {
-					creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
-				}
-			}
-			else {
-				if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
-					if(creep.room.controller.reservation == undefined) {
-						creep.room.memory.roomOwnerReservation = undefined;
+			
+			// If there is a controller
+			if(creep.room.controller != undefined) {
+				// If the variable is already stored in memory
+				if(creep.room.memory.roomOwner != undefined) {
+					// If the owner is not the same anymore
+					if(creep.room.memory.roomOwner != creep.room.controller.owner) {
+						// We change the data in memory
+						creep.room.memory.roomOwner = creep.room.controller.owner;
 					}
-					else {
+				}
+				// If the variable is not yet defined
+				else {
+					// We define it
+					creep.room.memory.roomOwner = creep.room.controller.owner;
+				}
+				
+				// Same for reservation
+				// If the variable is defined
+				if(creep.room.memory.roomOwnerReservation != undefined) {
+					// If it's not the same player having reserved it anymore
+					if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
+						// We update the info
+						creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+					}					
+				}
+				// If the variable is not yet defined
+				else {
+					// We initialize it
+					if(creep.room.controller.reservation != undefined) {
 						creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
 					}
 				}
+				
 			}
-			
-            // if room reserved ?
+			// If there is no controller, we keep all at undefined
+			else {
+				creep.room.memory.roomOwner = undefined;
+				creep.room.memory.roomOwnerReservation = undefined;
+			}
 
             // No "if" on power memory as we want to update it anyway
 
