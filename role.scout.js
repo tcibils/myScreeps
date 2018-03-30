@@ -91,12 +91,12 @@ var scout = {
 
             if(powerSourcesOfRoom.length > 0) {
                 for(let currentPowerSourceIndex = 0; currentPowerSourceIndex < powerSourcesOfRoom.length; currentPowerSourceIndex++) {
-                    creep.room.memory.powerSources.push(powerSourcesOfRoom[powerSourcesOfRoom].id);
-                    creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[powerSourcesOfRoom].pos);
-                    creep.room.memory.powerSourcesMax.push(powerSourcesOfRoom[powerSourcesOfRoom].power);
-                    creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[powerSourcesOfRoom].hits);
-                    creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[powerSourcesOfRoom].hitsMax);
-                    creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[powerSourcesOfRoom].ticksToDecay);
+                    creep.room.memory.powerSources.push(powerSourcesOfRoom[currentPowerSourceIndex].id);
+                    creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[currentPowerSourceIndex].pos);
+                    creep.room.memory.powerSourcesMax.push(powerSourcesOfRoom[currentPowerSourceIndex].power);
+                    creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[currentPowerSourceIndex].hits);
+                    creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[currentPowerSourceIndex].hitsMax);
+                    creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[currentPowerSourceIndex].ticksToDecay);
                 }
             }
 

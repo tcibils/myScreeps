@@ -36,6 +36,7 @@ var processLDEnergyInfo = {
 					Memory.rooms[roomInMemory].sourcesWorkNeed = [];
 					// 3. A number of carriers needed (currently number of creeps as well)
 					Memory.rooms[roomInMemory].sourcesCarryNeed = [];
+					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
 					
 					// So, for each source in the room
 					for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
@@ -47,9 +48,13 @@ var processLDEnergyInfo = {
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 							// We check the closeness of each source with each sender link
 							for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
-								let idealPath = PathFinder.search(
-									Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos,
-									Memory.rooms[roomInMemory].sourcesPos[sourceIndex]);
+								// First position : the sender link assessed
+								let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
+								// Second position : the position of the source, retrieved from memory - we need to re-create it
+								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+								
+								// We find the ideal path between the two
+								let idealPath = PathFinder.search(firstPosition, secondPosition);
 								
 								let currentDistance = 10000;
 								if(idealPath != undefined) {
@@ -99,11 +104,13 @@ var processLDEnergyInfo = {
 							}
 						}
 						
+						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
 						// If we encounter none of these events, we add the info
 						if(!closestRoomTooFar && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
 							// we define it as the home room of the source
 							Memory.rooms[roomInMemory].sourcesHomeRooms.push(closestRoom);
-										
+
+							
 							// define the number of work parts needed, in function of size of source. Now only in number of creeps.
 							Memory.rooms[roomInMemory].sourcesWorkNeed.push(1);
 						
