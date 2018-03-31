@@ -1,3 +1,9 @@
+// To Do :
+// Ne pas garder en mémoire la distance, c'est contre productif si la room est détruite
+// Si le nombre de sender links change dans la home room sélectionée (en plus ou en moins), re.assess toutes les rooms
+// Garder en mémoire les rooms déjà assess pour pas les refaire tant que le nombre de sender links a pas changé
+
+
 var processLDEnergyInfo = {
     run: function() {
         
@@ -32,11 +38,18 @@ var processLDEnergyInfo = {
 					// we first reset all variables in memory. To each source :
 					// 1. A Home room
 					Memory.rooms[roomInMemory].sourcesHomeRooms = [];
+					// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
+					// Nevertheless, if the rooms already tried have changed their number of senders, we shall retry the computation
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
+					// We keep in memory the closest distance found so far.
+					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
+
 					// 2. A number of harvesters needed (currently number of creeps rather than work body parts)
 					Memory.rooms[roomInMemory].sourcesWorkNeed = [];
+
 					// 3. A number of carriers needed (currently number of creeps as well)
 					Memory.rooms[roomInMemory].sourcesCarryNeed = [];
-					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
 					
 					// So, for each source in the room
 					for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
@@ -46,6 +59,9 @@ var processLDEnergyInfo = {
 						
 						// For each of my room having sender links
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
+
+							// INSERT HERE IF - if not room already tried, or if room has changed number of sender links 
+
 							// We check the closeness of each source with each sender link
 							for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 								// First position : the sender link assessed
@@ -54,6 +70,7 @@ var processLDEnergyInfo = {
 								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 								
 								// We find the ideal path between the two
+								// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
 								let idealPath = PathFinder.search(firstPosition, secondPosition);
 								
 								let currentDistance = 10000;
@@ -68,6 +85,8 @@ var processLDEnergyInfo = {
 								}
 							}	
 						}
+
+						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
 
 						// Now we have the "raw" information. But certain elements might make us decide that no harvesting is needed :
 						// 1. Room is too far
@@ -104,7 +123,6 @@ var processLDEnergyInfo = {
 							}
 						}
 						
-						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
 						// If we encounter none of these events, we add the info
 						if(!closestRoomTooFar && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
 							// we define it as the home room of the source

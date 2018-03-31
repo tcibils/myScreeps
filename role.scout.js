@@ -86,6 +86,7 @@ var scout = {
             creep.room.memory.powerSourcesHits = [];
             creep.room.memory.powerSourcesHitsMax = [];
             creep.room.memory.powerSourcesTime = [];
+            creep.room.memory.powerSourcesDiscoveryTime = [];
 
             var powerSourcesOfRoom = creep.room.find(FIND_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_BANK}});
 
@@ -97,6 +98,7 @@ var scout = {
                     creep.room.memory.powerSourcesHits.push(powerSourcesOfRoom[currentPowerSourceIndex].hits);
                     creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[currentPowerSourceIndex].hitsMax);
                     creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[currentPowerSourceIndex].ticksToDecay);
+                    creep.room.memory.powerSourcesDiscoveryTime.push(Game.time);
                 }
             }
 
