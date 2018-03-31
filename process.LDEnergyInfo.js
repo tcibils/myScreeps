@@ -7,10 +7,13 @@ var processLDEnergyInfo = {
     run: function() {
         
 		// Do all that every 2000 or 5000 turns for instance - we only need to update it if I got a new room
-        if(Game.time % 1000 == 0) {
+        if(Game.time % 10 == 0) {
 			
 			// variable array with rooms to be excluded (parameters), for diplomacy (Ringo86)
 			let roomsExceptions = ['W45N52'];
+			
+			// Arbitrary number of max distance
+			let maxSourceToLinkDistance = 80;
 			
 			// variable array with my rooms names, for comparaison later
 			let myRooms = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my);
@@ -199,7 +202,7 @@ var processLDEnergyInfo = {
 								Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex] = closestRoomDistance;
 								
 								// We check if the room isn't too far - arbitrary parameter here
-								if(closestRoomDistance <= 68) {
+								if(closestRoomDistance < maxSourceToLinkDistance) {
 									// we define it as the home room of the source
 									Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] = closestRoom;
 									
@@ -289,7 +292,7 @@ var processLDEnergyInfo = {
 							Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
 							
 							// We check if the room isn't too far - arbitrary parameter here
-							if(closestRoomDistance <= 68) {
+							if(closestRoomDistance < maxSourceToLinkDistance) {
 								// we define it as the home room of the source
 								Memory.rooms[roomInMemory].sourcesHomeRooms.push(closestRoom);
 								
@@ -313,10 +316,18 @@ var processLDEnergyInfo = {
 							// If the room is too distant, we cancel everything
 							else {
 								// Then LD harvesting will not have to take place.
-								Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
-								Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
-								Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
-								Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
+								if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == 0) {
+									Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
+								}
+								if(Memory.rooms[roomInMemory].sourcesWorkNeed.length == 0) {
+									Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
+								}
+								if(Memory.rooms[roomInMemory].sourcesCarryNeed.length == 0) {
+									Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
+								}
+								if(Memory.rooms[roomInMemory].sourcesSenderLink.length == 0) {
+									Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
+								}
 							}
 							
 						}
@@ -327,12 +338,24 @@ var processLDEnergyInfo = {
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
 				else {
 					// Then LD harvesting will not have to take place.
-					Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
-					Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
-					Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
-					Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
+					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == 0) {
+						Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
+					}
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.length == 0) {
+						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
+					}
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.length == 0) {
+						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
+					}
+					if(Memory.rooms[roomInMemory].sourcesWorkNeed.length == 0) {
+						Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
+					}
+					if(Memory.rooms[roomInMemory].sourcesCarryNeed.length == 0) {
+						Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
+					}
+					if(Memory.rooms[roomInMemory].sourcesSenderLink.length == 0) {
+						Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
+					}
 				}
 			
 			
