@@ -227,8 +227,6 @@ var processLDEnergyInfo = {
 								else {
 									// Then LD harvesting will not have to take place.
 									Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] = 'null';
-									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex] = 0;
-									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex] = 0;
 									Memory.rooms[roomInMemory].sourcesWorkNeed[sourceIndex] = 0;
 									Memory.rooms[roomInMemory].sourcesCarryNeed[sourceIndex] = 0;
 									Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] = 0;
@@ -323,8 +321,6 @@ var processLDEnergyInfo = {
 							else {
 								// Then LD harvesting will not have to take place.
 								Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
-								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
-								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
 								Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 								Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 								Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
