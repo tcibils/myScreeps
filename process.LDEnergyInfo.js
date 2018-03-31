@@ -37,10 +37,6 @@ var processLDEnergyInfo = {
 					// we first reset all variables in memory. To each source :
 					// 1. A Home room
 					Memory.rooms[roomInMemory].sourcesHomeRooms = [];
-					// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
-					// Nevertheless, if the rooms already tried have changed their number of senders, we shall retry the computation
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = []; // problème ici, on reset la valuer, on pourra plus comparer
 					// We keep in memory the closest distance found so far.
 					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
 
@@ -50,41 +46,73 @@ var processLDEnergyInfo = {
 					// 3. A number of carriers needed (currently number of creeps as well)
 					Memory.rooms[roomInMemory].sourcesCarryNeed = [];
 					
+					
+					
+					// we also want to reset these tables in othere cases to be adressed
+					
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried == undefined) {
+						// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
+						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
+					}
+
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders == undefined) {
+						// Nevertheless, if the rooms already tried have changed their number of senders, we shall retry the computation
+						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
+					}
+
+					
+					
+					
 					// So, for each source in the room
-					for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
+					for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {						
+						
 						// we find the room with the closest sender link to the said source (rather than storage)
 						let closestRoomDistance = 10000;
 						let closestRoom = null;
 						let closestRoomNumberSenderLinks = 0;
+						let testedRooms = [];
 
 						// For each of my room having sender links
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
-
-							// INSERT HERE IF - if not room already tried, or if room has changed number of sender links 
-
-							// We check the closeness of each source with each sender link
-							for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
-								// First position : the sender link assessed
-								let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
-								// Second position : the position of the source, retrieved from memory - we need to re-create it
-								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
-								
-								// We find the ideal path between the two
-								// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
-								let idealPath = PathFinder.search(firstPosition, secondPosition);
-								
-								let currentDistance = 10000;
-								if(idealPath != undefined) {
-									// Check if path is not empty
-									currentDistance = idealPath.path.length;
+							
+							// We check if its relevance has already been tested
+							let roomAlreadyTested = false;
+							// We check each room already listed
+							for(let alreadyTestedRoomsIndex = 0; alreadyTestedRoomsIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.length; alreadyTestedRoomsIndex++) {
+								// And if the home room we assess is in the array (meaning we already checked)
+								if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[alreadyTestedRoomsIndex] == myRoomsWithSenderLink[myRoomIndex]) {
+									// We set the value to true
+									roomAlreadyTested = true;
 								}
-								
-								if(currentDistance < closestRoomDistance) {
-									closestRoomDistance = currentDistance;
-									closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
-									closestRoomNumberSenderLinks = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length;
+							}
+							
+							// If we didn't check the room already
+							if(!roomAlreadyTested) {
+								// We check the closeness of each source with each sender link
+								for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
+									// First position : the sender link assessed
+									let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
+									// Second position : the position of the source, retrieved from memory - we need to re-create it
+									let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+									
+									// We find the ideal path between the two
+									// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
+									let idealPath = PathFinder.search(firstPosition, secondPosition);
+									
+									let currentDistance = 10000;
+									if(idealPath != undefined) {
+										// Check if path is not empty
+										currentDistance = idealPath.path.length;
+									}
+									
+									if(currentDistance < closestRoomDistance) {
+										closestRoomDistance = currentDistance;
+										closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
+										closestRoomNumberSenderLinks = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length;
+									}
+									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(myRoomsWithSenderLink[myRoomIndex]);
 								}
-							}	
+							}								
 						}
 
 						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
