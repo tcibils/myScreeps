@@ -66,7 +66,7 @@ var processLDEnergyInfo = {
 					distantRoomNoSources = true;
 				}
 				
-				if(Memory.rooms[roomInMemory].dangerous = true) {
+				if(Memory.rooms[roomInMemory].dangerous == true) {
 					distantRoomDangerous = true;
 				}
 				
