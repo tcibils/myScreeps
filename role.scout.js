@@ -16,6 +16,11 @@ var scout = {
         if(creep.memory.currentRoom == undefined) {
             creep.memory.currentRoom = creep.room.name;
         }
+		
+		// We start from the hypothesis that a scout is weak and will die if some start to hit it anyways
+		if(creep.hits < creep.hitsMax) {
+			creep.room.memory.dangerous = true;
+		}
 
         // We only try to update the room memory if we just arrived in it
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
