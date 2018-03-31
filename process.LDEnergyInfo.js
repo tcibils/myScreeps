@@ -1,5 +1,4 @@
 // To Do :
-// Ne pas garder en mémoire la distance, c'est contre productif si la room est détruite
 // Si le nombre de sender links change dans la home room sélectionée (en plus ou en moins), re.assess toutes les rooms
 // Garder en mémoire les rooms déjà assess pour pas les refaire tant que le nombre de sender links a pas changé
 
@@ -41,7 +40,7 @@ var processLDEnergyInfo = {
 					// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
 					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
 					// Nevertheless, if the rooms already tried have changed their number of senders, we shall retry the computation
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = []; // problème ici, on reset la valuer, on pourra plus comparer
 					// We keep in memory the closest distance found so far.
 					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
 
@@ -56,7 +55,8 @@ var processLDEnergyInfo = {
 						// we find the room with the closest sender link to the said source (rather than storage)
 						let closestRoomDistance = 10000;
 						let closestRoom = null;
-						
+						let closestRoomNumberSenderLinks = 0;
+
 						// For each of my room having sender links
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 
@@ -82,6 +82,7 @@ var processLDEnergyInfo = {
 								if(currentDistance < closestRoomDistance) {
 									closestRoomDistance = currentDistance;
 									closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
+									closestRoomNumberSenderLinks = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length;
 								}
 							}	
 						}
@@ -127,6 +128,7 @@ var processLDEnergyInfo = {
 						if(!closestRoomTooFar && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
 							// we define it as the home room of the source
 							Memory.rooms[roomInMemory].sourcesHomeRooms.push(closestRoom);
+							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(closestRoomNumberSenderLinks);
 
 							
 							// define the number of work parts needed, in function of size of source. Now only in number of creeps.
@@ -149,6 +151,7 @@ var processLDEnergyInfo = {
 						else {
 							// Then LD harvesting will not have to take place.
 							Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
+							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
 							Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 							Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 						}
