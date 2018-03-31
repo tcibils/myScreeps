@@ -138,9 +138,91 @@ var processLDEnergyInfo = {
 								distanceChanged = true;
 							}
 							
-							
+							// Something changed for this source in this distant room !
+							// We need to update the home room of this source.
 							if(distanceChanged || numberOfSenderLinksChanged) {
-								// TODO : find new home room
+								// we find the room with the closest sender link to the said source (rather than storage)
+								let closestRoomDistance = 10000;
+								let closestRoom = null;
+								let closestSenderLinkId = null;
+								
+								// Gonna be an array of potential home rooms tested
+								let testedRooms = [];
+								// Gonna be an array containing number of sender links in each potential home room
+								let testedRoomsNumberSenders = [];
+
+
+								// For each of my room having sender links
+								for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
+									// We check the closeness of each source with each sender link
+									for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
+										// First position : the sender link assessed
+										let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
+										// Second position : the position of the source, retrieved from memory - we need to re-create it
+										let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+										
+										// We find the ideal path between the two
+										// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
+										let idealPath = PathFinder.search(firstPosition, secondPosition);
+										
+										let currentDistance = 10000;
+										if(idealPath != undefined) {
+											// Check if path is not empty
+											currentDistance = idealPath.path.length;
+										}
+										
+										if(currentDistance < closestRoomDistance) {
+											closestRoomDistance = currentDistance;
+											closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
+											closestSenderLinkId = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex];
+										}
+									}
+									// Now that we parsed all links of a potential room, we add the home room in the list of tested rooms
+									testedRooms.push(myRoomsWithSenderLink[myRoomIndex].name);
+									// We also store the number of sender links
+									testedRoomsNumberSenders.push(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length);
+								}
+								// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
+								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex] = testedRooms;
+								
+								// We also store the correspondant number of sender links
+								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex] = testedRoomsNumberSenders;
+									
+								// We already add the distance to the room memory 
+								Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex] = closestRoomDistance;
+								
+								// We check if the room isn't too far - arbitrary parameter here
+								if(closestRoomDistance <= 68) {
+									// we define it as the home room of the source
+									Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] = closestRoom;
+									
+									// define the number of work parts needed, in function of size of source. Now only in number of creeps.
+									Memory.rooms[roomInMemory].sourcesWorkNeed[sourceIndex] = 1;
+								
+									// Commented formula for number of working creeps parts :
+									// time it takes to get refilled, divided by 2 because each work body part takes 2 per turn
+									// let workPartsNeeded = (Math.ceil(Memory.rooms[roomInMemory].sources[sourceIndex].energyCapacity / 300) / 2);
+									// Memory.rooms[roomInMemory].sourcesWorkNeed.push(workPartsNeeded);
+									
+									// Number of carrying creeps needed, assumed that they each carry 400 units of ressource
+									// We want that by the time they go and come back, 400 units of ressources have been produced
+									// typical LDFH have 3 work parts, thus produce 6 per turn
+									// As LDFM move 1 tile per turn, we want one creep per 400/6 = 66 tiles of distance
+									
+									let carryNeeded = Math.ceil(closestRoomDistance / (30));
+									Memory.rooms[roomInMemory].sourcesCarryNeed[sourceIndex] = carryNeeded;
+									Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] = closestSenderLinkId;
+								}
+								// If the room is too distant, we cancel everything
+								else {
+									// Then LD harvesting will not have to take place.
+									Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] = 'null';
+									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex] = 0;
+									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex] = 0;
+									Memory.rooms[roomInMemory].sourcesWorkNeed[sourceIndex] = 0;
+									Memory.rooms[roomInMemory].sourcesCarryNeed[sourceIndex] = 0;
+									Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] = 0;
+								}
 							}
 						}
 					}
