@@ -141,7 +141,7 @@ var scout = {
         // If there is a controller
         if(creep.room.controller != undefined) {
             // That neither me or Ringo signed (diplomacy...)
-            if(creep.room.controller.sign.username != "Blaugaard" && creep.room.controller.sign.username != "Ringo86") {
+            if((creep.room.controller.sign.username != "Blaugaard" && creep.room.controller.sign.username != "Ringo86") || creep.room.controller.sign == undefined) {
                 // Then we sign it =)
                 if(creep.signController(creep.room.controller, "Join #overlords alliance, find us on Slack! Also, fuck Quorum's auto-signing room bot.") == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
