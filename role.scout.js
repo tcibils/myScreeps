@@ -17,10 +17,13 @@ var scout = {
             creep.memory.currentRoom = creep.room.name;
         }
 		
-		// We start from the hypothesis that a scout is weak and will die if some start to hit it anyways
+        // We start from the hypothesis that a scout is weak and will die if some start to hit it anyways
+        // Not OK ! Scout get hit by random enemy creep and room get banned from LDHarvesting... Need something better
+        /*
 		if(creep.hits < creep.hitsMax) {
 			creep.room.memory.dangerous = true;
 		}
+        */
 
         // We only try to update the room memory if we just arrived in it
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
