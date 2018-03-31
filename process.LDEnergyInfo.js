@@ -78,9 +78,9 @@ var processLDEnergyInfo = {
 							// We check if its relevance has already been tested
 							let roomAlreadyTested = false;
 							// We check each room already listed
-							for(let alreadyTestedRoomsIndex = 0; alreadyTestedRoomsIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.length; alreadyTestedRoomsIndex++) {
+							for(let alreadyTestedRoomsIndex = 0; alreadyTestedRoomsIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].length; alreadyTestedRoomsIndex++) {
 								// And if the home room we assess is in the array (meaning we already checked)
-								if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[alreadyTestedRoomsIndex] == myRoomsWithSenderLink[myRoomIndex]) {
+								if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex][alreadyTestedRoomsIndex] == myRoomsWithSenderLink[myRoomIndex]) {
 									// We set the value to true
 									roomAlreadyTested = true;
 								}
@@ -110,11 +110,15 @@ var processLDEnergyInfo = {
 										closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
 										closestRoomNumberSenderLinks = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length;
 									}
-									Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(myRoomsWithSenderLink[myRoomIndex]);
 								}
-							}								
+							}
+							// Now that we parsed all links of a potential room, we add the home room in the list of tested rooms
+							testedRooms.push(myRoomsWithSenderLink[myRoomIndex]);							
 						}
-
+						// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
+						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].push(testedRooms);
+						
+						// We already add the distance to the room memory 
 						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
 
 						// Now we have the "raw" information. But certain elements might make us decide that no harvesting is needed :
