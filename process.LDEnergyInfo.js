@@ -7,7 +7,7 @@ var processLDEnergyInfo = {
     run: function() {
         
 		// Do all that every 2000 or 5000 turns for instance - we only need to update it if I got a new room
-        if(Game.time % 10 == 0) {
+        if(Game.time % 1000 == 0) {
 			
 			// variable array with rooms to be excluded (parameters), for diplomacy (Ringo86)
 			let roomsExceptions = ['W45N52'];
@@ -115,21 +115,22 @@ var processLDEnergyInfo = {
 						
 						// So, for each source in the room
 						for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
-							// A possibility would be the number of sender links having changed
-							// Si une home room potentielle construit de nouveaux sender links, celle ci seulement doit être ré-assessée
 							
+							// Maybe one of my rooms built a sender link that made it more competitive.
 							let numberOfSenderLinksChanged = false;
 							
 							// We parse all potential home rooms
 							for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 								// And we parse room that we've already tried to link
+								// QUESTION HERE - Why not do that with all my rooms ?
+								// We should have an arrow of rooms we tried to link for each source, thus having same length
 								if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.length == Memory.rooms[roomInMemory].sources.length) {
 									for(let myRoomAlreadyTriedIndex = 0; myRoomAlreadyTriedIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].length; myRoomAlreadyTriedIndex++) {
 										// If we found the potential room we're parsing
-										if(myRoomsWithSenderLink[myRoomIndex].name == Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex][myRoomAlreadyTriedIndex].name) {
+										if(myRoomsWithSenderLink[myRoomIndex].name == Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex][myRoomAlreadyTriedIndex]) {
 											// If its number of sender links changed
 											if(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length != Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex][myRoomAlreadyTriedIndex]) {
-												// Then this fucking number of sender links changed.
+												// Then this fucking number of sender links for this potential home room changed. Wasn't easy.
 												numberOfSenderLinksChanged = true;
 											}
 										}
@@ -137,25 +138,16 @@ var processLDEnergyInfo = {
 								}
 							}
 							
-							// Si la distance a changé entre la source et le sender link, ça veut dire que le sender a été détruit, donc il faut trouver un nouveau
+							// If the link got destroyed, we'll need to fine a potential new home room.
+							let senderLinkDestroyed = false;
 							
-							let distanceChanged = false;
-							
-							// We only check if we already have a sender link attached for this source, and if this link exists =)
-							if(Memory.rooms[roomInMemory].sourcesSenderLink.length == Memory.rooms[roomInMemory].sources.length && Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] != 0) {
-								// Position 1 : le link
-								let firstPosition = Game.getObjectById(Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex]).pos;
-								// Position 2 : la source
-								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
-								
-								if(PathFinder.search(firstPosition,secondPosition).path.length != Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex]) {
-									distanceChanged = true;
-								}
+							if(Game.getObjectById(Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex]) == undefined && Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] != 0) {
+								senderLinkDestroyed = true;
 							}
 							
 							// Something changed for this source in this distant room !
 							// We need to update the home room of this source.
-							if(distanceChanged || numberOfSenderLinksChanged) {
+							if(senderLinkDestroyed || numberOfSenderLinksChanged) {
 								// we find the room with the closest sender link to the said source (rather than storage)
 								let closestRoomDistance = 10000;
 								let closestRoom = null;
@@ -239,10 +231,6 @@ var processLDEnergyInfo = {
 							}
 						}
 					}
-					
-					
-					
-					
 					
 					
 					// Or we don't already have a home room, and we need to find one, and we iterate over everything
