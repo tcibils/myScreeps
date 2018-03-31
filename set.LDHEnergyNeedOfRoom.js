@@ -3,9 +3,11 @@ var setLDHEnergyNeedOfRoom = {
 		
         // Ajouter un "every X tick" ?
 		
+		// Manque la sécurité !
+		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
-			// If the sources have home rooms defined
+			// If the sources have home rooms defined - ISSUE HERE - IS DEFINED FOR ALL ROOMS
 			if(Memory.rooms[roomInMemory].sourcesHomeRooms != undefined) {
 				// For each of these sources
 				for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sourcesHomeRooms; sourceIndex++) {
