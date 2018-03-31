@@ -7,7 +7,7 @@ var processLDEnergyInfo = {
     run: function() {
         
 		// Do all that every 2000 or 5000 turns for instance - we only need to update it if I got a new room
-        if(Game.time % 5000 == 0) {
+        if(Game.time % 10 == 0) {
 			
 			// variable array with rooms to be excluded (parameters), for diplomacy (Ringo86)
 			let roomsExceptions = ['W45N52'];
@@ -60,47 +60,45 @@ var processLDEnergyInfo = {
 					}
 				}
 				
+				// If anything is not defined yet, we define it, by security.
+					
+				if(Memory.rooms[roomInMemory].sourcesHomeRooms == undefined) {
+					Memory.rooms[roomInMemory].sourcesHomeRooms = [];
+				}
+				
+				if(Memory.rooms[roomInMemory].sourcesHomeRoomsDistance == undefined) {
+					Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
+				}
+				
+				if(Memory.rooms[roomInMemory].sourcesWorkNeed == undefined) {
+					Memory.rooms[roomInMemory].sourcesWorkNeed = [];
+				}
+				
+				if(Memory.rooms[roomInMemory].sourcesCarryNeed == undefined) {
+					Memory.rooms[roomInMemory].sourcesCarryNeed = [];
+				}
+				
+				if(Memory.rooms[roomInMemory].sourcesSenderLink == undefined) {
+					Memory.rooms[roomInMemory].sourcesSenderLink = [];
+				}
+				
+				if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried == undefined) {
+					// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
+					// This is gonna be an array of array with for a given source (which is a point in the first array) the list of rooms already tried
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
+				}
+				
+				// For each source, we will store the number of sender links in each potential home room
+				// So if new links get built or destroyed, we will re-assess the potential home room
+				if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders == undefined) {
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
+				}
+			
+				
 				
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
 				// if the room is not mine
 				if(!roomIsMine && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
-					
-					// If anything is not defined yet, we define it, by security.
-					
-					if(Memory.rooms[roomInMemory].sourcesHomeRooms == undefined) {
-						Memory.rooms[roomInMemory].sourcesHomeRooms = [];
-					}
-					
-					if(Memory.rooms[roomInMemory].sourcesHomeRoomsDistance == undefined) {
-						Memory.rooms[roomInMemory].sourcesHomeRoomsDistance = [];
-					}
-					
-					if(Memory.rooms[roomInMemory].sourcesWorkNeed == undefined) {
-						Memory.rooms[roomInMemory].sourcesWorkNeed = [];
-					}
-					
-					if(Memory.rooms[roomInMemory].sourcesCarryNeed == undefined) {
-						Memory.rooms[roomInMemory].sourcesCarryNeed = [];
-					}
-					
-					if(Memory.rooms[roomInMemory].sourcesSenderLink == undefined) {
-						Memory.rooms[roomInMemory].sourcesSenderLink = [];
-					}
-					
-					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried == undefined) {
-						// We also keep in memory the room we've already tried to link to the assessed room, in order to avoid multiple computations
-						// This is gonna be an array of array with for a given source (which is a point in the first array) the list of rooms already tried
-						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried = [];
-					}
-					
-					// For each source, we will store the number of sender links in each potential home room
-					// So if new links get built or destroyed, we will re-assess the potential home room
-					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders == undefined) {
-						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
-					}
-
-					
-					
 					
 					// Now, either we already have the home rooms, and we'll have to assess if it's the best
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == Memory.rooms[roomInMemory].sources.length){
@@ -115,27 +113,34 @@ var processLDEnergyInfo = {
 							// We parse all potential home rooms
 							for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 								// And we parse room that we've already tried to link
-								for(let myRoomAlreadyTriedIndex = 0; myRoomAlreadyTriedIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].length; myRoomAlreadyTriedIndex++) {
-									// If we found the potential room we're parsing
-									if(myRoomsWithSenderLink[myRoomIndex].name == Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex][myRoomAlreadyTriedIndex].name) {
-										// If its number of sender links changed
-										if(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length != Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex][myRoomAlreadyTriedIndex]) {
-											// Then this fucking number of sender links changed.
-											numberOfSenderLinksChanged = true;
+								if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.length == Memory.rooms[roomInMemory].sources.length) {
+									for(let myRoomAlreadyTriedIndex = 0; myRoomAlreadyTriedIndex < Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].length; myRoomAlreadyTriedIndex++) {
+										// If we found the potential room we're parsing
+										if(myRoomsWithSenderLink[myRoomIndex].name == Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex][myRoomAlreadyTriedIndex].name) {
+											// If its number of sender links changed
+											if(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length != Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex][myRoomAlreadyTriedIndex]) {
+												// Then this fucking number of sender links changed.
+												numberOfSenderLinksChanged = true;
+											}
 										}
 									}
 								}
 							}
 							
 							// Si la distance a changé entre la source et le sender link, ça veut dire que le sender a été détruit, donc il faut trouver un nouveau
-							// Position 1 : le link
-							let firstPosition = Game.getObjectById(Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex]).pos;
-							// Position 2 : la source
-							let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 							
 							let distanceChanged = false;
-							if(PathFinder.search(firstPosition,secondPosition).path.length != Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex]) {
-								distanceChanged = true;
+							
+							// We only check if we already have a sender link attached.
+							if(Memory.rooms[roomInMemory].sourcesSenderLink.length == Memory.rooms[roomInMemory].sources.length) {
+								// Position 1 : le link
+								let firstPosition = Game.getObjectById(Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex]).pos;
+								// Position 2 : la source
+								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+								
+								if(PathFinder.search(firstPosition,secondPosition).path.length != Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex]) {
+									distanceChanged = true;
+								}
 							}
 							
 							// Something changed for this source in this distant room !
@@ -329,8 +334,8 @@ var processLDEnergyInfo = {
 				else {
 					// Then LD harvesting will not have to take place.
 					Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].push(0);
-					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].push(0);
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
+					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
 					Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 					Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 					Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
