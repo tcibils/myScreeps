@@ -40,6 +40,7 @@ var processLDEnergyInfo = {
 				let distantRoomOccupied = false;
 				let distantRoomReserved = false;
 				let distantRoomDiplomacy = false;
+				let distantRoomNoSources = false;
 				
 				// We check if the room has ownership
 				if(Memory.rooms[roomInMemory].roomOwner != undefined) {
@@ -58,6 +59,10 @@ var processLDEnergyInfo = {
 							distantRoomDiplomacy = true;
 						}
 					}
+				}
+				
+				if(Memory.rooms[roomInMemory].sources.length == 0) {
+					distantRoomNoSources = true;
 				}
 				
 				// If anything is not defined yet, we define it, by security.
@@ -98,7 +103,7 @@ var processLDEnergyInfo = {
 				
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
 				// if the room is not mine
-				if(!roomIsMine && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy) {
+				if(!roomIsMine && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy && !distantRoomNoSources) {
 					
 					// Now, either we already have the home rooms, and we'll have to assess if it's the best
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == Memory.rooms[roomInMemory].sources.length){
@@ -131,8 +136,8 @@ var processLDEnergyInfo = {
 							
 							let distanceChanged = false;
 							
-							// We only check if we already have a sender link attached.
-							if(Memory.rooms[roomInMemory].sourcesSenderLink.length == Memory.rooms[roomInMemory].sources.length) {
+							// We only check if we already have a sender link attached for this source, and if this link exists =)
+							if(Memory.rooms[roomInMemory].sourcesSenderLink.length == Memory.rooms[roomInMemory].sources.length && Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] != 0) {
 								// Position 1 : le link
 								let firstPosition = Game.getObjectById(Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex]).pos;
 								// Position 2 : la source
@@ -284,10 +289,10 @@ var processLDEnergyInfo = {
 								testedRoomsNumberSenders.push(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length);
 							}
 							// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
-							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].push(testedRooms);
+							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(testedRooms);
 							
 							// We also store the correspondant number of sender links
-							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].push(testedRoomsNumberSenders);
+							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(testedRoomsNumberSenders);
 								
 							// We already add the distance to the room memory 
 							Memory.rooms[roomInMemory].sourcesHomeRoomsDistance.push(closestRoomDistance);
@@ -318,8 +323,8 @@ var processLDEnergyInfo = {
 							else {
 								// Then LD harvesting will not have to take place.
 								Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
-								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].push(0);
-								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders[sourceIndex].push(0);
+								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
+								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
 								Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 								Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 								Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
