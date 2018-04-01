@@ -52,7 +52,7 @@ var setLDHEnergyNeedOfRoom = {
 						
 						
 						// We count the existing LDSecurity for target room
-						let LDSecurityOfSource = _.filter(Game.creeps, (creep) =>
+						let LDSecurityOfRoom = _.filter(Game.creeps, (creep) =>
 							creep.memory.role == 'longDistanceSecurity' &&
 							creep.memory.targetRoom == roomInMemory &&
 							(creep.ticksToLive > 50 || creep.memory.creepSpawning)
@@ -65,7 +65,7 @@ var setLDHEnergyNeedOfRoom = {
 						treatedRoom.memory.labels.push('LDSecurity')
 						if	   (creepsUnderAttack.length > 0) {treatedRoom.memory.need.push(1);}
 						else if(creepsUnderAttack.length == 0){treatedRoom.memory.need.push(0);}
-						treatedRoom.memory.attached.push(LDSecurityOfSource);
+						treatedRoom.memory.attached.push(LDSecurityOfRoom);
 						treatedRoom.memory.role.push('longDistanceSecurity');
 						treatedRoom.memory.unity.push('Number of creeps');
 						treatedRoom.memory.targetRoom.push(roomInMemory);
@@ -74,14 +74,33 @@ var setLDHEnergyNeedOfRoom = {
 						
 						
 						/*  // Reserver creep for the room as well ?
+						
+						// We count the existing LDSecurity for target room
+						let LDReserverOfRoom = _.filter(Game.creeps, (creep) =>
+							creep.memory.role == 'longDistanceReserver' &&
+							creep.memory.targetRoom == roomInMemory &&
+							(creep.ticksToLive > 50 || creep.memory.creepSpawning)
+						).length;
+						
+						// Do we need a reserver ?
+						let reserversNeeded = 0;
+						// If there is no reservation, we need to start it
+						if(Game.rooms[roomInMemory].controller.reservation == undefined) {
+							reserversNeeded = 1;
+						}
+						// If there is a reservation, and it's comming to an end, we need to renew it
+						else if (Game.rooms[roomInMemory].controller.reservation.ticksToEnd < 500) {
+							reserversNeeded = 1
+						}
+						
 						treatedRoom.memory.labels.push('LDReserver')
-						treatedRoom.memory.need.push();
-						treatedRoom.memory.attached.push();
-						treatedRoom.memory.role.push();
-						treatedRoom.memory.unity.push();
-						treatedRoom.memory.targetRoom.push();
-						treatedRoom.memory.needOrigin.push();
-						treatedRoom.memory.criticalNeed.push();
+						treatedRoom.memory.need.push(reserversNeeded);
+						treatedRoom.memory.attached.push(LDReserverOfRoom);
+						treatedRoom.memory.role.push('longDistanceReserver');
+						treatedRoom.memory.unity.push('Number of creeps');
+						treatedRoom.memory.targetRoom.push(roomInMemory);
+						treatedRoom.memory.needOrigin.push('undefined');
+						treatedRoom.memory.criticalNeed.push(false);
 						*/
 						
 						
