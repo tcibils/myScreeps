@@ -49,6 +49,7 @@ module.exports = {
 					}
 					// Else we update the controller simply
 					else {
+						console.log(creep.upgradeController(creep.room.controller))
 						if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 							creep.moveTo(creep.room.controller);
 						}
