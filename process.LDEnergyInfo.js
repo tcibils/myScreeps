@@ -138,6 +138,9 @@ var processLDEnergyInfo = {
 								}
 							}
 							
+							// ISSUE HERE : What if we build a new, more concurential room ? Then it will not be assessed.
+							// Solution : if roomsAssessed.length != myRooms.length, find a new home room. Better would be to assess only the new home room...
+							
 							// If the link got destroyed, we'll need to fine a potential new home room.
 							let senderLinkDestroyed = false;
 							
@@ -232,6 +235,10 @@ var processLDEnergyInfo = {
 						}
 					}
 					
+					
+					// ISSUE HERE : for too distant rooms, the sourcesHomeRoom.length will be just 1, which might be != from the number of sources
+					// We will thus constantly try to attach a new home room, which is costly
+					// Solution : always have the same number as sourcesHomRooms as number of sources ?
 					
 					// Or we don't already have a home room, and we need to find one, and we iterate over everything
 					else {
