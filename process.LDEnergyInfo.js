@@ -140,9 +140,16 @@ var processLDEnergyInfo = {
 									}
 								}
 							}
+
+							// We also want to check it a new room has been built since we assessed the best home room
+							// In which case we want to include it in our check
+							let newRoomBuilt = false;
+							if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].length < myRooms.length) {
+								newRoomBuilt = true;
+							}
 							
-							// ISSUE HERE : What if we build a new, more concurential room ? Then it will not be assessed.
-							// Solution : if roomsAssessed.length != myRooms.length, find a new home room. Better would be to assess only the new home room...
+							// IMPROVEMENT HERE : Obviously new rooms won't have sender links. So the only point would be to add them to the alreadyTried list...?
+							
 							
 							// If the link got destroyed, we'll need to fine a potential new home room.
 							let senderLinkDestroyed = false;
@@ -153,7 +160,7 @@ var processLDEnergyInfo = {
 							
 							// Something changed for this source in this distant room !
 							// We need to update the home room of this source.
-							if(senderLinkDestroyed || numberOfSenderLinksChanged) {
+							if(senderLinkDestroyed || numberOfSenderLinksChanged || newRoomBuilt) {
 								// we find the room with the closest sender link to the said source (rather than storage)
 								let closestRoomDistance = 10000;
 								let closestRoom = null;
@@ -238,11 +245,6 @@ var processLDEnergyInfo = {
 						}
 					}
 					
-					
-					// ISSUE HERE : for too distant rooms, the sourcesHomeRoom.length will be just 1, which might be != from the number of sources
-					// We will thus constantly try to attach a new home room, which is costly
-					// Solution : always have the same number as sourcesHomRooms as number of sources ?
-					
 					// Or we don't already have a home room, and we need to find one, and we iterate over everything
 					else {
 						// So, for each source in the room
@@ -323,16 +325,20 @@ var processLDEnergyInfo = {
 							// If the room is too distant, we cancel everything
 							else {
 								// Then LD harvesting will not have to take place.
-								if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == 0) {
+								// We put one "empty" value in front of each source for consistency
+								
+								let numberOfSources = Memory.rooms[roomInMemory].sources.length;
+								
+								if(Memory.rooms[roomInMemory].sourcesHomeRooms.length < numberOfSources) {
 									Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
 								}
-								if(Memory.rooms[roomInMemory].sourcesWorkNeed.length == 0) {
+								if(Memory.rooms[roomInMemory].sourcesWorkNeed.length < numberOfSources) {
 									Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 								}
-								if(Memory.rooms[roomInMemory].sourcesCarryNeed.length == 0) {
+								if(Memory.rooms[roomInMemory].sourcesCarryNeed.length < numberOfSources) {
 									Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 								}
-								if(Memory.rooms[roomInMemory].sourcesSenderLink.length == 0) {
+								if(Memory.rooms[roomInMemory].sourcesSenderLink.length < numberOfSources) {
 									Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
 								}
 							}
@@ -345,22 +351,26 @@ var processLDEnergyInfo = {
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
 				else {
 					// Then LD harvesting will not have to take place.
-					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == 0) {
+					// We put one "empty" value in front of each source for consistency
+					
+					let numberOfSources = Memory.rooms[roomInMemory].sources.length;
+					
+					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesHomeRooms.push('null');
 					}
-					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.length == 0) {
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(0);
 					}
-					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.length == 0) {
+					if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders.push(0);
 					}
-					if(Memory.rooms[roomInMemory].sourcesWorkNeed.length == 0) {
+					if(Memory.rooms[roomInMemory].sourcesWorkNeed.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesWorkNeed.push(0);
 					}
-					if(Memory.rooms[roomInMemory].sourcesCarryNeed.length == 0) {
+					if(Memory.rooms[roomInMemory].sourcesCarryNeed.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesCarryNeed.push(0);
 					}
-					if(Memory.rooms[roomInMemory].sourcesSenderLink.length == 0) {
+					if(Memory.rooms[roomInMemory].sourcesSenderLink.length < numberOfSources) {
 						Memory.rooms[roomInMemory].sourcesSenderLink.push(0);
 					}
 				}

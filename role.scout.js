@@ -19,6 +19,7 @@ var scout = {
 		
         // We start from the hypothesis that a scout is weak and will die if some start to hit it anyways
         // Not OK ! Scout get hit by random enemy creep and room get banned from LDHarvesting... Need something better
+		// ISSUE HERE - we could simply say that we don't take rooms having no controller. It rules out center rooms and in-between rooms, it's good.
         /*
 		if(creep.hits < creep.hitsMax) {
 			creep.room.memory.dangerous = true;
