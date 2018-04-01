@@ -969,7 +969,7 @@ module.exports.loop = function () {
                                     creepBody.push(MOVE);
                                     creepBody.push(MOVE);
                                 }
-
+								// We'll have an ISSUE HERE, as we will need bigger creeps when we'll have reservers. Also, we need body for reservers,as big claim parts as possible
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
                                     creepBody.push(MOVE);
@@ -980,7 +980,7 @@ module.exports.loop = function () {
                                     creepBody.push(WORK);
                                     creepBody.push(WORK);
                                 }
-
+								
                                 // OK for spawning prototype - target room and home room
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFastMover') {
                                     for(let j = 0; j<8; j++) {
