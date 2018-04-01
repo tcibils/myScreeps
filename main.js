@@ -950,17 +950,14 @@ module.exports.loop = function () {
                                 }
 
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceBuilder') {
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                }
-
+									// Useless to do bigger than 5 work part creeps, as we're capped by the sources in target room
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 200) && j < 5; j++) {
+										creepBody.push(WORK);
+										creepBody.push(CARRY);
+										creepBody.push(MOVE);
+									}
+								}
+								
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
                                     creepBody.push(MOVE);
