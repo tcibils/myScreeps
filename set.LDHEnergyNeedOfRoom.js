@@ -84,8 +84,12 @@ var setLDHEnergyNeedOfRoom = {
 						
 						// Do we need a reserver ?
 						let reserversNeeded = 0;
+						// If we have no visibility, we definitely need to reserve the room
+						if(Game.rooms[roomInMemory] == undefined) {
+							reserversNeeded = 1;
+						}
 						// If there is no reservation, we need to start it
-						if(Game.rooms[roomInMemory].controller.reservation == undefined) {
+						else if(Game.rooms[roomInMemory].controller.reservation == undefined) {
 							reserversNeeded = 1;
 						}
 						// If there is a reservation, and it's comming to an end, we need to renew it
