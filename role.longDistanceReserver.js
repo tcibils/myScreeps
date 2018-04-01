@@ -19,11 +19,6 @@ var longDistanceReserver = {
             }
         }
         
-        else if(creep.room.name == creep.memory.homeRoom) {
-            var localExit = creep.room.findExitTo(creep.memory.targetRoom);
-            creep.moveTo(creep.pos.findClosestByRange(localExit));
-        }
-        
         else {
             var localExit = creep.room.findExitTo(creep.memory.targetRoom);
             creep.moveTo(creep.pos.findClosestByRange(localExit));

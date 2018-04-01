@@ -77,7 +77,7 @@ var setLDHEnergyNeedOfRoom = {
 						
 						// We count the existing LDSecurity for target room
 						let LDReserverOfRoom = _.filter(Game.creeps, (creep) =>
-							creep.memory.role == 'longDistanceReserver' &&
+							creep.memory.role == 'roomReserver' &&
 							creep.memory.targetRoom == roomInMemory &&
 							(creep.ticksToLive > 50 || creep.memory.creepSpawning)
 						).length;
@@ -96,7 +96,7 @@ var setLDHEnergyNeedOfRoom = {
 						treatedRoom.memory.labels.push('LDReserver')
 						treatedRoom.memory.need.push(reserversNeeded);
 						treatedRoom.memory.attached.push(LDReserverOfRoom);
-						treatedRoom.memory.role.push('longDistanceReserver');
+						treatedRoom.memory.role.push('roomReserver');
 						treatedRoom.memory.unity.push('Number of creeps');
 						treatedRoom.memory.targetRoom.push(roomInMemory);
 						treatedRoom.memory.needOrigin.push('undefined');

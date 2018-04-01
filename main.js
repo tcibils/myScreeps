@@ -981,6 +981,13 @@ module.exports.loop = function () {
                                     creepBody.push(WORK);
                                 }
 								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'roomReserver') {
+									for(let j = 0; j< Math.floor((capacityToBeUsed) / 650) && j < 13; j++) {
+										creepBody.push(CLAIM);
+										creepBody.push(MOVE);
+									}
+								}
+								
                                 // OK for spawning prototype - target room and home room
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFastMover') {
                                     for(let j = 0; j<8; j++) {
