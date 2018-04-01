@@ -6,11 +6,11 @@ var setLDHEnergyNeedOfRoom = {
 		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
-			// If the sources have home rooms defined - ISSUE HERE - THIS IS DEFINED FOR ALL ROOMS
+			// If the sources have home rooms defined
 			if(Memory.rooms[roomInMemory].sourcesHomeRooms != undefined) {
 				// For each of these sources
-				for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sourcesHomeRooms; sourceIndex++) {
-					// If the home room is the room we're treating 
+				for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sourcesHomeRooms.length; sourceIndex++) {
+					// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] == treatedRoom) {
 						
 						// We count the existing LDHarvesters for target room AND target source

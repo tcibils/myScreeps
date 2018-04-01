@@ -16,15 +16,6 @@ var scout = {
         if(creep.memory.currentRoom == undefined) {
             creep.memory.currentRoom = creep.room.name;
         }
-		
-        // We start from the hypothesis that a scout is weak and will die if some start to hit it anyways
-        // Not OK ! Scout get hit by random enemy creep and room get banned from LDHarvesting... Need something better
-		// ISSUE HERE - we could simply say that we don't take rooms having no controller. It rules out center rooms and in-between rooms, it's good.
-        /*
-		if(creep.hits < creep.hitsMax) {
-			creep.room.memory.dangerous = true;
-		}
-        */
 
         // We only try to update the room memory if we just arrived in it
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
@@ -85,6 +76,11 @@ var scout = {
 			else {
 				creep.room.memory.roomOwner = undefined;
 				creep.room.memory.roomOwnerReservation = undefined;
+				// TRICKY THAT ! If there is no controller, then we don't have an interest in LDHarvesting the room.
+				// This rules out the corridor rooms, which have neither controller nor source
+				// It also rules out central rools, which have multiple powerful sources, but no controller, and as sources are defended we currently don't know how to manage it
+				// So it conviniently rules out certain rooms with a biaised but useful and simple indicator
+				creep.room.memory.noEnergyInterest = true;
 			}
 
             // No "if" on power memory as we want to update it anyway

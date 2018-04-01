@@ -44,7 +44,7 @@ var processLDEnergyInfo = {
 				let distantRoomReserved = false;
 				let distantRoomDiplomacy = false;
 				let distantRoomNoSources = false;
-				let distantRoomDangerous = false;
+				let distantRoomNoInterest = false;
 				
 				// We check if the room has ownership
 				if(Memory.rooms[roomInMemory].roomOwner != undefined) {
@@ -69,8 +69,8 @@ var processLDEnergyInfo = {
 					distantRoomNoSources = true;
 				}
 				
-				if(Memory.rooms[roomInMemory].dangerous == true) {
-					distantRoomDangerous = true;
+				if(Memory.rooms[roomInMemory].noEnergyInterest == true) {
+					distantRoomNoInterest = true;
 				}
 				
 				// If anything is not defined yet, we define it, by security.
@@ -111,7 +111,7 @@ var processLDEnergyInfo = {
 				
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
 				// if the room is not mine
-				if(!roomIsMine && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy && !distantRoomNoSources && !distantRoomDangerous) {
+				if(!roomIsMine && !distantRoomOccupied && !distantRoomReserved && !distantRoomDiplomacy && !distantRoomNoSources && !distantRoomNoInterest) {
 					
 					// Now, either we already have the home rooms, and we'll have to assess if it's the best
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms.length == Memory.rooms[roomInMemory].sources.length){
