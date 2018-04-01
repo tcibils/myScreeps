@@ -29,7 +29,7 @@ var processLDPowerInfo = {
 				// Attack creeps
 				// En supposant qu'on utilise disons les 1400 ticks pour la destroy :
 				// 2'000'000 / 30 = 66'667 attaques nécessaires
-				// 66'667 / 1500 = 48 attaques par tour nécessaires en moyenne
+				// 66'667 / 1400 = 48 attaques par tour nécessaires en moyenne
 				// Donc : deux attack creeps, 25 attack et 25 moves chacun. 
 				// Total cost 3250, need RCL 7.
 				
@@ -43,6 +43,17 @@ var processLDPowerInfo = {
 				// Une power bank a environ 3'000 power. Un carry permet 50 à transporter. Un creep 25 move 25 carry peut donc 1250.
 				// Il faudrait donc 2 à 4 carry creeps maxés en fonction.
 				// Total cost 2500, chill sur le RCL - 6 peut être
+				
+				// Donc : on utiliserait deux rooms de niveau 8 pour être tranquille, qui créerait chacune une paire.
+				// Chaque room spawnerait en priorité le healer, vu qu'il est plus lent, et ensuite l'attack, qui le rejoindrait sur le site
+				// Le temps que ça se fasse détruire, elle spawnera les carrys.
+				
+				// Risques : on est ristret sur le nombre d'attaques, on tombe le truc en 1334 tours.
+				// Mitigation : on a donc (1500-1334)/2 = 83 tours pour aller jusqu'à la source - le divisé par 2 étant pour les healers
+				// On va jamais réussir à avoir deux rooms lvl 8 à moins de 80 de distance de la power source...
+				// Quoi que, vu ma disposition !
+				
+				// Il va falloir faire 2 volées, ou alors utiliser plus de rooms.
 			}
 		}
     }
