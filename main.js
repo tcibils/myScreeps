@@ -28,7 +28,7 @@ var processLDEnergyInfo = require('process.LDEnergyInfo');
 
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
-Game.spawns['Spawn11'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W36N48', originRoom: 'W42N48'}});
+Game.spawns['Spawn11'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W37N47', originRoom: 'W42N48'}});
 
 */
 
@@ -72,11 +72,11 @@ module.exports.loop = function () {
     var longDistancePillageRoomsCarryNeeded = [];
 
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
-    var longDistanceBuildRooms = ['W46N51'];
+    var longDistanceBuildRooms = ['W37N47'];
     // Pas s'emmerder avec l'automatique, c'est Ã  changer anyway
-    var longDistanceBuildRoomsHomeRooms = ['W43N51'];
+    var longDistanceBuildRoomsHomeRooms = ['W42N48'];
     // Number of builders to use.
-    var longDistanceBuildRoomsBuilders = [0];
+    var longDistanceBuildRoomsBuilders = [3];
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -959,6 +959,7 @@ module.exports.loop = function () {
                                 }
 
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceBuilder') {
+<<<<<<< HEAD
                                     creepBody.push(WORK);
                                     creepBody.push(WORK);
                                     creepBody.push(WORK);
@@ -970,6 +971,16 @@ module.exports.loop = function () {
                                     creepBody.push(MOVE);
                                 }
 								// We'll have an ISSUE HERE, as we will need bigger creeps when we'll have reservers. Also, we need body for reservers,as big claim parts as possible
+=======
+									// Useless to do bigger than 5 work part creeps, as we're capped by the sources in target room
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 200) && j < 5; j++) {
+										creepBody.push(WORK);
+										creepBody.push(CARRY);
+										creepBody.push(MOVE);
+									}
+								}
+								
+>>>>>>> master
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
                                     creepBody.push(MOVE);
