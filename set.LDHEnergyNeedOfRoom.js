@@ -50,7 +50,28 @@ var setLDHEnergyNeedOfRoom = {
 						treatedRoom.memory.needOrigin.push(Memory.rooms[roomInMemory].sources[sourceIndex]);
 						treatedRoom.memory.criticalNeed.push(false);
 						
-						// ISSUE HERE : we do not create the LDSecurity needs
+						
+						// We count the existing LDSecurity for target room
+						let LDSecurityOfSource = _.filter(Game.creeps, (creep) =>
+							creep.memory.role == 'longDistanceSecurity' &&
+							creep.memory.targetRoom == roomInMemory &&
+							(creep.ticksToLive > 50 || creep.memory.creepSpawning)
+						).length;
+						
+						// We also count if some creeps are attacked, which will define the need
+						let creepsUnderAttack = _.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == roomInMemory && creep.memory.underAttack == true && creep.getActiveBodyparts(MOVE) > 0)
+						
+						// Create the LDSecurity need for the treated room as well
+						treatedRoom.memory.labels.push('LDSecurity')
+						if	   (creepsUnderAttack.length > 0) {treatedRoom.memory.need.push(1);}
+						else if(creepsUnderAttack.length == 0){treatedRoom.memory.need.push(0);}
+						treatedRoom.memory.attached.push(LDSecurityOfSource);
+						treatedRoom.memory.role.push('longDistanceSecurity');
+						treatedRoom.memory.unity.push('Number of creeps');
+						treatedRoom.memory.targetRoom.push(roomInMemory);
+						treatedRoom.memory.needOrigin.push('undefined');
+						treatedRoom.memory.criticalNeed.push(false);
+						
 						
 						/*  // Reserver creep for the room as well ?
 						treatedRoom.memory.labels.push('LDReserver')
