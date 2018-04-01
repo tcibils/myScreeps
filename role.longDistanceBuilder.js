@@ -49,7 +49,7 @@ module.exports = {
 					}
 					// Else we update the controller simply
 					else {
-						if(creep.upgraderController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+						if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 							creep.moveTo(creep.room.controller);
 						}
 					}					
