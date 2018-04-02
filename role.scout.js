@@ -123,8 +123,8 @@ var scout = {
         }
 
 		
-		if(creep.memory.targetRoom == creep.room.name) {
-			creep.memory.targetRoom = undefined;
+		if(creep.memory.targetRoom == creep.room.name || creep.memory.targetRoom == undefined) {
+			creep.memory.targetRoom = "undefined";
 		}
 
         // If we just arrived in a new room, or don't know where to go

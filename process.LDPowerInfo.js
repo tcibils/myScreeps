@@ -27,6 +27,14 @@ var processLDPowerInfo = {
 							Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance = [];
 						}
 						
+						if(Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms == undefined) {
+							Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms = [];
+						}
+						
+						if(Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance == undefined) {
+							Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance = [];
+						}
+						
 						if(Memory.rooms[roomInMemory].powerSourcesAttackNeed == undefined) {
 							Memory.rooms[roomInMemory].powerSourcesAttackNeed = [];
 						}
@@ -36,6 +44,9 @@ var processLDPowerInfo = {
 						}
 						
 						if(Memory.rooms[roomInMemory].powerSourcesCarryNeed == undefined) {
+							Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
+						}
+						if(Memory.rooms[roomInMemory].powerSourcesAssessed == undefined) {
 							Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
 						}
 						
@@ -60,14 +71,22 @@ var processLDPowerInfo = {
 							// ISSUE HERE - make it true somehow ?
 							// On n'aura pas besoin de faire la recherche à chaque fois, une seule fois devrait suffire. C'est pas comme les sources avec les nouvelles rooms construites.					
 							
+							
+							// Condition 4 : not having found the necessary already
+							let powerSourceAlreadyTreated = false;
+							if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length == Memory.rooms[roomInMemory].powerSources.length) {
+								powerSourceAlreadyTreated = true;
+							}
+							
+							
 							// If we have the above conditions
-							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready) {
+							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated) {
 								// We assess the distances - not before, as this is way more costly to do.
 								// We will need two rooms in order to make it fast enough.
 								let firstClosestRoomDistance = 10000;
-								let firstClosestRoom = null;
+								let firstClosestRoom = 'null';
 								let secondClosestRoomDistance = 10000;
-								let secondClosestRoom = null;
+								let secondClosestRoom = 'null';
 								
 								let potentialHomeRoomsDistances = [];
 								let potentialHomeRooms = [];
@@ -81,7 +100,7 @@ var processLDPowerInfo = {
 								// For each of my room being level 8
 								for(let myRoomIndex = 0; myRoomIndex < myRoomsLevelEight.length; myRoomIndex++) {
 									// First spawn of the room - approximation as they are generaly grouped... Would be too CPU expensive to check all spawns
-									let spawnPosition = Game.getObjectById(myRoomsLevelEight[myRoomIndex].memory.spawningPointsPos[0]).pos;
+									let spawnPosition = Game.getObjectById(myRoomsLevelEight[myRoomIndex].memory.spawningPoints[0]).pos;
 									
 									// We find the ideal path between the two
 									// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
@@ -120,7 +139,9 @@ var processLDPowerInfo = {
 									homeRoomsDistances.push(secondClosestRoomDistance);
 									
 									Memory.rooms[roomInMemory].powerSourcesHomeRooms.push(homeRooms);
-									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance(homeRoomsDistances);
+									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push(homeRoomsDistances);
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push(potentialHomeRooms);
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
 									
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
@@ -129,7 +150,9 @@ var processLDPowerInfo = {
 								// If the closest home rooms are too far, we don't bother.
 								else {
 									Memory.rooms[roomInMemory].powerSourcesHomeRooms.push('null');
-									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance('null');
+									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push('null');
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push(potentialHomeRooms);
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(0);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
 									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
@@ -138,11 +161,28 @@ var processLDPowerInfo = {
 							
 							// If the power source do not meet the first criterias, we don't bother
 							else {
-								Memory.rooms[roomInMemory].powerSourcesHomeRooms.push('null');
-								Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push('null');
-								Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(0);
-								Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
-								Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
+								
+								if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesHomeRooms.push('null');
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push('null');
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push('null');
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push('null');
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesAttackNeed.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(0);
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesHealNeed.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
+								}
+								if(Memory.rooms[roomInMemory].powerSourcesCarryNeed.length < Memory.rooms[roomInMemory].powerSources.length) {
+									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
+								}
 							}
 							
 							// "Garbage collection" : we clean up the memory. Expiry is enough, no need to check if it's been destroyed.
@@ -153,6 +193,8 @@ var processLDPowerInfo = {
 								// We clean the memory of the whole room.
 								delete Memory.rooms[roomInMemory];
 							}
+							
+
 						}
 					}
 			// On va spawner 
