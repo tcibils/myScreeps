@@ -119,6 +119,7 @@ var processLDEnergyInfo = {
 						// So, for each source in the room
 						for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {
 							
+							
 							// Maybe one of my rooms built a sender link that made it more competitive.
 							let numberOfSenderLinksChanged = false;
 							
@@ -140,11 +141,12 @@ var processLDEnergyInfo = {
 									}
 								}
 							}
+							
 
 							// We also want to check it a new room has been built since we assessed the best home room
 							// In which case we want to include it in our check
 							let newRoomBuilt = false;
-							if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].length < myRooms.length) {
+							if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex].length < myRoomsWithSenderLink.length) {
 								newRoomBuilt = true;
 							}
 							
