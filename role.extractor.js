@@ -52,6 +52,9 @@ var roleExtractor = {
                 if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_OXYGEN) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Game.getObjectById(creep.memory.depositTarget));
                 }
+				if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_LEMERGIUM) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget));
+                }
             }
             
             if(_.sum(creep.carry) == 0 && creep.ticksToLive > 50) {
