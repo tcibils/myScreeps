@@ -71,16 +71,17 @@ var processLDPowerInfo = {
 						let homeRoomsDistances = [];
 						let homeRooms = [];
 						
+						// Position : the position of the power source, retrieved from memory - we need to re-create it
+						let powerSourcePosition = new RoomPosition(Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].x, Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].y, Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].roomName);
+
 						// For each of my room being level 8
 						for(let myRoomIndex = 0; myRoomIndex < myRoomsLevelEight.length; myRoomIndex++) {
-							// First position : first spawn of the room - approximation as they are generaly grouped... Would be too CPU expensive to check all spawns
-							let firstPosition = Game.getObjectById(myRoomsLevelEight[myRoomIndex].memory.spawningPointsPos[0]).pos;
-							// Second position : the position of the power source, retrieved from memory - we need to re-create it
-							let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].x, Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].y, Memory.rooms[roomInMemory].powerSourcesPos[powerSourceIndex].roomName);
+							// First spawn of the room - approximation as they are generaly grouped... Would be too CPU expensive to check all spawns
+							let spawnPosition = Game.getObjectById(myRoomsLevelEight[myRoomIndex].memory.spawningPointsPos[0]).pos;
 							
 							// We find the ideal path between the two
 							// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
-							let idealPath = PathFinder.search(firstPosition, secondPosition);
+							let idealPath = PathFinder.search(spawnPosition, powerSourcePosition);
 							
 							let currentDistance = 10000;
 							if(idealPath != undefined) {
@@ -88,14 +89,17 @@ var processLDPowerInfo = {
 								currentDistance = idealPath.path.length;
 							}
 							
-							// We get the closest rooms.
-							if(currentDistance < firstClosestRoomDistance) {
-								firstClosestRoomDistance = currentDistance;
-								firstClosestRoom = myRoomsLevelEight[myRoomIndex].name;
-							}
-							else if (currentDistance < secondClosestRoomDistance) {
-								secondClosestRoomDistance = currentDistance;
-								secondClosestRoom = myRoomsLevelEight[myRoomIndex].name;
+							// If we get a distance better than what we have so far
+							if(currentDistance < firstClosestRoomDistance || currentDistance < secondClosestRoomDistance) {
+								// We set this new distance as the new optimum for the worst of the two possibilities we have
+								if(firstClosestRoomDistance < secondClosestRoomDistance) {
+									secondClosestRoomDistance = currentDistance;
+									secondClosestRoom = myRoomsLevelEight[myRoomIndex].name;
+								}
+								else {
+									firstClosestRoomDistance = currentDistance;
+									firstClosestRoom = myRoomsLevelEight[myRoomIndex].name;
+								}
 							}
 						}
 						
