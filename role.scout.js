@@ -122,31 +122,44 @@ var scout = {
 
         }
 
-
+		
+		if(creep.memory.targetRoom == creep.room.name) {
+			creep.memory.targetRoom = undefined;
+		}
 
         // If we just arrived in a new room, or don't know where to go
         if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined) {
-            // We define the possibilities, checking which exit exist
-            let possibilities = [];
+			if(creep.memory.targetRoom == undefined) {
+				// We define the possibilities, checking which exit exist
+				let possibilities = [];
 
-            if(creep.room.find(FIND_EXIT_TOP).length > 0) {
-                possibilities.push(FIND_EXIT_TOP);
-            }
-            if(creep.room.find(FIND_EXIT_RIGHT).length > 0) {
-                possibilities.push(FIND_EXIT_RIGHT);
-            }
-            if(creep.room.find(FIND_EXIT_BOTTOM).length > 0) {
-                possibilities.push(FIND_EXIT_BOTTOM);
-            }
-            if(creep.room.find(FIND_EXIT_LEFT).length > 0) {
-                possibilities.push(FIND_EXIT_LEFT);
-            }
+				if(creep.room.find(FIND_EXIT_TOP).length > 0) {
+					possibilities.push(FIND_EXIT_TOP);
+				}
+				if(creep.room.find(FIND_EXIT_RIGHT).length > 0) {
+					possibilities.push(FIND_EXIT_RIGHT);
+				}
+				if(creep.room.find(FIND_EXIT_BOTTOM).length > 0) {
+					possibilities.push(FIND_EXIT_BOTTOM);
+				}
+				if(creep.room.find(FIND_EXIT_LEFT).length > 0) {
+					possibilities.push(FIND_EXIT_LEFT);
+				}
 
-            // And we take one at random, store it in the memory, and make the room we're in the current room.
-            let randomResult = Math.floor(Math.random() * possibilities.length);
-            creep.memory.targetRoomDirection = possibilities[randomResult];
-            creep.memory.currentRoom = creep.room.name;
+				// And we take one at random, store it in the memory, and make the room we're in the current room.
+				let randomResult = Math.floor(Math.random() * possibilities.length);
+				creep.memory.targetRoomDirection = possibilities[randomResult];
+				
+			}
+			else {
+				var localExit = creep.room.findExitTo(creep.memory.targetRoom);
+				// And we move towards our target !
+				creep.memory.targetRoomDirection = localExit;
+			}
+			creep.memory.currentRoom = creep.room.name;
         }
+		
+
 
 
 
