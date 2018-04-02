@@ -110,13 +110,14 @@ var scout = {
 					var counter = 0;
 					for(var a = -1; a<=1; a++) {
 						for(var b = -1; b<=1; b++) {
-							let terrainToBeAssessed = Game.map.getTerrainAt(powerSourcesOfRoom[currentPowerSourceIndex].pos.x + a, powerSourcesOfRoom[currentPowerSourceIndex].pos.y + b, creep.room.name):
+							let terrainToBeAssessed = Game.map.getTerrainAt(powerSourcesOfRoom[currentPowerSourceIndex].pos.x + a, powerSourcesOfRoom[currentPowerSourceIndex].pos.y + b, creep.room.name);
 							if (terrainToBeAssessed == 'plain' || terrainToBeAssessed == 'swamp') {
 								counter ++;
 							}
-						¨}
+						}
 					}
-					creep.room.memory.powerSourceFreeSpots.push(counter);
+                    creep.room.memory.powerSourceFreeSpots.push(counter);
+                }
             }
 
         }
@@ -153,7 +154,7 @@ var scout = {
         // If there is a controller
         if(creep.room.controller != undefined) {
             // That neither me or Ringo signed (diplomacy...)
-            if((creep.room.controller.sign.username != "Blaugaard" && creep.room.controller.sign.username != "Ringo86") || creep.room.controller.sign == undefined) {
+            if(creep.room.controller.sign.username != "Blaugaard" && creep.room.controller.sign.username != "Ringo86") {
                 // Then we sign it =)
                 if(creep.signController(creep.room.controller, "Join #overlords alliance, find us on Slack! Also, fuck Quorum's auto-signing room bot.") == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
@@ -174,6 +175,6 @@ var scout = {
 
 
     }
-}
+};
 
 module.exports = scout;
