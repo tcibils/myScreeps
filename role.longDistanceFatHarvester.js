@@ -67,13 +67,13 @@ var longDistanceFatHarvester = {
                 if(Game.getObjectById(creep.memory.attachedContainer) == null && Game.getObjectById(creep.memory.attachedSource) != undefined) {
 
                     // Step 3 : go to source
-                    if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.attachedSource).pos) > 1) {
+                    if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.attachedSource).pos) > 2) {
                         creep.moveTo(Game.getObjectById(creep.memory.attachedSource), {visualizePathStyle: {stroke: '#ffbc11'}, reusePath: 3, maxRooms: 1});
 
                     }
 
                     // Step 4 : get container
-                    if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.attachedSource).pos) <= 1) {
+                    if(creep.pos.getRangeTo(Game.getObjectById(creep.memory.attachedSource).pos) <= 2) {
                         // But we only look for one if there are no construction sites attached  -which would be our container, being build !
                         if(Game.getObjectById(creep.memory.attachedConstructionContainer) == null) {
                             // We look for the closest close container
