@@ -34,6 +34,14 @@ var buildingTerminal = {
                     console.log('Selling ' + Math.min(buyOrdersUtrium[0].amount, terminal.store[RESOURCE_UTRIUM]) + ' Utrium, at price ' + buyOrdersUtrium[0].price +', result : ' + Game.market.deal(buyOrdersUtrium[0].id, Math.min(buyOrdersUtrium[0].amount, terminal.store[RESOURCE_UTRIUM]), terminal.room.name))
                 }
             }
+			
+			if(terminal.store[RESOURCE_LEMERGIUM] > 0) {
+                let buyOrdersLemergium = Game.market.getAllOrders(order => order.resourceType == RESOURCE_LEMERGIUM && order.type == ORDER_BUY && order.price > 0.15);
+                _.sortBy(buyOrdersLemergium, ['price']);
+                if(!terminal.cooldown && buyOrdersLemergium.length > 0) {
+                    console.log('Selling ' + Math.min(buyOrdersLemergium[0].amount, terminal.store[RESOURCE_LEMERGIUM]) + ' Lemergium, at price ' + buyOrdersLemergium[0].price +', result : ' + Game.market.deal(buyOrdersLemergium[0].id, Math.min(buyOrdersLemergium[0].amount, terminal.store[RESOURCE_LEMERGIUM]), terminal.room.name))
+                }
+            }
             
             if(terminal.store[RESOURCE_OXYGEN] > 0) {
                 let buyOrdersOxygen = Game.market.getAllOrders(order => order.resourceType == RESOURCE_OXYGEN && order.type == ORDER_BUY && order.price > 0.071);
