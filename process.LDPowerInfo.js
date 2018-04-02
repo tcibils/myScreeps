@@ -139,7 +139,7 @@ var processLDPowerInfo = {
 							// If the power source do not meet the first criterias, we don't bother
 							else {
 								Memory.rooms[roomInMemory].powerSourcesHomeRooms.push('null');
-								Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance('null');
+								Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push('null');
 								Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(0);
 								Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
 								Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);

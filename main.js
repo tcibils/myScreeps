@@ -47,8 +47,8 @@ module.exports.loop = function () {
 
     // Information display in console variables
     var showLongDistanceDashboard = false;
-    var showRoomSpawn = true;
-    var showRoomDashboard = true;
+    var showRoomSpawn = false;
+    var showRoomDashboard = false;
     var showRoomDashboardToDisplay = 'W46N51';
     var naturallyDeadTime = 100;
 
