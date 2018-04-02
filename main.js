@@ -25,6 +25,7 @@ var roleExtractor = require('role.extractor');
 var roleLongDistanceReserver = require('role.longDistanceReserver');
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 var processLDEnergyInfo = require('process.LDEnergyInfo');
+var processLDPowerInfo = require('process.LDPowerInfo');
 
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
@@ -1183,5 +1184,6 @@ module.exports.loop = function () {
 
     }
     processLDEnergyInfo.run();
+	processLDPowerInfo.run();
     // console.log('Step 21 : ' + Game.cpu.getUsed() + ', after setting ALL roles')
 }
