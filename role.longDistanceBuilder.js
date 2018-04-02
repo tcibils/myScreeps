@@ -18,32 +18,41 @@ module.exports = {
             if(creep.memory.building) {
                 // While we have some energy
                 if(creep.carry[RESOURCE_ENERGY] > 0) {
-                    // If we do not have a building target
-                    if(Game.getObjectById(creep.memory.targetBuilding) == null || Game.getObjectById(creep.memory.targetBuilding).progressTotal == Game.getObjectById(creep.memory.targetBuilding).progress ){
-                        // We find the closest one
-                        var primaryTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}});
-                        // console.log(buildingPotentialTarget)
-                        if(primaryTarget != null) {
-                            creep.memory.targetBuilding = primaryTarget.id;
-                        }
-                        if(primaryTarget == null) {
-                            var secondaryTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-                            // console.log(buildingPotentialTarget)
-                            if(secondaryTarget != null) {
-                                creep.memory.targetBuilding = secondaryTarget.id;
-                            }
-                            if(secondaryTarget == null) {
-                                // Is an issue : home room was spamming creeps to compensate this
-                                // creep.memory.role = 'harvester';
-                            }
-                        }
-                    }
-                    
-                    else {
-                        if(creep.build(Game.getObjectById(creep.memory.targetBuilding)) == ERR_NOT_IN_RANGE ) {
-                            creep.moveTo(Game.getObjectById(creep.memory.targetBuilding));
-                        }
-                    }                  
+					// If there is something to build - and that should be the case !
+					if(creep.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+						// If we do not have a building target
+						if(Game.getObjectById(creep.memory.targetBuilding) == null || Game.getObjectById(creep.memory.targetBuilding).progressTotal == Game.getObjectById(creep.memory.targetBuilding).progress ){
+							// We find the closest one
+							var primaryTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}});
+							// console.log(buildingPotentialTarget)
+							if(primaryTarget != null) {
+								creep.memory.targetBuilding = primaryTarget.id;
+							}
+							if(primaryTarget == null) {
+								var secondaryTarget = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+								// console.log(buildingPotentialTarget)
+								if(secondaryTarget != null) {
+									creep.memory.targetBuilding = secondaryTarget.id;
+								}
+								if(secondaryTarget == null) {
+									// Is an issue : home room was spamming creeps to compensate this
+									// creep.memory.role = 'harvester';
+								}
+							}
+						}
+						
+						else {
+							if(creep.build(Game.getObjectById(creep.memory.targetBuilding)) == ERR_NOT_IN_RANGE ) {
+								creep.moveTo(Game.getObjectById(creep.memory.targetBuilding));
+							}
+						}    
+					}
+					// Else we update the controller simply
+					else {
+						if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(creep.room.controller);
+						}
+					}					
                 }
                 
 
