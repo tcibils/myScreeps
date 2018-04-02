@@ -92,6 +92,8 @@ var scout = {
             creep.room.memory.powerSourcesHitsMax = [];
             creep.room.memory.powerSourcesTime = [];
             creep.room.memory.powerSourcesDiscoveryTime = [];
+            creep.room.memory.freeSpots = [];
+			
 
             var powerSourcesOfRoom = creep.room.find(FIND_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_BANK}});
 
@@ -104,7 +106,17 @@ var scout = {
                     creep.room.memory.powerSourcesHitsMax.push(powerSourcesOfRoom[currentPowerSourceIndex].hitsMax);
                     creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[currentPowerSourceIndex].ticksToDecay);
                     creep.room.memory.powerSourcesDiscoveryTime.push(Game.time);
-                }
+					
+					var counter = 0;
+					for(var a = -1; a<=1; a++) {
+						for(var b = -1; b<=1; b++) {
+							let terrainToBeAssessed = Game.map.getTerrainAt(powerSourcesOfRoom[currentPowerSourceIndex].pos.x + a, powerSourcesOfRoom[currentPowerSourceIndex].pos.y + b, creep.room.name):
+							if (terrainToBeAssessed == 'plain' || terrainToBeAssessed == 'swamp') {
+								counter ++;
+							}
+						¨}
+					}
+					creep.room.memory.freeSpots.push(counter);
             }
 
         }

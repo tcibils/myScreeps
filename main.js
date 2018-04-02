@@ -959,19 +959,6 @@ module.exports.loop = function () {
                                 }
 
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceBuilder') {
-<<<<<<< HEAD
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                }
-								// We'll have an ISSUE HERE, as we will need bigger creeps when we'll have reservers. Also, we need body for reservers,as big claim parts as possible
-=======
 									// Useless to do bigger than 5 work part creeps, as we're capped by the sources in target room
                                     for(let j = 0; j< Math.floor((capacityToBeUsed) / 200) && j < 5; j++) {
 										creepBody.push(WORK);
@@ -979,8 +966,7 @@ module.exports.loop = function () {
 										creepBody.push(MOVE);
 									}
 								}
-								
->>>>>>> master
+				
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
                                     creepBody.push(MOVE);
