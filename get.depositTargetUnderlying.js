@@ -15,7 +15,7 @@
         // Control variables leting us set the maximum in each type of storage before moving on to the extensions and spawn
         let maximumFillingOfContainer = 1750;
         let maximumFillingOfStorageOne = 37500; 
-        let maximumFillingOfStorageTwo = 900000;
+        let maximumFillingOfStorageTwo = 650000;
         let maximumFillingOfTerminal = 20000;
         // keeping this high should ensure us that when spawning an upgrader creep, we will have enough to feed him for a loong time.
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DEPOSITTARGET
