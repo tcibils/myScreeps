@@ -69,7 +69,12 @@ var processLDEnergyInfo = {
 					}
 				}
 				
-				if(Memory.rooms[roomInMemory].sources.length == 0) {
+				if(Memory.rooms[roomInMemory].sources != undefined) {
+					if(Memory.rooms[roomInMemory].sources.length == 0) {
+						distantRoomNoSources = true;
+					}
+				}
+				else {
 					distantRoomNoSources = true;
 				}
 				

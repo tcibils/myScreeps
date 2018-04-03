@@ -12,7 +12,7 @@ var setLDHEnergyNeedOfRoom = {
 				// For each of these sources
 				for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms.length; powerSourceIndex++) {
 					// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
-					if(Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex] == treatedRoom) {
+					if(Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex] == treatedRoom.name) {
 					
 						
 						// ------------ Attackers
@@ -25,7 +25,7 @@ var setLDHEnergyNeedOfRoom = {
 						).length;
 						
 						// And create the LDAttackerPower need for the treated room
-						treatedRoom.memory.labels.push('LDAttackerPower')
+						treatedRoom.memory.labels.push('LDAttackerPower target room ' + roomInMemory + ' power source ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex])
 						treatedRoom.memory.need.push(Memory.rooms[roomInMemory].powerSourcesAttackNeed[powerSourceIndex]);
 						treatedRoom.memory.attached.push(LDAttackersOfPowerSource);
 						treatedRoom.memory.role.push('longDistanceAttackerPower');
@@ -46,7 +46,7 @@ var setLDHEnergyNeedOfRoom = {
 						).length;
 						
 						// And create the LDHealerPower need for the treated room
-						treatedRoom.memory.labels.push('LDHealerPower')
+						treatedRoom.memory.labels.push('LDHealerPower target room ' + roomInMemory + ' power source ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex])
 						treatedRoom.memory.need.push(Memory.rooms[roomInMemory].powerSourcesHealNeed[powerSourceIndex]);
 						treatedRoom.memory.attached.push(LDFHealersOfPowerSource);
 						treatedRoom.memory.role.push('longDistanceHealerPower');
@@ -67,7 +67,7 @@ var setLDHEnergyNeedOfRoom = {
 						).length;						
 						
 						// Create the LDCarryPower need for the treated room as well
-						treatedRoom.memory.labels.push('LDSecurity');
+						treatedRoom.memory.labels.push('LDCarryPower target room ' + roomInMemory + ' power source ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex]);
 						treatedRoom.memory.need.push(Memory.rooms[roomInMemory].powerSourcesCarryNeed[powerSourceIndex]);
 						treatedRoom.memory.attached.push(LDCarrysOfPowerSource);
 						treatedRoom.memory.role.push('longDistanceCarryPower');

@@ -49,8 +49,8 @@ module.exports.loop = function () {
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
-    var showRoomDashboard = false;
-    var showRoomDashboardToDisplay = 'W46N51';
+    var showRoomDashboard = true;
+    var showRoomDashboardToDisplay = 'W43N51';
     var naturallyDeadTime = 100;
 
     // Room to pillage. To be emptied manually when finished.
@@ -213,6 +213,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceSecurity');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
+        myRooms[currentRoomIndex].memory.priorities.push('roomReserver');
         myRooms[currentRoomIndex].memory.priorities.push('builder');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceBuilder');
         myRooms[currentRoomIndex].memory.priorities.push('repairer');
@@ -232,9 +233,6 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.needOrigin = [];
         myRooms[currentRoomIndex].memory.criticalNeed = [];
 		
-		// Using scout info to define the LD Harvesting needs
-		setLDHEnergyNeedOfRoom(myRooms[currentRoomIndex]);
-	
         // Looping on sources
         if(myRooms[currentRoomIndex].memory.sources.length > 0) {
             for(let currentSourceIndex = 0; currentSourceIndex < myRooms[currentRoomIndex].memory.sources.length; currentSourceIndex++) {
@@ -621,6 +619,9 @@ module.exports.loop = function () {
             myRooms[currentRoomIndex].memory.need.push(0);
         }
 
+		
+		// Using scout info to define the LD Harvesting needs
+		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY
@@ -644,7 +645,8 @@ module.exports.loop = function () {
         else {
             myRooms[currentRoomIndex].memory.underAttack = false;
         }
-    }
+		
+	}
 
 
 
@@ -787,7 +789,7 @@ module.exports.loop = function () {
                                 // OK for spawning prototype
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'spreaderEfficient') {
                                     // !!! energyCapacity et pas energyCapacityAvailable : normal, si j'en ai pas, je meurs !
-                                    for(let j=0; j< Math.floor((capacityToBeUsed) /150) && j<5; j++) {
+                                    for(let j=0; j< Math.floor((capacityToBeUsed) /150) && j<8; j++) {
                                         creepBody.push(CARRY);
                                         creepBody.push(CARRY);
                                         creepBody.push(MOVE);
@@ -853,17 +855,18 @@ module.exports.loop = function () {
 				
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
+									let maxNumberBodyParts = 5;
+                                    for(let j = 0; j < maxNumberBodyParts; j++) {
+										creepBody.push(MOVE);
+									}
+                                    creepBody.push(CARRY);		
+                                    for(let j = 0; j < maxNumberBodyParts; j++) {
+										creepBody.push(WORK);
+									}																	
                                 }
 								
 								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'roomReserver') {
-									for(let j = 0; j< Math.floor((capacityToBeUsed) / 650) && j < 13; j++) {
+									for(let j = 0; j< Math.floor((capacityToBeUsed) / 650) && j < 7; j++) {
 										creepBody.push(CLAIM);
 										creepBody.push(MOVE);
 									}
