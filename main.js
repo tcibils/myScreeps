@@ -26,6 +26,7 @@ var roleLongDistanceReserver = require('role.longDistanceReserver');
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 var processLDEnergyInfo = require('process.LDEnergyInfo');
 var processLDPowerInfo = require('process.LDPowerInfo');
+var setLDHEnergyNeedOfRoom = require('set.LDHEnergyNeedOfRoom');
 
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
@@ -52,19 +53,6 @@ module.exports.loop = function () {
     var showRoomDashboardToDisplay = 'W46N51';
     var naturallyDeadTime = 100;
 
-
-    // INPUT TABLES for long distance harvesting. Just add the room in the first table, and the number of sources in the second.
-    // Long distance target rooms
-    var longDistanceTargetRooms = ['W42N51','W44N51','W41N52','W44N52','W43N52','W43N49','W42N49','W43N48','W41N49','W41N48','W42N46','W42N44','W41N45','W43N45','W42N47','W45N51','W46N52','W47N52'];
-    // Number of source to harvest in each room
-    var longDistanceTargetRoomsSources = [1,1,1,1,1,1,1,2,1,1,2,2,1,1,1,2,1,1];
-    // Carrys needed for each room
-    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,4,2,2];
-    // If the harvesters should be able to defend themselves
-    var longDistanceTargetRoomsAgressive = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-    // Home rooms spawning creeps. If "null", then automatically computed.
-    var longDistanceTargetRoomsHomeRooms = ['null','null','null','null','null','null','null','null','W42N48','null','null','null','null','null','null','null','null','null'];
-
     // Room to pillage. To be emptied manually when finished.
     var longDistancePillageRooms = [];
     // Warriors not needed for storage looting. For terminals ?
@@ -83,9 +71,6 @@ module.exports.loop = function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
     // Cleaning up memeory
     for(var i in Memory.creeps) {
         if(!Game.creeps[i]) {
@@ -97,7 +82,6 @@ module.exports.loop = function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- ROOM MANAGEMENT ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-
 
 
     // Array with my rooms, and with rooms names
@@ -247,8 +231,10 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.targetRoom = [];
         myRooms[currentRoomIndex].memory.needOrigin = [];
         myRooms[currentRoomIndex].memory.criticalNeed = [];
-
-
+		
+		// Using scout info to define the LD Harvesting needs
+		setLDHEnergyNeedOfRoom(myRooms[currentRoomIndex]);
+	
         // Looping on sources
         if(myRooms[currentRoomIndex].memory.sources.length > 0) {
             for(let currentSourceIndex = 0; currentSourceIndex < myRooms[currentRoomIndex].memory.sources.length; currentSourceIndex++) {
@@ -666,107 +652,12 @@ module.exports.loop = function () {
     // -------------------------------------- LONG DISTANCE HARVESTING ---------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
-
-
-    // Automatically filled tables for long distance harvesting.
-    var longDistanceTargetRoomsFattysAttached = [];
-    var longDistanceTargetRoomsCarryAttached = [];
-    var longDistanceTargetRoomsSecurityNeeded = [];
-    var longDistanceTargetRoomsSecurityAttached = [];
-
     var longDistancePillageRoomsHomeRooms = [];
     var longDistancePillageRoomsWarriorAttached = [];
     var longDistancePillageRoomsCarryAttached = [];
 
-    // Long distance table filling
-    for(let i = 0; i<longDistanceTargetRooms.length; i++) {
-        if(longDistanceTargetRoomsHomeRooms[i] == 'null')
-        {
-            // Push on the home rooms
-            let closestRoomDistance = 1000;
-            let closestRoom = null;
-            for(let j = 0; j<myRooms.length; j++) {
-                let currentDistance = Game.map.findRoute(myRooms[j].name, longDistanceTargetRooms[i]).length;
-                if(currentDistance < closestRoomDistance && currentDistance <=3 && myRooms[j].energyCapacityAvailable > 1000 && myRooms[j].find(FIND_MY_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_STORAGE)}}).length > 0) {
-                    closestRoomDistance = currentDistance;
-                    closestRoom = myRooms[j].name;
-                }
-            }
-            longDistanceTargetRoomsHomeRooms[i] = closestRoom;
-        }
-        // Push on carry needed
-        // longDistanceTargetRoomsCarryNeeded.push(2*closestRoomDistance*longDistanceTargetRoomsSources[i] -1);
-
-        // Push on the fattys attached
-        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceFatHarvester' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
-        ).length);
-
-        // Push on the carry attached
-        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceFastMover' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
-        ).length);
-
-        if(_.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == longDistanceTargetRooms[i] && creep.memory.underAttack == true && creep.getActiveBodyparts(MOVE) > 0).length > 0) {
-            longDistanceTargetRoomsSecurityNeeded.push(1);
-        }
-        else if(_.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == longDistanceTargetRooms[i] && creep.memory.underAttack == true  && creep.getActiveBodyparts(MOVE) > 0).length == 0) {
-            longDistanceTargetRoomsSecurityNeeded.push(0);
-        }
-
-        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceSecurity' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 50 || creep.memory.creepSpawning)
-        ).length);
-
-    }
-
-
-    // Linking info with room needs
-
     // For each room,
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
-        // And for each long distance target room,
-        for(let currentLongDistanceRoomIndex = 0; currentLongDistanceRoomIndex < longDistanceTargetRoomsHomeRooms.length; currentLongDistanceRoomIndex++) {
-            // If the current room is the same as the home room of the LDTRoom
-            if(myRoomsNames[currentRoomIndex] == longDistanceTargetRoomsHomeRooms[currentLongDistanceRoomIndex]) {
-                // We first push the need for LDFHarvesters
-                myRooms[currentRoomIndex].memory.labels.push('LDFH target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsSources[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsFattysAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceFatHarvester');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // Then we push the need for the carrys
-                myRooms[currentRoomIndex].memory.labels.push('LDFM target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsCarryNeeded[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsCarryAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceFastMover');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // And finaly the security
-                myRooms[currentRoomIndex].memory.labels.push('LDS target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsSecurityNeeded[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsSecurityAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceSecurity');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-            }
-        }
-
         // Long distance builders table filling
         for(let currentLongDistanceBuildRoomIndex = 0; currentLongDistanceBuildRoomIndex < longDistanceBuildRooms.length; currentLongDistanceBuildRoomIndex++) {
             if(myRoomsNames[currentRoomIndex] == longDistanceBuildRoomsHomeRooms[currentLongDistanceBuildRoomIndex]) {
@@ -795,15 +686,7 @@ module.exports.loop = function () {
 
 
     if(showLongDistanceDashboard) {
-        console.log('Long Distance Harvesting Dashboard :')
-        console.log('Room targets : ' + longDistanceTargetRooms)
-        console.log('Homes        : ' + longDistanceTargetRoomsHomeRooms)
-        console.log('Sources      : ' + longDistanceTargetRoomsSources)
-        console.log('Fatty atta   : ' + longDistanceTargetRoomsFattysAttached)
-        console.log('Carrys need  : ' + longDistanceTargetRoomsCarryNeeded)
-        console.log('Carrys atta  : ' + longDistanceTargetRoomsCarryAttached)
-        console.log('Security need: ' + longDistanceTargetRoomsSecurityNeeded)
-        console.log('Security atta: ' + longDistanceTargetRoomsSecurityAttached)
+		// To be rebuilt
     }
 
     if(showRoomDashboard) {
