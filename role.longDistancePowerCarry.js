@@ -34,6 +34,10 @@ var rolePowerCarry = {
 			if(potentialTarget != undefined) {
 				creep.memory.foundPowerToPickup = true;
 				creep.memory.powerToPickup = potentialTarget.id;
+				creep.memory.powerToPickupPos = potentialTarget.pos;
+			}
+			if(potentialTarget == undefined) {
+				creep.say('zZzZ');
 			}
 		}
 		
@@ -42,7 +46,8 @@ var rolePowerCarry = {
 				creep.moveTo(Game.getObjectById(creep.memory.powerToPickup));
 			}
 			
-			if(_.sum(creep.carry) == creep.carryCapacity) {
+			// If the creep is full OR if there is nothing more to carry, we set the gathering to false to get back to base
+			if(_.sum(creep.carry) == creep.carryCapacity || Game.getObjectById(creep.memory.powerToPickup) == undefined) {
 				creep.memory.gathering = false;
 			}
 		}
