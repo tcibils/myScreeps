@@ -30,7 +30,6 @@ var rolePowerCarry = {
 		
 		if(!creep.memory.nearPowerSource && creep.memory.gathering) {
 			creep.moveTo(targetPowerSourcePos);
-
 		}
 		
 		if(creep.memory.nearPowerSource && !creep.memory.foundPowerToPickup && creep.memory.gathering) {
