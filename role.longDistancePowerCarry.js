@@ -53,10 +53,19 @@ var rolePowerCarry = {
 		}
 		
 		if(!creep.memory.gathering) {
-			// Should return the power to the "right place" - TBD !
+			if(Game.rooms(creep.memory.homeRoom).memory.storages.length > 0) {
+				if(creep.transfer(Game.getObjectById(Game.rooms(creep.memory.homeRoom).memory.storages[0]),RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(Game.getObjectById(Game.rooms(creep.memory.homeRoom).memory.storages[0]));
+				}
+			}
+			else {
+				creep.say('ISSUE');
+			}
+			
+			if(creep.carry(RESOURCE_POWER) == 0) {
+				creep.memory.gathering = true;
+			}
 		}
-
-
     }
 };
 
