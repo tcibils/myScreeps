@@ -77,7 +77,7 @@ module.exports.loop = function () {
     // Pas s'emmerder avec l'automatique, c'est Ã  changer anyway
     var longDistanceBuildRoomsHomeRooms = ['W42N48'];
     // Number of builders to use.
-    var longDistanceBuildRoomsBuilders = [3];
+    var longDistanceBuildRoomsBuilders = [0];
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
