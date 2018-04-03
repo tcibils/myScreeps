@@ -5,6 +5,14 @@ var rolePowerAttacker = {
 			creep.memory.nearPowerSource = false;
 		}
 		
+		let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
+		if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
+			creep.memory.nearPowerSource = true;
+		}
+		else {
+			creep.memory.nearPowerSource = false;
+		}
+		
 		// This will be set to true by the healing buddy, and never by the attacker himself.
 		if(creep.memory.healBuddyAttached == undefined) {
 			creep.memory.healBuddyAttached = false;
@@ -17,11 +25,7 @@ var rolePowerAttacker = {
 		// ISSUE HERE : we need to store the pos of the need origin in main.
 		
 		if(!creep.memory.nearPowerSource && !creep.memory.powerTargetDestroyed) {
-			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
 			creep.moveTo(targetPowerSourcePos);
-			if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
-				creep.memory.nearPowerSource = true;
-			}
 		}
 		
 		if(creep.memory.nearPowerSource && creep.memory.healBuddyAttached && !creep.memory.powerTargetDestroyed) {

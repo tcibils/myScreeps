@@ -5,6 +5,14 @@ var rolePowerCarry = {
 			creep.memory.nearPowerSource = false;
 		}
 		
+		let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
+		if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
+			creep.memory.nearPowerSource = true;
+		}
+		else {
+			creep.memory.nearPowerSource = false;
+		}
+		
 		if(creep.memory.foundPowerToPickup == undefined) {
 			creep.memory.foundPowerToPickup = false;
 		}
@@ -21,11 +29,8 @@ var rolePowerCarry = {
 		// ISSUE HERE : we need to store the pos of the need origin in main.
 		
 		if(!creep.memory.nearPowerSource && creep.memory.gathering) {
-			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
 			creep.moveTo(targetPowerSourcePos);
-			if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
-				creep.memory.nearPowerSource = true;
-			}
+
 		}
 		
 		if(creep.memory.nearPowerSource && !creep.memory.foundPowerToPickup && creep.memory.gathering) {
