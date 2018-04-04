@@ -3,16 +3,38 @@ var setLDHEnergyNeedOfRoom = {
 		
         // Ajouter un "every X tick" ?
 		
+		var showLDHEnergyDigest = false;
+		var showLDHEnergySpecificRoomDigest = false;
+		var showLDHEnergySpecificRoomDigestTarget = 'W44N51';
+		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
 			// If the sources have home rooms defined
 			if(Memory.rooms[roomInMemory].sourcesHomeRooms != undefined) {
+				
+				if(showLDHEnergySpecificRoomDigest) {
+					if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
+						console.log('Distant room ' + roomInMemory ' Digest : ');
+					}
+				}
 				// For each of these sources
 				for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sourcesHomeRooms.length; sourceIndex++) {
 					
+					if(showLDHEnergySpecificRoomDigest) {
+						if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
+							console.log('Source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex]);
+						}
+					}
+					
 					// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] == treatedRoom.name) {
-					console.log('Distant room ' + roomInMemory + ', source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room found : ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance : ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex])	
+						
+						if(showLDHEnergyDigest) {
+							console.log('Distant room ' + roomInMemory + ', source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room found : ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance : ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex])	
+						}
+						
+
+						
 						// We count the existing LDHarvesters for target room AND target source
 						 let LDFHarvestersOfSource = _.filter(Game.creeps, (creep) =>
 							creep.memory.role == 'longDistanceFatHarvester' &&
