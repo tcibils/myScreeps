@@ -1,4 +1,6 @@
 power from deposit to power source
-pwer spawn script
 
 debug distance function...
+first tests of power script
+
+what about automating the needs of LDB on same model? Sounds good

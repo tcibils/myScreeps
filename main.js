@@ -66,8 +66,6 @@ module.exports.loop = function () {
     var showRoomDashboardBuildingsToDisplay = 'W43N51';
     var showRoomDashboardCreeps = true;
     var showRoomDashboardCreepsToDisplay = 'W43N51';
-	
-    var naturallyDeadTime = 100;
 
     // Room to pillage. To be emptied manually when finished.
     var longDistancePillageRooms = [];
@@ -115,6 +113,8 @@ module.exports.loop = function () {
 		// For each index, the ID the said buildings in the room, and their position for some of them
         myRooms[currentRoomIndex].memory.spawningPoints = [];
         myRooms[currentRoomIndex].memory.spawningPointsPos = [];
+		
+        myRooms[currentRoomIndex].memory.powerSpawningPoints = [];
 
         myRooms[currentRoomIndex].memory.links = [];
         myRooms[currentRoomIndex].memory.storages = [];
@@ -539,6 +539,15 @@ module.exports.loop = function () {
         if(myRooms[currentRoomIndex].terminal) {
             functionTerminal.run(myRooms[currentRoomIndex].terminal);
         }
+		
+		// Power spawn : if enough ressources, we process power.
+		if(myRooms[currentRoomIndex].memory.powerSpawningPoints.length > 0) {
+			for(let powerSpawnIndex = 0; powerSpawnIndex < myRooms[currentRoomIndex].memory.powerSpawningPoints.length; powerSpawnIndex++) {
+				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints).energy > 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints).power > 1) {
+					Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints).processPower();
+				}
+			}
+		}
 
         }
     }

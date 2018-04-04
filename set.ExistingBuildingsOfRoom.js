@@ -9,6 +9,13 @@ var setExistingBuildingsOfRoom = {
                 treatedRoom.memory.spawningPointsPos.push(spawningPointsOfRoom[currentSpawningPointIndex].pos);
             }
         }
+		
+		var powerSpawningPointsOfRoom = treatedRoom.find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_SPAWN}} );
+        if(powerSpawningPointsOfRoom.length > 0) {
+            for(let currentPowerSpawningPointIndex= 0; currentPowerSpawningPointIndex<powerSpawningPointsOfRoom.length; currentPowerSpawningPointIndex++) {
+                treatedRoom.memory.powerSpawningPoints.push(powerSpawningPointsOfRoom[currentPowerSpawningPointIndex].id);
+            }
+        }
 
         var linksOfRoom = treatedRoom.find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_LINK}} );
         if(linksOfRoom.length > 0) {
