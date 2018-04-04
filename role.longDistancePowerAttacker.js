@@ -22,8 +22,6 @@ var rolePowerAttacker = {
 			creep.memory.powerTargetDestroyed = false;
 		}
 		
-		// ISSUE HERE : we need to store the pos of the need origin in main.
-		
 		if(!creep.memory.nearPowerSource && !creep.memory.powerTargetDestroyed) {
 			creep.moveTo(targetPowerSourcePos);
 		}

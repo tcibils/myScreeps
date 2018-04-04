@@ -12,6 +12,7 @@ var setNeedCreepsEnergyHarvestingOfRoom = {
                 treatedRoom.memory.unity.push('Work body parts')
                 treatedRoom.memory.targetRoom.push('undefined')
                 treatedRoom.memory.needOrigin.push(treatedRoom.memory.sources[currentSourceIndex]);
+                treatedRoom.memory.needOriginPos.push(treatedRoom.memory.sources[currentSourceIndex].pos);
                 treatedRoom.memory.criticalNeed.push(false);
 
                 // Work parts needed is stocked (time it takes to get refilled, divided by 2 because each work body part takes 2 per turn)
@@ -40,6 +41,7 @@ var setNeedCreepsEnergyHarvestingOfRoom = {
                 treatedRoom.memory.unity.push('Carry body parts')
                 treatedRoom.memory.targetRoom.push('undefined')
                 treatedRoom.memory.needOrigin.push(treatedRoom.memory.sources[currentSourceIndex]);
+                treatedRoom.memory.needOriginPos.push(treatedRoom.memory.sources[currentSourceIndex].pos);
                 treatedRoom.memory.criticalNeed.push(false);
 
                 // If there is no fat harvester, then we do not need to carry energy

@@ -26,8 +26,6 @@ var rolePowerCarry = {
 			}
 		}
 		
-		// ISSUE HERE : we need to store the pos of the need origin in main.
-		
 		if(!creep.memory.nearPowerSource && creep.memory.gathering) {
 			creep.moveTo(targetPowerSourcePos);
 		}

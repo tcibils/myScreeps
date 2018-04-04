@@ -158,13 +158,14 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.unity = [];
         myRooms[currentRoomIndex].memory.targetRoom = [];
         myRooms[currentRoomIndex].memory.needOrigin = [];
+        myRooms[currentRoomIndex].memory.needOriginPos = [];
         myRooms[currentRoomIndex].memory.criticalNeed = [];
 		
         
 		// Sets the needs and fills the data structure above for different types of creeps
 		setNeedCreepsEnergyHarvestingOfRoom.run(myRooms[currentRoomIndex]);
-		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]);
-		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]); 
+		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]); 
 		setNeedCreepsMineralExtractorsOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);
@@ -223,6 +224,7 @@ module.exports.loop = function () {
                 myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
                 myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceBuildRooms[currentLongDistanceBuildRoomIndex]);
                 myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
+                myRooms[currentRoomIndex].memory.needOriginPos.push('undefined')
                 myRooms[currentRoomIndex].memory.criticalNeed.push(false);
             }
         }
@@ -482,6 +484,7 @@ module.exports.loop = function () {
                                             targetRoom : myRooms[currentRoomIndex].memory.targetRoom[needIndex],
                                             homeRoom: myRooms[currentRoomIndex].name,
                                             needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex],
+                                            needOriginPos: myRooms[currentRoomIndex].memory.needOriginPos[needIndex],
                                             creepSpawning: true}
                                 }));
 

@@ -7,6 +7,7 @@ var setNeedCreepsBuildingsOfRoom = {
         treatedRoom.memory.unity.push('Number of creeps')
         treatedRoom.memory.targetRoom.push('undefined')
         treatedRoom.memory.needOrigin.push('undefined')
+        treatedRoom.memory.needOriginPos.push('undefined')
         treatedRoom.memory.criticalNeed.push(false);
 
         treatedRoom.memory.labels.push('Repairers')
@@ -14,6 +15,7 @@ var setNeedCreepsBuildingsOfRoom = {
         treatedRoom.memory.unity.push('Number of creeps')
         treatedRoom.memory.targetRoom.push('undefined')
         treatedRoom.memory.needOrigin.push('undefined')
+        treatedRoom.memory.needOriginPos.push('undefined')
         treatedRoom.memory.criticalNeed.push(false);
 
 
