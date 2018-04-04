@@ -165,7 +165,7 @@ module.exports.loop = function () {
 		// Sets the needs and fills the data structure above for different types of creeps
 		setNeedCreepsEnergyHarvestingOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]); 
-		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]); 
+		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsMineralExtractorsOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);

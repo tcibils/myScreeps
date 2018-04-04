@@ -176,6 +176,7 @@ var processLDEnergyInfo = {
 								let closestRoomDistance = 10000;
 								let closestRoom = null;
 								let closestSenderLinkId = null;
+								let finalIdealPath = null;//TEMP
 								
 								// Gonna be an array of potential home rooms tested
 								let testedRooms = [];
@@ -206,6 +207,8 @@ var processLDEnergyInfo = {
 											closestRoomDistance = currentDistance;
 											closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
 											closestSenderLinkId = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex];
+											//TEMP
+											finalIdealPath = idealPath;
 										}
 									}
 									// Now that we parsed all links of a potential room, we add the home room in the list of tested rooms
@@ -213,6 +216,10 @@ var processLDEnergyInfo = {
 									// We also store the number of sender links
 									testedRoomsNumberSenders.push(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length);
 								}
+								
+								//TEMP
+								Memory.rooms[roomInMemory].finalIdealPathFound = finalIdealPath;
+								
 								// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
 								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex] = testedRooms;
 								

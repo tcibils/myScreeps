@@ -12,7 +12,7 @@ var setNeedCreepsEnergySpreadingOfRoom = {
                 treatedRoom.memory.unity.push('Number of creeps')
                 treatedRoom.memory.targetRoom.push('undefined')
                 treatedRoom.memory.needOrigin.push(treatedRoom.memory.receiverLinks[currentLinkIndex]);
-                treatedRoom.memory.needOriginPos.push(treatedRoom.memory.receiverLinks[currentLinkIndex]).pos;
+                treatedRoom.memory.needOriginPos.push(Game.getObjectById(treatedRoom.memory.receiverLinks[currentLinkIndex]).pos);
                 treatedRoom.memory.criticalNeed.push(false);
 
                 // SLAKER needed : 1 for each receiver, if we have a sender somewhere
@@ -50,7 +50,7 @@ var setNeedCreepsEnergySpreadingOfRoom = {
                 treatedRoom.memory.unity.push('Number of creeps')
                 treatedRoom.memory.targetRoom.push('undefined')
                 treatedRoom.memory.needOrigin.push(treatedRoom.memory.storages[currentStorageIndex]);
-                treatedRoom.memory.needOriginPos.push(treatedRoom.memory.storages[currentStorageIndex].pos);
+                treatedRoom.memory.needOriginPos.push(Game.getObjectById(treatedRoom.memory.storages[currentStorageIndex]).pos);
 
 
                 // Need a spreader efficient as long as we have a storage

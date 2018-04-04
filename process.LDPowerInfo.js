@@ -46,9 +46,6 @@ var processLDPowerInfo = {
 						if(Memory.rooms[roomInMemory].powerSourcesCarryNeed == undefined) {
 							Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
 						}
-						if(Memory.rooms[roomInMemory].powerSourcesAssessed == undefined) {
-							Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
-						}
 						
 						// For each power source
 						for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSources.length; powerSourceIndex++) {
@@ -145,7 +142,14 @@ var processLDPowerInfo = {
 									
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
-									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
+									
+									// For carrys, if the source is already consequently damaged, then we need some, but not before.
+									if(Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex] < (Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex] / 4)) {
+										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
+									}
+									else {
+										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
+									}
 								}
 								// If the closest home rooms are too far, we don't bother.
 								else {
