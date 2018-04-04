@@ -1,5 +1,6 @@
 var setNeedCreepsAdHocHarvestersOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
         // CATASTROPHE
 
         treatedRoom.memory.labels.push('AdHoc Harvesters')

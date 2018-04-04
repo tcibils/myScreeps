@@ -1,5 +1,6 @@
 var setNeedCreepsBuildingsOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
 		        // BUILDING-RELATED
 
         treatedRoom.memory.labels.push('Builders')

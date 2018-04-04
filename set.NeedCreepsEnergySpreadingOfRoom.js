@@ -1,5 +1,6 @@
 var setNeedCreepsEnergySpreadingOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
 		 // LINK-RELATED
 
         if(treatedRoom.memory.links.length > 0) {

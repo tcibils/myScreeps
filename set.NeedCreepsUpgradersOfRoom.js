@@ -1,5 +1,6 @@
 var setNeedCreepsUpgradersOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
 		        // UPAGREDERS
 
 

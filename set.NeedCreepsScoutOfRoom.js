@@ -1,5 +1,6 @@
 var setNeedCreepsScoutOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
 		 // SCOUT
 
         treatedRoom.memory.labels.push('scout');

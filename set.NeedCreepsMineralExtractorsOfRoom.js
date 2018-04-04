@@ -1,5 +1,6 @@
 var setNeedCreepsMineralExtractorsOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
 		// MINERAL RELATED
 
         treatedRoom.memory.labels.push('Extractors')

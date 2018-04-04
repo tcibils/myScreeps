@@ -1,8 +1,13 @@
+
+var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
+
 var setNeedCreepsEnergyHarvestingOfRoom = {
     run: function(treatedRoom) {
+		let naturallyDeadTime = 100;
+		
 		// Looping on sources
         if(treatedRoom.memory.sources.length > 0) {
-            for(let currentSourceIndex = 0; currentSourceIndex < .memory.sources.length; currentSourceIndex++) {
+            for(let currentSourceIndex = 0; currentSourceIndex < treatedRoom.memory.sources.length; currentSourceIndex++) {
                 // Store source id
 
                 // WORK

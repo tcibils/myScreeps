@@ -105,23 +105,23 @@ module.exports.loop = function () {
 		
 		
 		// For each index, the ID the said buildings in the room, and their position for some of them
-        treatedRoom.memory.spawningPoints = [];
-        treatedRoom.memory.spawningPointsPos = [];
+        myRooms[currentRoomIndex].memory.spawningPoints = [];
+        myRooms[currentRoomIndex].memory.spawningPointsPos = [];
 
-        treatedRoom.memory.links = [];
-        treatedRoom.memory.storages = [];
-        treatedRoom.memory.towers = [];
+        myRooms[currentRoomIndex].memory.links = [];
+        myRooms[currentRoomIndex].memory.storages = [];
+        myRooms[currentRoomIndex].memory.towers = [];
 		
 		if(Game.time % 500 == 0) {
-            treatedRoom.memory.receiverLinks = null;
-            treatedRoom.memory.senderLinks = null;
+            myRooms[currentRoomIndex].memory.receiverLinks = null;
+            myRooms[currentRoomIndex].memory.senderLinks = null;
         }
         // We first define the two arays
-        if(treatedRoom.memory.senderLinks == null) {
-            treatedRoom.memory.senderLinks = [];
+        if(myRooms[currentRoomIndex].memory.senderLinks == null) {
+            myRooms[currentRoomIndex].memory.senderLinks = [];
         }
-        if(treatedRoom.memory.receiverLinks == null) {
-            treatedRoom.memory.receiverLinks = [];
+        if(myRooms[currentRoomIndex].memory.receiverLinks == null) {
+            myRooms[currentRoomIndex].memory.receiverLinks = [];
         }
 		
 		
