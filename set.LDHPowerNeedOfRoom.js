@@ -3,8 +3,6 @@ var setLDHEnergyNeedOfRoom = {
 		
         // Ajouter un "every X tick" ?
 		
-		// TRES BROUILLON - A BIEN RELIRE
-		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
 			// If the power sources have home rooms defined
