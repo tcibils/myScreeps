@@ -57,7 +57,9 @@ var processLDEnergyInfo = {
 
 				// We check if there's a reservation saved
 				if(Memory.rooms[roomInMemory].roomOwnerReservation != undefined) {
-					distantRoomReserved = true;
+					if(Memory.rooms[roomInMemory].roomOwnerReservation.username != 'Blaugaard') {
+						distantRoomReserved = true;
+					}
 				}
 				
 				// We check all registered exceptions to see if one is true

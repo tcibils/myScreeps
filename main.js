@@ -64,8 +64,8 @@ module.exports.loop = function () {
 	
     var showRoomDashboardBuildings = false;
     var showRoomDashboardBuildingsToDisplay = 'W43N51';
-    var showRoomDashboardCreeps = true;
-    var showRoomDashboardCreepsToDisplay = 'W43N51';
+    var showRoomDashboardCreeps = false;
+    var showRoomDashboardCreepToDisplay = 'W43N51';
 
     // Room to pillage. To be emptied manually when finished.
     var longDistancePillageRooms = [];
@@ -181,7 +181,7 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
-		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
+		// setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY

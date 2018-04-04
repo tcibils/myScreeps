@@ -57,11 +57,16 @@ var scout = {
 				// Same for reservation
 				// If the variable is defined
 				if(creep.room.memory.roomOwnerReservation != undefined) {
-					// If it's not the same player having reserved it anymore
-					if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
-						// We update the info
-						creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
-					}					
+					if(creep.room.controller.reservation != undefined) {
+						// If it's not the same player having reserved it anymore
+						if(creep.room.memory.roomOwnerReservation != creep.room.controller.reservation.username) {
+							// We update the info
+							creep.room.memory.roomOwnerReservation = creep.room.controller.reservation.username;
+						}					
+					}
+					else {
+						creep.room.memory.roomOwnerReservation = undefined;
+					}
 				}
 				// If the variable is not yet defined
 				else {

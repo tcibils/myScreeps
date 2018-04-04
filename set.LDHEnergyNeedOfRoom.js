@@ -12,7 +12,7 @@ var setLDHEnergyNeedOfRoom = {
 					
 					// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] == treatedRoom.name) {
-					console.log('Distant room ' + roomInMemory + ' source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ' home room ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex])	
+					console.log('Distant room ' + roomInMemory + ', source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room found : ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance : ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex])	
 						// We count the existing LDHarvesters for target room AND target source
 						 let LDFHarvestersOfSource = _.filter(Game.creeps, (creep) =>
 							creep.memory.role == 'longDistanceFatHarvester' &&
