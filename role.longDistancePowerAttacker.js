@@ -22,12 +22,16 @@ var rolePowerAttacker = {
 			creep.memory.powerTargetDestroyed = false;
 		}
 		
+		// If we are not near the source and target still existing
 		if(!creep.memory.nearPowerSource && !creep.memory.powerTargetDestroyed) {
+			// We move towards it.
 			creep.moveTo(targetPowerSourcePos);
 		}
 		
+		// If we are near the power source, have a heal buddy, and target not destroyed
 		if(creep.memory.nearPowerSource && creep.memory.healBuddyAttached && !creep.memory.powerTargetDestroyed) {
 			// We should now be in the same room as power source, so we have necessary visibility for Game.getObjectById.
+			// We attack.
 			if(creep.attack(Game.getObjectById(creep.memory.needOrigin)) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(Game.getObjectById(creep.memory.needOrigin));
 			}
@@ -38,15 +42,17 @@ var rolePowerAttacker = {
 			}
 		}
 		
+		// If we destroy the target
 		if(creep.memory.powerTargetDestroyed) {
-			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-			if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
+			// If we are near the source
+			if(creep.memory.nearPowerSource) {
+				// We randomly move away from it.
 				let direction = Math.ceil(Math.random * 8);
 				creep.move(direction);
 				creep.say('Mving aw')
 			}
 			else {
-				creep.say('Dying')
+				creep.say('Off')
 			}
 		}
     }

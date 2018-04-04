@@ -22,16 +22,21 @@ var rolePowerHealer = {
 			creep.memory.powerTargetDestroyed = false;
 		}
 		
-		if(!creep.memory.nearPowerSource && !creep.memory.powerTargetDestroyed) {
+		// If we are not near the power source
+		if(!creep.memory.nearPowerSource) {
+			// We go to it.
 			creep.moveTo(targetPowerSourcePos);
 		}
 		
-		if(creep.memory.nearPowerSource && !creep.memory.attackBuddyAttached && !creep.memory.powerTargetDestroyed) {
+		// If we are near the source but do not have an attack buddy attached
+		if(creep.memory.nearPowerSource && !creep.memory.attackBuddyAttached) {
+			// We search for one available
 			let potentialTarget = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: function(creep) {return 
 				creep.memory.role == longDistanceAttackerPower,
 				creep.memory.healBuddyAttached == false,
 				creep.memory.nearPowerSource == true
 				}});
+			// If found, we set memories
 			if(potentialTarget != undefined) {
 				creep.memory.attackBudyId = potentialTarget.id;
 				creep.memory.attackBuddyAttached = true;
@@ -40,7 +45,8 @@ var rolePowerHealer = {
 			}
 		}
 		
-		if(creep.memory.nearPowerSource && creep.memory.attackBuddyAttached && !creep.memory.powerTargetDestroyed) {
+		// If we have an attack buddy attached, we spam heal it to death.
+		if(creep.memory.attackBuddyAttached) {
 			if(creep.heal(Game.getObjectById(creep.memory.attackBudyId)) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(Game.getObjectById(creep.memory.attackBudyId));
 			}
@@ -50,19 +56,6 @@ var rolePowerHealer = {
 				creep.say('Trgt supr')
 			}
 		}
-		
-		if(creep.memory.powerTargetDestroyed) {
-			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-			if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
-				let direction = Math.ceil(Math.random * 8);
-				creep.move(direction);
-				creep.say('Mving aw')
-			}
-			else{
-				creep.say('Dying')
-			}
-		}
-
     }
 };
 
