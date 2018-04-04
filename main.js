@@ -369,7 +369,7 @@ module.exports.loop = function () {
                                     creepBody.push(CARRY);
                                     creepBody.push(MOVE);
                                 }
-
+								
                                 // OK for spawning prototype - role only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'builder') {
                                     for(let j = 0; j< Math.floor((capacityToBeUsed) / 200) && j < 5; j++) {
@@ -459,6 +459,36 @@ module.exports.loop = function () {
                                         creepBody.push(ATTACK);
                                     }
                                 }
+								
+								// --------------- POWER CREEPS BODYS - According to excel computations
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceAttackerPower') {
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(ATTACK);
+                                    }
+                                }
+								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceHealerPower') {
+                                    for(let j = 0; j < 25; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 25; j++) {
+                                        creepBody.push(HEAL);
+                                    }
+                                }
+								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceCarryPower') {
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(CARRY);
+                                    }
+                                }
+
+								
 
                                 // Ok for spawning prototype
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'upgrader') {
