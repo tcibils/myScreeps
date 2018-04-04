@@ -7,9 +7,9 @@ var setLDHEnergyNeedOfRoom = {
 		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
-			// If the sources have home rooms defined
+			// If the power sources have home rooms defined
 			if(Memory.rooms[roomInMemory].powerSourcesHomeRooms != undefined) {
-				// For each of these sources
+				// For each of these power sources
 				for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms.length; powerSourceIndex++) {
 					// Remember : we have multiple home rooms for the same power source !
 					for(let homeRoomOfPowerSourceIndex=0; homeRoomOfPowerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex].length; homeRoomOfPowerSourceIndex++) {
