@@ -45,7 +45,6 @@ var setLDHEnergyNeedOfRoom = {
 							// We count the existing LDHealerPower for target room AND target source
 							let LDFHealersOfPowerSource = _.filter(Game.creeps, (creep) =>
 								creep.memory.role == 'longDistanceHealerPower' &&
-								creep.memory.targetRoom == roomInMemory &&
 								creep.memory.needOrigin == Memory.rooms[roomInMemory].powerSources[powerSourceIndex] &&
 								(creep.ticksToLive > 1 || creep.memory.creepSpawning)
 							).length;
