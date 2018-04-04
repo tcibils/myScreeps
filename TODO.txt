@@ -1,3 +1,4 @@
 power from deposit to power source
-adapt power creep needs with timing for carrys
-adapt power creep needs with 2 home rooms
+pwer spawn script
+
+debug distance function...

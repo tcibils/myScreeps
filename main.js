@@ -23,11 +23,16 @@ var roleScout = require('role.scout');
 var roleSpreaderEfficient = require('role.spreaderEfficient');
 var roleExtractor = require('role.extractor');
 var roleLongDistanceReserver = require('role.longDistanceReserver');
+var rolelongDistancePowerAttacker = require('role.longDistancePowerAttacker');
+var rolelongDistancePowerCarry = require('role.longDistancePowerCarry');
+var rolelongDistancePowerHealer = require('role.longDistancePowerHealer');
+
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 var processLDEnergyInfo = require('process.LDEnergyInfo');
 var processLDPowerInfo = require('process.LDPowerInfo');
 
 var setLDHEnergyNeedOfRoom = require('set.LDHEnergyNeedOfRoom');
+var setLDHPowerNeedOfRoom = require('set.LDHEnergyNeedOfRoom')
 var setNeedCreepsEnergyHarvestingOfRoom = require('set.NeedCreepsEnergyHarvestingOfRoom')
 var setNeedCreepsEnergySpreadingOfRoom = require('set.NeedCreepsEnergySpreadingOfRoom')
 var setNeedCreepsBuildingsOfRoom = require('set.NeedCreepsBuildingsOfRoom')
@@ -46,7 +51,6 @@ module.exports.loop = function () {
 
     console.log('------------')
     console.log('Starting - time ' + Game.time)
-    console.log('-----------')
 
 
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -57,8 +61,12 @@ module.exports.loop = function () {
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
-    var showRoomDashboard = true;
-    var showRoomDashboardToDisplay = 'W43N51';
+	
+    var showRoomDashboardBuildings = false;
+    var showRoomDashboardBuildingsToDisplay = 'W43N51';
+    var showRoomDashboardCreeps = true;
+    var showRoomDashboardCreepsToDisplay = 'W43N51';
+	
     var naturallyDeadTime = 100;
 
     // Room to pillage. To be emptied manually when finished.
@@ -173,6 +181,7 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
+		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY
@@ -241,11 +250,10 @@ module.exports.loop = function () {
 		// To be rebuilt
     }
 
-    if(showRoomDashboard) {
+    if(showRoomDashboardBuildings) {
         for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
-            if(myRoomsNames[currentRoomIndex] == showRoomDashboardToDisplay) {
-                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' MANAGEMENT DASHBOARD')
-                console.log('----- Global -----')
+            if(myRoomsNames[currentRoomIndex] == showRoomDashboardBuildingsToDisplay) {
+                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' BUILDING MANAGEMENT DASHBOARD')
                 console.log('Under attack : ' + myRooms[currentRoomIndex].memory.underAttack)
                 console.log('Towers       : ' + myRooms[currentRoomIndex].memory.towers)
                 console.log('Spawning     : ' + myRooms[currentRoomIndex].memory.spawningPoints)
@@ -253,7 +261,14 @@ module.exports.loop = function () {
                 console.log('Send. Links  : ' + myRooms[currentRoomIndex].memory.senderLinks)
                 console.log('Reciev. Links: ' + myRooms[currentRoomIndex].memory.receiverLinks)
                 console.log('Storages     : ' + myRooms[currentRoomIndex].memory.storages)
-                console.log('----- Creeps -----')
+            }
+        }
+    }
+	
+	if(showRoomDashboardCreeps) {
+        for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
+            if(myRoomsNames[currentRoomIndex] == showRoomDashboardCreepToDisplay) {
+                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' CREEPS MANAGEMENT DASHBOARD')
                 for(let generalCounter = 0; generalCounter < myRooms[currentRoomIndex].memory.labels.length; generalCounter++) {
                     console.log(myRooms[currentRoomIndex].memory.attached[generalCounter] + '/'+ myRooms[currentRoomIndex].memory.need[generalCounter] + ' ' + myRooms[currentRoomIndex].memory.role[generalCounter] +  ', target room ' + myRooms[currentRoomIndex].memory.targetRoom[generalCounter] + ', origin : ' + myRooms[currentRoomIndex].memory.needOrigin[generalCounter]) /* + ', label : ' + myRooms[currentRoomIndex].memory.labels[generalCounter])*/
                     // console.log('Unity : ' + myRooms[currentRoomIndex].memory.unity[generalCounter])
@@ -618,6 +633,16 @@ module.exports.loop = function () {
         if(creep.memory.role == 'scout') {
             roleScout.run(creep);
         }
+		
+		if(creep.memory.role == 'longDistanceAttackerPower'){
+			rolelongDistancePowerAttacker.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceCarryPower'){
+			rolelongDistancePowerCarry.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceHealerPower'){
+			rolelongDistancePowerHealer.run(creep)
+		}
 
     }
     processLDEnergyInfo.run();
