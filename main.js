@@ -191,7 +191,7 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
-		// setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
+		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY
