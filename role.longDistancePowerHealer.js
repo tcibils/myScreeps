@@ -36,6 +36,7 @@ var rolePowerHealer = {
 				potentialTargetCreep.memory.healBuddyAttached === 'false' &&
 				potentialTargetCreep.memory.nearPowerSource === 'true'
 				}});
+			console.log('potential target ' + potentialTarget)
 			// If found, we set memories
 			if(potentialTarget != undefined) {
 				creep.memory.attackBudyId = potentialTarget.id;
