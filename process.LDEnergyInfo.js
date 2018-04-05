@@ -15,7 +15,7 @@ var processLDEnergyInfo = {
 			
 			// variable array with rooms to be excluded (parameters), for diplomacy (Ringo86)
 			// Add here rooms of Threen, as he does not reserve them
-			let roomsExceptions = ['W45N52'];
+			let roomsExceptions = ['W45N52', 'W46N49','W46N48','W44N47'];
 			
 			// Arbitrary number of max distance
 			let maxSourceToLinkDistance = 80;
