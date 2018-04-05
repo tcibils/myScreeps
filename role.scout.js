@@ -25,6 +25,10 @@ var scout = {
 				creep.memory.targetLocalExit = "null";
 			}
 		}
+		
+		if(creep.memory.targetRoom == creep.room.name || creep.memory.targetRoom == undefined) {
+			creep.memory.targetRoom = "undefined";
+		}
 				
 
         // We only try to update the room memory if we just arrived in it
@@ -138,10 +142,6 @@ var scout = {
         }
 
 		
-		if(creep.memory.targetRoom == creep.room.name || creep.memory.targetRoom == undefined) {
-			creep.memory.targetRoom = "undefined";
-		}
-
         // If we just arrived in a new room, or don't know where to go
         if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined || creep.memory.targetRoom != "undefined") {
 			if(creep.memory.targetRoom === "undefined") {
