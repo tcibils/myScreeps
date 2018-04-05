@@ -32,7 +32,7 @@ var processLDEnergyInfo = require('process.LDEnergyInfo');
 var processLDPowerInfo = require('process.LDPowerInfo');
 
 var setLDHEnergyNeedOfRoom = require('set.LDHEnergyNeedOfRoom');
-var setLDHPowerNeedOfRoom = require('set.LDHEnergyNeedOfRoom')
+var setLDHPowerNeedOfRoom = require('set.LDHPowerNeedOfRoom')
 var setNeedCreepsEnergyHarvestingOfRoom = require('set.NeedCreepsEnergyHarvestingOfRoom')
 var setNeedCreepsEnergySpreadingOfRoom = require('set.NeedCreepsEnergySpreadingOfRoom')
 var setNeedCreepsBuildingsOfRoom = require('set.NeedCreepsBuildingsOfRoom')
@@ -195,7 +195,6 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
-		console.log('HERE')
 		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
