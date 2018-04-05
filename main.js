@@ -157,8 +157,8 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('fatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceSecurity');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFatHarvester');
-        myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
         myRooms[currentRoomIndex].memory.priorities.push('roomReserver');
+        myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
         myRooms[currentRoomIndex].memory.priorities.push('builder');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceBuilder');
         myRooms[currentRoomIndex].memory.priorities.push('repairer');

@@ -47,7 +47,7 @@ var setNeedCreepsEnergyHarvestingOfRoom = {
                 treatedRoom.memory.targetRoom.push('undefined')
                 treatedRoom.memory.needOrigin.push(treatedRoom.memory.sources[currentSourceIndex]);
                 treatedRoom.memory.needOriginPos.push(Game.getObjectById(treatedRoom.memory.sources[currentSourceIndex]).pos);
-                treatedRoom.memory.criticalNeed.push(false);
+                
 
                 // If there is no fat harvester, then we do not need to carry energy
                 if(counterOfCurrentWorkBodyParts == 0) {
@@ -98,6 +98,12 @@ var setNeedCreepsEnergyHarvestingOfRoom = {
                     }
                 }
                 treatedRoom.memory.attached.push(counterOfCurrentCarryBodyParts);
+				if(counterOfCurrentCarryBodyParts == 0) {
+					treatedRoom.memory.criticalNeed.push(true);
+				}
+				else {
+					treatedRoom.memory.criticalNeed.push(false);
+				}
 
             }
         }
