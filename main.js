@@ -23,8 +23,24 @@ var roleScout = require('role.scout');
 var roleSpreaderEfficient = require('role.spreaderEfficient');
 var roleExtractor = require('role.extractor');
 var roleLongDistanceReserver = require('role.longDistanceReserver');
-var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
+var rolelongDistancePowerAttacker = require('role.longDistancePowerAttacker');
+var rolelongDistancePowerCarry = require('role.longDistancePowerCarry');
+var rolelongDistancePowerHealer = require('role.longDistancePowerHealer');
 
+var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
+var processLDEnergyInfo = require('process.LDEnergyInfo');
+var processLDPowerInfo = require('process.LDPowerInfo');
+
+var setLDHEnergyNeedOfRoom = require('set.LDHEnergyNeedOfRoom');
+var setLDHPowerNeedOfRoom = require('set.LDHEnergyNeedOfRoom')
+var setNeedCreepsEnergyHarvestingOfRoom = require('set.NeedCreepsEnergyHarvestingOfRoom')
+var setNeedCreepsEnergySpreadingOfRoom = require('set.NeedCreepsEnergySpreadingOfRoom')
+var setNeedCreepsBuildingsOfRoom = require('set.NeedCreepsBuildingsOfRoom')
+var setNeedCreepsMineralExtractorsOfRoom = require('set.NeedCreepsMineralExtractorsOfRoom')
+var setNeedCreepsUpgradersOfRoom = require('set.NeedCreepsUpgradersOfRoom')
+var setNeedCreepsScoutOfRoom = require('set.NeedCreepsScoutOfRoom')
+var setNeedCreepsAdHocHarvestersOfRoom = require('set.NeedCreepsAdHocHarvestersOfRoom')
+var setExistingBuildingsOfRoom = require('set.ExistingBuildingsOfRoom')
 /*
 C:\Users\Thomas\AppData\Local\Screeps\scripts\screeps.com\autoEmpire1
 Game.spawns['Spawn11'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: {role: 'roomClaimer', targetRoom: 'W37N47', originRoom: 'W42N48'}});
@@ -35,7 +51,6 @@ module.exports.loop = function () {
 
     console.log('------------')
     console.log('Starting - time ' + Game.time)
-    console.log('-----------')
 
 
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -45,23 +60,13 @@ module.exports.loop = function () {
 
     // Information display in console variables
     var showLongDistanceDashboard = false;
-    var showRoomSpawn = true;
-    var showRoomDashboard = true;
-    var showRoomDashboardToDisplay = 'W46N51';
-    var naturallyDeadTime = 100;
-
-
-    // INPUT TABLES for long distance harvesting. Just add the room in the first table, and the number of sources in the second.
-    // Long distance target rooms
-    var longDistanceTargetRooms = ['W42N51','W44N51','W41N52','W44N52','W43N52','W43N49','W42N49','W43N48','W41N49','W41N48','W42N46','W42N44','W41N45','W43N45','W42N47','W45N51','W46N52','W47N52'];
-    // Number of source to harvest in each room
-    var longDistanceTargetRoomsSources = [1,1,1,1,1,1,1,2,1,1,2,2,1,1,1,2,1,1];
-    // Carrys needed for each room
-    var longDistanceTargetRoomsCarryNeeded = [1,2,2,1,2,1,2,3,1,1,3,1,1,1,1,4,2,2];
-    // If the harvesters should be able to defend themselves
-    var longDistanceTargetRoomsAgressive = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
-    // Home rooms spawning creeps. If "null", then automatically computed.
-    var longDistanceTargetRoomsHomeRooms = ['null','null','null','null','null','null','null','null','W42N48','null','null','null','null','null','null','null','null','null'];
+    var showRoomSpawn = false;
+    var showScoutsPositions = true;
+	
+    var showRoomDashboardBuildings = false;
+    var showRoomDashboardBuildingsToDisplay = 'W43N51';
+    var showRoomDashboardCreeps = false;
+    var showRoomDashboardCreepToDisplay = 'W43N51';
 
     // Room to pillage. To be emptied manually when finished.
     var longDistancePillageRooms = [];
@@ -81,72 +86,51 @@ module.exports.loop = function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
     // Cleaning up memeory
     for(var i in Memory.creeps) {
         if(!Game.creeps[i]) {
             delete Memory.creeps[i];
         }
     }
-
+	
+	if(showScoutsPositions) {
+		let scouts = _.filter(Game.creeps, (creep) =>
+			creep.memory.role == 'scout'
+		);
+		console.log('Scout Listing Dashboard');
+		for(let scoutIndex = 0; scoutIndex < scouts.length; scoutIndex++) {
+			console.log('Scout ' + scouts[scoutIndex].name + ', position ' + scouts[scoutIndex].pos + ', target room : ' + scouts[scoutIndex].memory.targetRoom + ', target room direction : ' + scouts[scoutIndex].memory.targetRoomDirection + ', time to live ' + scouts[scoutIndex].ticksToLive + ', home room : ' + scouts[scoutIndex].memory.homeRoom);
+		}
+	}
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- ROOM MANAGEMENT ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
 
-
     // Array with my rooms, and with rooms names
     var myRooms = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my);
     var myRoomsNames = [];
 
-    for(let i = 0; i < myRooms.length; i++) {
-        myRoomsNames.push(myRooms[i].name);
+    for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
+        myRoomsNames.push(myRooms[currentRoomIndex].name);
     }
 
 
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
-        // BUILDINGS
-        // For each index, the ID the said buildings in the room
+		
+		
+		// For each index, the ID the said buildings in the room, and their position for some of them
         myRooms[currentRoomIndex].memory.spawningPoints = [];
+        myRooms[currentRoomIndex].memory.spawningPointsPos = [];
+		
+        myRooms[currentRoomIndex].memory.powerSpawningPoints = [];
+
         myRooms[currentRoomIndex].memory.links = [];
         myRooms[currentRoomIndex].memory.storages = [];
         myRooms[currentRoomIndex].memory.towers = [];
-        myRooms[currentRoomIndex].memory.sources = [];
-
-        var spawningPointsOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_SPAWN}} );
-        if(spawningPointsOfRoom.length > 0) {
-            for(let currentSpawningPointIndex= 0; currentSpawningPointIndex<spawningPointsOfRoom.length; currentSpawningPointIndex++) {
-                myRooms[currentRoomIndex].memory.spawningPoints.push(spawningPointsOfRoom[currentSpawningPointIndex].id);
-            }
-        }
-
-        var linksOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_LINK}} );
-        if(linksOfRoom.length > 0) {
-            for(let currentLinkIndex= 0; currentLinkIndex<linksOfRoom.length; currentLinkIndex++) {
-                myRooms[currentRoomIndex].memory.links.push(linksOfRoom[currentLinkIndex].id);
-            }
-        }
-
-        var storageOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_STORAGE}});
-        if(storageOfRoom.length > 0) {
-            for(let currentStorageIndex= 0; currentStorageIndex<storageOfRoom.length; currentStorageIndex++) {
-                myRooms[currentRoomIndex].memory.storages.push(storageOfRoom[currentStorageIndex].id);
-            }
-        }
-
-        var sourcesOfRoom = myRooms[currentRoomIndex].find(FIND_SOURCES);
-        if(sourcesOfRoom.length > 0) {
-            for(let currentSourceIndex= 0; currentSourceIndex<sourcesOfRoom.length; currentSourceIndex++) {
-                myRooms[currentRoomIndex].memory.sources.push(sourcesOfRoom[currentSourceIndex].id);
-            }
-        }
-
-
-
-        if(Game.time % 500 == 0) {
+		
+		if(Game.time % 500 == 0) {
             myRooms[currentRoomIndex].memory.receiverLinks = null;
             myRooms[currentRoomIndex].memory.senderLinks = null;
         }
@@ -157,57 +141,12 @@ module.exports.loop = function () {
         if(myRooms[currentRoomIndex].memory.receiverLinks == null) {
             myRooms[currentRoomIndex].memory.receiverLinks = [];
         }
+		
+		
+		// Sets the existing buildings in the room memory, filling the above tables
+		setExistingBuildingsOfRoom.run(myRooms[currentRoomIndex]);
 
-        // Then we parse the links to check they are all categorized
-        if(myRooms[currentRoomIndex].memory.senderLinks != null && myRooms[currentRoomIndex].memory.receiverLinks != null){
-            for(let k=0; k<linksOfRoom.length; k++) {
-                let linkCategorized = false;
-                if(myRooms[currentRoomIndex].memory.senderLinks != undefined){
-                    for(let h= 0; h<myRooms[currentRoomIndex].memory.senderLinks.length; h++) {
-                        if(linksOfRoom[k].id == myRooms[currentRoomIndex].memory.senderLinks[h]) {
-                            linkCategorized = true;
-                        }
-                    }
-                }
-                if(myRooms[currentRoomIndex].memory.receiverLinks != undefined ) {
-                    for(let h=0; h<myRooms[currentRoomIndex].memory.receiverLinks.length; h++) {
-                        if(linksOfRoom[k].id == myRooms[currentRoomIndex].memory.receiverLinks[h]) {
-                            linkCategorized = true;
-                        }
-                    }
-                }
-
-                // And if they are not, then we attach them to either range, using closeness to sources and storages
-                if(!linkCategorized) {
-//                    if(links[k].pos.getRangeTo(links[k].pos.findClosestByRange(FIND_SOURCES)) <= 3) {
-//
-//                    }
-
-                    if(linksOfRoom[k].pos.getRangeTo(linksOfRoom[k].pos.findClosestByRange(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_STORAGE}})) <= 2) {
-
-                        myRooms[currentRoomIndex].memory.receiverLinks.push(linksOfRoom[k].id);
-
-                    }
-                    else {
-                        myRooms[currentRoomIndex].memory.senderLinks.push(linksOfRoom[k].id);
-                    }
-                }
-
-            }
-        }
-
-
-        var towersOfRoom = myRooms[currentRoomIndex].find(FIND_MY_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_TOWER}});
-        if(towersOfRoom.length > 0) {
-            for(let currentTowerIndex= 0; currentTowerIndex<towersOfRoom.length; currentTowerIndex++) {
-                myRooms[currentRoomIndex].memory.towers.push(towersOfRoom[currentTowerIndex].id);
-            }
-        }
-
-
-        // SOURCES
-
-
+		
         // SpawningPrioritied
 
         myRooms[currentRoomIndex].memory.priorities = [];
@@ -218,6 +157,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('fatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceSecurity');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFatHarvester');
+        myRooms[currentRoomIndex].memory.priorities.push('roomReserver');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
         myRooms[currentRoomIndex].memory.priorities.push('builder');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceBuilder');
@@ -227,7 +167,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('scout');
 
 
-        // CREEPS
+        // CREEPS Data table
 
         myRooms[currentRoomIndex].memory.labels = [];
         myRooms[currentRoomIndex].memory.need = [];
@@ -236,395 +176,22 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.unity = [];
         myRooms[currentRoomIndex].memory.targetRoom = [];
         myRooms[currentRoomIndex].memory.needOrigin = [];
+        myRooms[currentRoomIndex].memory.needOriginPos = [];
         myRooms[currentRoomIndex].memory.criticalNeed = [];
-
-
-        // Looping on sources
-        if(myRooms[currentRoomIndex].memory.sources.length > 0) {
-            for(let currentSourceIndex = 0; currentSourceIndex < myRooms[currentRoomIndex].memory.sources.length; currentSourceIndex++) {
-                // Store source id
-
-                // WORK
-
-                myRooms[currentRoomIndex].memory.labels.push('Work source ' + myRooms[currentRoomIndex].memory.sources[currentSourceIndex] )
-                myRooms[currentRoomIndex].memory.role.push('fatHarvester')
-                myRooms[currentRoomIndex].memory.unity.push('Work body parts')
-                myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-                myRooms[currentRoomIndex].memory.needOrigin.push(myRooms[currentRoomIndex].memory.sources[currentSourceIndex]);
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // Work parts needed is stocked (time it takes to get refilled, divided by 2 because each work body part takes 2 per turn)
-                let workPartsNeeded = (Math.ceil(Game.getObjectById(myRooms[currentRoomIndex].memory.sources[currentSourceIndex]).energyCapacity / 300) / 2);
-                myRooms[currentRoomIndex].memory.need.push(workPartsNeeded);
-
-                // Work parts attached is computed and stocked
-                var fatHarvestersOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fatHarvester' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.needOrigin == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
-
-
-                var counterOfCurrentWorkBodyParts = 0;
-                for(var i = 0; i<fatHarvestersOfSource.length; i++) {
-                    if(fatHarvestersOfSource[i].ticksToLive >= naturallyDeadTime || fatHarvestersOfSource[i].memory.creepSpawning) {
-                        counterOfCurrentWorkBodyParts += fatHarvestersOfSource[i].getActiveBodyparts(WORK);
-                    }
-                }
-                // Work parts currently attached
-                myRooms[currentRoomIndex].memory.attached.push(counterOfCurrentWorkBodyParts);
-
-
-
-                // CARRY
-
-                myRooms[currentRoomIndex].memory.labels.push('Carry source ' + myRooms[currentRoomIndex].memory.sources[currentSourceIndex] )
-                myRooms[currentRoomIndex].memory.role.push('fastMover')
-                myRooms[currentRoomIndex].memory.unity.push('Carry body parts')
-                myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-                myRooms[currentRoomIndex].memory.needOrigin.push(myRooms[currentRoomIndex].memory.sources[currentSourceIndex]);
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // If there is no fat harvester, then we do not need to carry energy
-                if(counterOfCurrentWorkBodyParts == 0) {
-                    myRooms[currentRoomIndex].memory.need.push(0);
-                }
-                // If there is one, then we need to carry the energy
-                else if(counterOfCurrentWorkBodyParts > 0) {
-
-                    // First we check if we have a receiver link
-                    let receiverLinkExists = false;
-                    if(myRooms[currentRoomIndex].controller.level >= 5) {
-                        if(myRooms[currentRoomIndex].memory.receiverLinks != undefined) {
-                            if(myRooms[currentRoomIndex].memory.receiverLinks.length > 0) {
-                                receiverLinkExists = true;
-                            }
-                        }
-                    }
-
-                    // If there is a link close to the source and a receiver link, then carry parts are not needed for this source.
-                    if(senderLinkCloseToSource.run(Game.getObjectById(myRooms[currentRoomIndex].memory.sources[currentSourceIndex])) && receiverLinkExists) {
-                        myRooms[currentRoomIndex].memory.need.push(0);
-                    }
-
-                    // If there's one of them missing, then we still need to spawn fast creeps
-                    if(!senderLinkCloseToSource.run(Game.getObjectById(myRooms[currentRoomIndex].memory.sources[currentSourceIndex])) || !receiverLinkExists) {
-                        if(myRooms[currentRoomIndex].memory.spawningPoints.length > 0) {
-                            // On détermine de combien de transporteurs on va avoir besoin
-                            var distanceSourceSpawn = myRooms[currentRoomIndex].findPath(Game.getObjectById(myRooms[currentRoomIndex].memory.sources[currentSourceIndex]).pos,Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[0]).pos, {ignoreCreeps:true}).length;
-                        }
-                        // 1 body part "work" mine 2 énergie/tick, +1 for legit reasons, +1 for rounding - c'est très estimatif
-                        var totalCarryPartsNeeded = Math.floor(((distanceSourceSpawn * 2.5) * (Math.floor(Game.getObjectById(myRooms[currentRoomIndex].memory.sources[currentSourceIndex]).energyCapacity / 300))) / 50) + 1 + 4;
-
-                        myRooms[currentRoomIndex].memory.need.push(totalCarryPartsNeeded);
-                    }
-
-                }
-
-
-                var fastMoversOfSource = _.filter(Game.creeps, (creep) => (creep.memory.role == 'fastMover' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.needOrigin == myRooms[currentRoomIndex].memory.sources[currentSourceIndex]));
-
-                let counterOfCurrentCarryBodyParts = 0;
-                if(fastMoversOfSource.length > 0) {
-                    for(let fastMoverIndex = 0; fastMoverIndex < fastMoversOfSource.length; fastMoverIndex++) {
-                        if(fastMoversOfSource[fastMoverIndex].ticksToLive > naturallyDeadTime || fastMoversOfSource[fastMoverIndex].memory.creepSpawning) {
-                            counterOfCurrentCarryBodyParts += fastMoversOfSource[fastMoverIndex].getActiveBodyparts(CARRY);
-                        }
-
-                    }
-                }
-                myRooms[currentRoomIndex].memory.attached.push(counterOfCurrentCarryBodyParts);
-
-            }
-        }
-
-
-        // LINK-RELATED
-
-        if(myRooms[currentRoomIndex].memory.links.length > 0) {
-            // Looping on receivers links for SLACKER
-            for(let currentLinkIndex = 0; currentLinkIndex < myRooms[currentRoomIndex].memory.receiverLinks.length; currentLinkIndex++) {
-
-                myRooms[currentRoomIndex].memory.labels.push('Slacker for link ' + myRooms[currentRoomIndex].memory.receiverLinks[currentLinkIndex])
-                myRooms[currentRoomIndex].memory.role.push('slacker')
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-                myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-                myRooms[currentRoomIndex].memory.needOrigin.push(myRooms[currentRoomIndex].memory.receiverLinks[currentLinkIndex]);
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // SLAKER needed : 1 for each receiver, if we have a sender somewhere
-                if(myRooms[currentRoomIndex].memory.senderLinks != undefined) {
-                    if(myRooms[currentRoomIndex].memory.senderLinks.length == 0 || myRooms[currentRoomIndex].controller.level < 5) {
-                        myRooms[currentRoomIndex].memory.need.push(0);
-                    }
-                }
-
-                if(myRooms[currentRoomIndex].memory.senderLinks.length > 0 && myRooms[currentRoomIndex].controller.level >= 5) {
-                    myRooms[currentRoomIndex].memory.need.push(1);
-                }
-
-                // SLAKER attached : the slackers of the room, having the receiver link attached, and not being too close to death
-                var slackersOfLink = _.filter(Game.creeps, (creep) => (creep.memory.role == 'slacker' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.linkAttached == myRooms[currentRoomIndex].memory.receiverLinks[currentLinkIndex]));
-
-
-                var counterOfSlackerForReceiverLink = 0;
-                for(let i = 0; i<slackersOfLink.length; i++) {
-                    if(slackersOfLink[i].ticksToLive > naturallyDeadTime || slackersOfLink[i].memory.creepSpawning) {
-                        counterOfSlackerForReceiverLink++;
-                    }
-                }
-
-                myRooms[currentRoomIndex].memory.attached.push(counterOfSlackerForReceiverLink);
-            }
-        }
-
-        if(myRooms[currentRoomIndex].memory.storages.length > 0) {
-            // Looping on deposits for SPREADERS
-            for(let currentStorageIndex = 0; currentStorageIndex < myRooms[currentRoomIndex].memory.storages.length; currentStorageIndex++) {
-
-                myRooms[currentRoomIndex].memory.labels.push('Spreader for storage ' + myRooms[currentRoomIndex].memory.storages[currentStorageIndex])
-                myRooms[currentRoomIndex].memory.role.push('spreaderEfficient')
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-                myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-                myRooms[currentRoomIndex].memory.needOrigin.push(myRooms[currentRoomIndex].memory.storages[currentStorageIndex]);
-
-
-                // Need a spreader efficient as long as we have a storage
-                if(myRooms[currentRoomIndex].name == 'W43N51') {
-                    myRooms[currentRoomIndex].memory.need.push(2);
-                }
-                else if(myRooms[currentRoomIndex].name == 'W42N48') {
-                    myRooms[currentRoomIndex].memory.need.push(3);
-                }
-                else {
-                    myRooms[currentRoomIndex].memory.need.push(1);
-                }
-                // Counting attached creeps
-                var spreadersEfficientsOfStorage = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderEfficient' && creep.memory.homeRoom == myRooms[currentRoomIndex].name && creep.memory.storageAttached == myRooms[currentRoomIndex].memory.storages[currentStorageIndex]));
-
-
-                var counterOfAliveSpreadersOfStorage = 0;
-                var counterOfSpreadersOfStorage = 0;
-                if(spreadersEfficientsOfStorage.length > 0) {
-                    for(let i = 0; i<spreadersEfficientsOfStorage.length; i++) {
-                        if(spreadersEfficientsOfStorage[i].ticksToLive > naturallyDeadTime || spreadersEfficientsOfStorage[i].memory.creepSpawning) {
-                            counterOfAliveSpreadersOfStorage++;
-                        }
-                        counterOfSpreadersOfStorage++;
-                    }
-                }
-
-                myRooms[currentRoomIndex].memory.attached.push(counterOfAliveSpreadersOfStorage);
-
-                if(counterOfSpreadersOfStorage == 0) {
-                    myRooms[currentRoomIndex].memory.criticalNeed.push(true);
-                }
-                else {
-                    myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-                }
-
-            }
-        }
-
-
-        // BUILDING-RELATED
-
-        myRooms[currentRoomIndex].memory.labels.push('Builders')
-        myRooms[currentRoomIndex].memory.role.push('builder')
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-        myRooms[currentRoomIndex].memory.labels.push('Repairers')
-        myRooms[currentRoomIndex].memory.role.push('repairer')
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-
-        var realConstructionSites = myRooms[currentRoomIndex].find(FIND_CONSTRUCTION_SITES, {filter: (s) => s.structureType != STRUCTURE_RAMPART && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_ROAD});
-        var totalConstructionNeeded = 0;
-        for(let a = 0; a <realConstructionSites.length; a++) {
-            totalConstructionNeeded += (realConstructionSites[a].progressTotal - realConstructionSites[a].progress);
-        }
-
-        // Builders needed
-
-        if(totalConstructionNeeded == 0) {
-            myRooms[currentRoomIndex].memory.need.push(0);
-        }
-        else if(totalConstructionNeeded > 0 && totalConstructionNeeded <= 1000) {
-            myRooms[currentRoomIndex].memory.need.push(1);
-        }
-        else if(totalConstructionNeeded > 1000 && totalConstructionNeeded <= 15000) {
-            myRooms[currentRoomIndex].memory.need.push(2);
-        }
-        else if(totalConstructionNeeded > 15000 && totalConstructionNeeded <= 30000) {
-            myRooms[currentRoomIndex].memory.need.push(3);
-        }
-        else if(totalConstructionNeeded > 30000) {
-            myRooms[currentRoomIndex].memory.need.push(4);
-        }
-
-        // Builders attached
-
-        myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'builder' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
-
-
-        // Repairer needed
-
-        myRooms[currentRoomIndex].memory.need.push(1);
-
-        // Repairer attached
-
-        myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'repairer' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
-
-
-        // MINERAL RELATED
-
-        myRooms[currentRoomIndex].memory.labels.push('Extractors')
-        myRooms[currentRoomIndex].memory.role.push('extractor')
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-
-        // TO BE IMPROVED : take into account the mineral amount available
-        if(myRooms[currentRoomIndex].terminal != undefined) {
-            myRooms[currentRoomIndex].memory.need.push(1);
-        }
-        else {
-            myRooms[currentRoomIndex].memory.need.push(0);
-        }
-
-        myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'extractor' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
-
-        // UPAGREDERS
-
-
-        myRooms[currentRoomIndex].memory.labels.push('Upgraders')
-        myRooms[currentRoomIndex].memory.role.push('upgrader')
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-        // à améliorer : upgrader "lite" ?
-        if(myRooms[currentRoomIndex].controller.level == 8) {
-            myRooms[currentRoomIndex].memory.need.push(1);
-        }
-
-        // This variable is the energy the upgrader creep is supposed to consume during its life
-        let baseUnitUpgradersNeed = 40000;
-
-        // Max harvesters in order not to clog the room
-        let maxUpgraders = 4;
-
-        if(myRooms[currentRoomIndex].controller.level < 8) {
-            // If we have a storage
-            if(myRooms[currentRoomIndex].memory.storages.length > 0) {
-                // But not enough energy in it
-                if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_ENERGY] < baseUnitUpgradersNeed) {
-                    // We do not create upgraders
-                    myRooms[currentRoomIndex].memory.need.push(0);
-                }
-
-                else if (Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_ENERGY] > baseUnitUpgradersNeed * maxUpgraders) {
-                    myRooms[currentRoomIndex].memory.need.push(maxUpgraders);
-                }
-
-                else {
-                    // If we have enough energy, we check how much we could sustain
-                    let maximumReached = false;
-                    for(let maxFactor = 1; maxFactor < maxUpgraders && !maximumReached; maxFactor++) {
-                        if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_ENERGY] > (baseUnitUpgradersNeed * maxFactor) && Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_ENERGY] <= (baseUnitUpgradersNeed * (maxFactor+1))) {
-                            myRooms[currentRoomIndex].memory.need.push(maxFactor);
-                        }
-                    }
-                }
-            }
-            // If we have no storage, we still need upgraders ! The room is just low level.
-            else {
-                let builderNeededOfRoom = 0;
-                let maxSpaceAroundContainer = 4;
-                for(let findBuilderIndex = 0; findBuilderIndex < myRooms[currentRoomIndex].memory.need.length; findBuilderIndex++) {
-                    if(myRooms[currentRoomIndex].memory.role[findBuilderIndex] == 'builder') {
-                        builderNeededOfRoom = myRooms[currentRoomIndex].memory.need[findBuilderIndex];
-                    }
-                }
-                // We need 1 spot free around container for fast movers to acess it
-                let result = maxSpaceAroundContainer - 1 - builderNeededOfRoom;
-                if(result >= 0) {
-                    myRooms[currentRoomIndex].memory.need.push(result);
-                }
-                else {
-                    myRooms[currentRoomIndex].memory.need.push(0);
-                }
-            }
-        }
-
-        myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'upgrader' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
-
-
-        // SCOUT
-
-        myRooms[currentRoomIndex].memory.labels.push('scout');
-        myRooms[currentRoomIndex].memory.role.push('scout');
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined');
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-        myRooms[currentRoomIndex].memory.need.push(0);
-        myRooms[currentRoomIndex].memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'scout' && creep.memory.homeRoom == myRooms[currentRoomIndex].name)).length);
-
-
-        // CATASTROPHE
-
-        myRooms[currentRoomIndex].memory.labels.push('AdHoc Harvesters')
-        myRooms[currentRoomIndex].memory.role.push('harvester')
-        myRooms[currentRoomIndex].memory.unity.push('Number of creeps')
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-
-        var harvesters = _.filter(Game.creeps, (creep) => (creep.memory.role == 'harvester' && creep.memory.homeRoom == myRooms[currentRoomIndex].name));
-        myRooms[currentRoomIndex].memory.attached.push(harvesters.length);
-
-        let counterTotalWorkNeeded = 0;
-        let counterTotalWorkAttached = 0;
-        let counterTotalCarryNeeded = 0;
-        let counterTotalCarryAttached = 0;
-        let counterTotalSpreadNeeded = 0;
-        let counterTotalSpreadAttached = 0;
-
-        for(let a = 0; a < myRooms[currentRoomIndex].memory.labels.length; a++) {
-
-            if(myRooms[currentRoomIndex].memory.role[a] == 'fatHarvester') {
-                counterTotalWorkNeeded += myRooms[currentRoomIndex].memory.need[a];
-                counterTotalWorkAttached += myRooms[currentRoomIndex].memory.attached[a];
-            }
-
-            if(myRooms[currentRoomIndex].memory.role[a] == 'fastMover') {
-                counterTotalCarryNeeded += myRooms[currentRoomIndex].memory.need[a];
-                counterTotalCarryAttached += myRooms[currentRoomIndex].memory.attached[a];
-            }
-
-            if(myRooms[currentRoomIndex].memory.role[a] == 'spreader') {
-                counterTotalSpreadNeeded += myRooms[currentRoomIndex].memory.need[a];
-                counterTotalSpreadAttached += myRooms[currentRoomIndex].memory.attached[a];
-            }
-
-        }
-
-
-        // console.log('spreaders A ' + myRooms[currentRoomIndex].memory.storageSpreaderAttached[0])
-        if(counterTotalWorkAttached < (counterTotalWorkNeeded / 3) || counterTotalCarryAttached < (counterTotalCarryNeeded / 3) || counterTotalSpreadNeeded > counterTotalSpreadAttached) {
-            myRooms[currentRoomIndex].memory.need.push(2);
-        }
-        else {
-            myRooms[currentRoomIndex].memory.need.push(0);
-        }
-
+		
+        
+		// Sets the needs and fills the data structure above for different types of creeps
+		setNeedCreepsEnergyHarvestingOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]); 
+		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsMineralExtractorsOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);
+		setNeedCreepsAdHocHarvestersOfRoom.run(myRooms[currentRoomIndex]);
+
+		// Using scout info to define the LD Harvesting needs
+		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
+		// setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY
@@ -648,115 +215,21 @@ module.exports.loop = function () {
         else {
             myRooms[currentRoomIndex].memory.underAttack = false;
         }
-    }
+		
+	}
 
 
 
     // -------------------------------------------------------------------------------------------------------------------------------
-    // -------------------------------------- LONG DISTANCE HARVESTING ---------------------------------------------------------------
+    // -------------------------------------- LONG DISTANCE ---------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-
-
-
-    // Automatically filled tables for long distance harvesting.
-    var longDistanceTargetRoomsFattysAttached = [];
-    var longDistanceTargetRoomsCarryAttached = [];
-    var longDistanceTargetRoomsSecurityNeeded = [];
-    var longDistanceTargetRoomsSecurityAttached = [];
 
     var longDistancePillageRoomsHomeRooms = [];
     var longDistancePillageRoomsWarriorAttached = [];
     var longDistancePillageRoomsCarryAttached = [];
 
-    // Long distance table filling
-    for(let i = 0; i<longDistanceTargetRooms.length; i++) {
-        if(longDistanceTargetRoomsHomeRooms[i] == 'null')
-        {
-            // Push on the home rooms
-            let closestRoomDistance = 1000;
-            let closestRoom = null;
-            for(let j = 0; j<myRooms.length; j++) {
-                let currentDistance = Game.map.findRoute(myRooms[j].name, longDistanceTargetRooms[i]).length;
-                if(currentDistance < closestRoomDistance && currentDistance <=3 && myRooms[j].energyCapacityAvailable > 1000 && myRooms[j].find(FIND_MY_STRUCTURES, {filter: (structure) => {return (structure.structureType == STRUCTURE_STORAGE)}}).length > 0) {
-                    closestRoomDistance = currentDistance;
-                    closestRoom = myRooms[j].name;
-                }
-            }
-            longDistanceTargetRoomsHomeRooms[i] = closestRoom;
-        }
-        // Push on carry needed
-        // longDistanceTargetRoomsCarryNeeded.push(2*closestRoomDistance*longDistanceTargetRoomsSources[i] -1);
-
-        // Push on the fattys attached
-        longDistanceTargetRoomsFattysAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceFatHarvester' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
-        ).length);
-
-        // Push on the carry attached
-        longDistanceTargetRoomsCarryAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceFastMover' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 150 || creep.memory.creepSpawning)
-        ).length);
-
-        if(_.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == longDistanceTargetRooms[i] && creep.memory.underAttack == true && creep.getActiveBodyparts(MOVE) > 0).length > 0) {
-            longDistanceTargetRoomsSecurityNeeded.push(1);
-        }
-        else if(_.filter(Game.creeps, (creep) => creep.memory.underAttackRoom == longDistanceTargetRooms[i] && creep.memory.underAttack == true  && creep.getActiveBodyparts(MOVE) > 0).length == 0) {
-            longDistanceTargetRoomsSecurityNeeded.push(0);
-        }
-
-        longDistanceTargetRoomsSecurityAttached.push(_.filter(Game.creeps, (creep) =>
-            creep.memory.role == 'longDistanceSecurity' &&
-            creep.memory.targetRoom == longDistanceTargetRooms[i] &&
-            (creep.ticksToLive > 50 || creep.memory.creepSpawning)
-        ).length);
-
-    }
-
-
-    // Linking info with room needs
-
     // For each room,
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
-        // And for each long distance target room,
-        for(let currentLongDistanceRoomIndex = 0; currentLongDistanceRoomIndex < longDistanceTargetRoomsHomeRooms.length; currentLongDistanceRoomIndex++) {
-            // If the current room is the same as the home room of the LDTRoom
-            if(myRoomsNames[currentRoomIndex] == longDistanceTargetRoomsHomeRooms[currentLongDistanceRoomIndex]) {
-                // We first push the need for LDFHarvesters
-                myRooms[currentRoomIndex].memory.labels.push('LDFH target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsSources[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsFattysAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceFatHarvester');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // Then we push the need for the carrys
-                myRooms[currentRoomIndex].memory.labels.push('LDFM target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsCarryNeeded[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsCarryAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceFastMover');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
-                // And finaly the security
-                myRooms[currentRoomIndex].memory.labels.push('LDS target room ' + longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.need.push(longDistanceTargetRoomsSecurityNeeded[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.attached.push(longDistanceTargetRoomsSecurityAttached[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.role.push('longDistanceSecurity');
-                myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
-                myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceTargetRooms[currentLongDistanceRoomIndex]);
-                myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
-                myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-            }
-        }
-
         // Long distance builders table filling
         for(let currentLongDistanceBuildRoomIndex = 0; currentLongDistanceBuildRoomIndex < longDistanceBuildRooms.length; currentLongDistanceBuildRoomIndex++) {
             if(myRoomsNames[currentRoomIndex] == longDistanceBuildRoomsHomeRooms[currentLongDistanceBuildRoomIndex]) {
@@ -770,11 +243,10 @@ module.exports.loop = function () {
                 myRooms[currentRoomIndex].memory.unity.push('Number of creeps');
                 myRooms[currentRoomIndex].memory.targetRoom.push(longDistanceBuildRooms[currentLongDistanceBuildRoomIndex]);
                 myRooms[currentRoomIndex].memory.needOrigin.push('undefined')
+                myRooms[currentRoomIndex].memory.needOriginPos.push('undefined')
                 myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
             }
         }
-
     }
 
 
@@ -785,22 +257,13 @@ module.exports.loop = function () {
 
 
     if(showLongDistanceDashboard) {
-        console.log('Long Distance Harvesting Dashboard :')
-        console.log('Room targets : ' + longDistanceTargetRooms)
-        console.log('Homes        : ' + longDistanceTargetRoomsHomeRooms)
-        console.log('Sources      : ' + longDistanceTargetRoomsSources)
-        console.log('Fatty atta   : ' + longDistanceTargetRoomsFattysAttached)
-        console.log('Carrys need  : ' + longDistanceTargetRoomsCarryNeeded)
-        console.log('Carrys atta  : ' + longDistanceTargetRoomsCarryAttached)
-        console.log('Security need: ' + longDistanceTargetRoomsSecurityNeeded)
-        console.log('Security atta: ' + longDistanceTargetRoomsSecurityAttached)
+		// To be rebuilt
     }
 
-    if(showRoomDashboard) {
+    if(showRoomDashboardBuildings) {
         for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
-            if(myRoomsNames[currentRoomIndex] == showRoomDashboardToDisplay) {
-                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' MANAGEMENT DASHBOARD')
-                console.log('----- Global -----')
+            if(myRoomsNames[currentRoomIndex] == showRoomDashboardBuildingsToDisplay) {
+                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' BUILDING MANAGEMENT DASHBOARD')
                 console.log('Under attack : ' + myRooms[currentRoomIndex].memory.underAttack)
                 console.log('Towers       : ' + myRooms[currentRoomIndex].memory.towers)
                 console.log('Spawning     : ' + myRooms[currentRoomIndex].memory.spawningPoints)
@@ -808,7 +271,14 @@ module.exports.loop = function () {
                 console.log('Send. Links  : ' + myRooms[currentRoomIndex].memory.senderLinks)
                 console.log('Reciev. Links: ' + myRooms[currentRoomIndex].memory.receiverLinks)
                 console.log('Storages     : ' + myRooms[currentRoomIndex].memory.storages)
-                console.log('----- Creeps -----')
+            }
+        }
+    }
+	
+	if(showRoomDashboardCreeps) {
+        for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
+            if(myRoomsNames[currentRoomIndex] == showRoomDashboardCreepToDisplay) {
+                console.log('ROOM ' + myRoomsNames[currentRoomIndex] + ' CREEPS MANAGEMENT DASHBOARD')
                 for(let generalCounter = 0; generalCounter < myRooms[currentRoomIndex].memory.labels.length; generalCounter++) {
                     console.log(myRooms[currentRoomIndex].memory.attached[generalCounter] + '/'+ myRooms[currentRoomIndex].memory.need[generalCounter] + ' ' + myRooms[currentRoomIndex].memory.role[generalCounter] +  ', target room ' + myRooms[currentRoomIndex].memory.targetRoom[generalCounter] + ', origin : ' + myRooms[currentRoomIndex].memory.needOrigin[generalCounter]) /* + ', label : ' + myRooms[currentRoomIndex].memory.labels[generalCounter])*/
                     // console.log('Unity : ' + myRooms[currentRoomIndex].memory.unity[generalCounter])
@@ -894,7 +364,7 @@ module.exports.loop = function () {
                                 // OK for spawning prototype
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'spreaderEfficient') {
                                     // !!! energyCapacity et pas energyCapacityAvailable : normal, si j'en ai pas, je meurs !
-                                    for(let j=0; j< Math.floor((capacityToBeUsed) /150) && j<5; j++) {
+                                    for(let j=0; j< Math.floor((capacityToBeUsed) /150) && j<8; j++) {
                                         creepBody.push(CARRY);
                                         creepBody.push(CARRY);
                                         creepBody.push(MOVE);
@@ -909,7 +379,7 @@ module.exports.loop = function () {
                                     creepBody.push(CARRY);
                                     creepBody.push(MOVE);
                                 }
-
+								
                                 // OK for spawning prototype - role only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'builder') {
                                     for(let j = 0; j< Math.floor((capacityToBeUsed) / 200) && j < 5; j++) {
@@ -957,18 +427,26 @@ module.exports.loop = function () {
 										creepBody.push(MOVE);
 									}
 								}
-								
+				
                                 // OK for spawning prototype - target room only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFatHarvester') {
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(MOVE);
-                                    creepBody.push(CARRY);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
-                                    creepBody.push(WORK);
+									let maxNumberBodyParts = 5;
+                                    for(let j = 0; j < maxNumberBodyParts; j++) {
+										creepBody.push(MOVE);
+									}
+                                    creepBody.push(CARRY);		
+                                    for(let j = 0; j < maxNumberBodyParts; j++) {
+										creepBody.push(WORK);
+									}																	
                                 }
-
+								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'roomReserver') {
+									for(let j = 0; j< Math.floor((capacityToBeUsed) / 650) && j < 7; j++) {
+										creepBody.push(CLAIM);
+										creepBody.push(MOVE);
+									}
+								}
+								
                                 // OK for spawning prototype - target room and home room
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFastMover') {
                                     for(let j = 0; j<8; j++) {
@@ -991,6 +469,36 @@ module.exports.loop = function () {
                                         creepBody.push(ATTACK);
                                     }
                                 }
+								
+								// --------------- POWER CREEPS BODYS - According to excel computations
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceAttackerPower') {
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(ATTACK);
+                                    }
+                                }
+								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceHealerPower') {
+                                    for(let j = 0; j < 25; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 25; j++) {
+                                        creepBody.push(HEAL);
+                                    }
+                                }
+								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceCarryPower') {
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(MOVE);
+                                    }
+                                    for(let j = 0; j < 20; j++) {
+                                        creepBody.push(CARRY);
+                                    }
+                                }
+
+								
 
                                 // Ok for spawning prototype
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'upgrader') {
@@ -1031,6 +539,7 @@ module.exports.loop = function () {
                                             targetRoom : myRooms[currentRoomIndex].memory.targetRoom[needIndex],
                                             homeRoom: myRooms[currentRoomIndex].name,
                                             needOrigin: myRooms[currentRoomIndex].memory.needOrigin[needIndex],
+                                            needOriginPos: myRooms[currentRoomIndex].memory.needOriginPos[needIndex],
                                             creepSpawning: true}
                                 }));
 
@@ -1070,6 +579,15 @@ module.exports.loop = function () {
         if(myRooms[currentRoomIndex].terminal) {
             functionTerminal.run(myRooms[currentRoomIndex].terminal);
         }
+		
+		// Power spawn : if enough ressources, we process power.
+		if(myRooms[currentRoomIndex].memory.powerSpawningPoints.length > 0) {
+			for(let powerSpawnIndex = 0; powerSpawnIndex < myRooms[currentRoomIndex].memory.powerSpawningPoints.length; powerSpawnIndex++) {
+				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).energy > 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).power > 1) {
+					Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).processPower();
+				}
+			}
+		}
 
         }
     }
@@ -1164,7 +682,19 @@ module.exports.loop = function () {
         if(creep.memory.role == 'scout') {
             roleScout.run(creep);
         }
+		
+		if(creep.memory.role == 'longDistanceAttackerPower'){
+			rolelongDistancePowerAttacker.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceCarryPower'){
+			rolelongDistancePowerCarry.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceHealerPower'){
+			rolelongDistancePowerHealer.run(creep)
+		}
 
     }
+    processLDEnergyInfo.run();
+	processLDPowerInfo.run();
     // console.log('Step 21 : ' + Game.cpu.getUsed() + ', after setting ALL roles')
 }

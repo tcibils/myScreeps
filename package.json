@@ -1,0 +1,25 @@
+{
+  "name": "myScreeps",
+  "version": "1.0.0",
+  "description": "*STATUS - 24-03-2018 - Thomas Cibils*\r Using parameter dashboard to get infos in the console.",
+  "main": "main.js",
+  "dependencies": {
+    "grunt": "^1.0.2",
+    "grunt-screeps": "^1.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tcibils/myScreeps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tcibils/myScreeps/issues"
+  },
+  "homepage": "https://github.com/tcibils/myScreeps#readme"
+}

@@ -16,12 +16,10 @@ var longDistanceReserver = {
                 if(creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
                 }
+				if(creep.reserveController(creep.room.controller) == ERR_NO_PATH) {
+					creep.move(RIGHT);
+				}
             }
-        }
-        
-        else if(creep.room.name == creep.memory.homeRoom) {
-            var localExit = creep.room.findExitTo(creep.memory.targetRoom);
-            creep.moveTo(creep.pos.findClosestByRange(localExit));
         }
         
         else {

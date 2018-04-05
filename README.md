@@ -4,6 +4,14 @@ Using parameter dashboard to get infos in the console.
 Current data structure is tables defining, for each of my rooms, the need for each creep type, and the quantity currently attached.
 Thus, we can change easily the need for each creep type, and take spawning decisions based on the data gathered.
 
+Data structure :
+
+Data is stored by room, in each room memory.
+ - My rooms have stored information in their memory on their needs and attached creeps. This allows modular code : filling information on one hand, and taking decisions with the data structured in the other.
+ - All rooms have information stored on the buildings and sources present, gathered through main for my rooms, and through scouts for other rooms.
+ - The goal will be to automate long-distance harvesting and power processing based on multi-room gathered information.
+ 
+
 *Room leveling :*
  - First level : simple harvesters to start the machine and bring some energy.
  - Second level : using fat harvesters and fast movers to bring the energy back to the spawn, extensions and containers - containers used by upgraders to upgrade the room - get them space around !
