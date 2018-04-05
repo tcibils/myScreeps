@@ -9,10 +9,11 @@ var setLDHEnergyNeedOfRoom = {
 			if(Memory.rooms[roomInMemory].powerSourcesHomeRooms != undefined) {
 				// For each of these power sources
 				for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms.length; powerSourceIndex++) {
+					console.log('power source ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ' were here')
 					// Remember : we have multiple home rooms for the same power source !
 					for(let homeRoomOfPowerSourceIndex=0; homeRoomOfPowerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex].length; homeRoomOfPowerSourceIndex++) {
 						
-						console.log('power source ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex] + ' home rooms ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex][homeRoomOfPowerSourceIndex])
+						console.log('power source ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ' home rooms ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex][homeRoomOfPowerSourceIndex])
 					
 						// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 						if(Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex][homeRoomOfPowerSourceIndex] == treatedRoom.name) {
