@@ -54,15 +54,16 @@ var setNeedCreepsEnergySpreadingOfRoom = {
 
 
                 // Need a spreader efficient as long as we have a storage
-                if(treatedRoom.name == 'W43N51') {
-                    treatedRoom.memory.need.push(2);
-                }
-                else if(treatedRoom.name == 'W42N48') {
+
+                if(treatedRoom.name == 'W42N48') {
                     treatedRoom.memory.need.push(3);
                 }
-                else {
-                    treatedRoom.memory.need.push(1);
+                else if(treatedRoom.controller.level >= 8) {
+                    treatedRoom.memory.need.push(2);
                 }
+				else {
+					treatedRoom.memory.need.push(1);
+				}
                 // Counting attached creeps
                 var spreadersEfficientsOfStorage = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderEfficient' && creep.memory.homeRoom == treatedRoom.name && creep.memory.storageAttached == treatedRoom.memory.storages[currentStorageIndex]));
 
