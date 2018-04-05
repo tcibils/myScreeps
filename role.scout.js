@@ -133,7 +133,7 @@ var scout = {
 		}
 
         // If we just arrived in a new room, or don't know where to go
-        if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined) {
+        if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined || creep.memory.targetRoom != "undefined") {
 			if(creep.memory.targetRoom === "undefined") {
 				// We define the possibilities, checking which exit exist
 				let possibilities = [];
@@ -154,7 +154,7 @@ var scout = {
 				// And we take one at random, store it in the memory, and make the room we're in the current room.
 				let randomResult = Math.floor(Math.random() * possibilities.length);
 				creep.memory.targetRoomDirection = possibilities[randomResult];
-				
+
 			}
 			else {
 				var localExit = creep.room.findExitTo(creep.memory.targetRoom);
@@ -166,7 +166,8 @@ var scout = {
         }
 		
 
-
+		// IMPROVEMENT HERE : arrêtre le findClosestByRange chaque tour, storer le résultat en mémoire genre avec ça :
+		// creep.memory.targetLocalExist = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
 
 
         // And now, moving the creep :

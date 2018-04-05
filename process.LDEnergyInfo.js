@@ -14,6 +14,7 @@ var processLDEnergyInfo = {
 			// Debug : store path to see it on the map...
 			
 			// variable array with rooms to be excluded (parameters), for diplomacy (Ringo86)
+			// Add here rooms of Threen, as he does not reserve them
 			let roomsExceptions = ['W45N52'];
 			
 			// Arbitrary number of max distance
@@ -186,7 +187,9 @@ var processLDEnergyInfo = {
 								let testedRooms = [];
 								// Gonna be an array containing number of sender links in each potential home room
 								let testedRoomsNumberSenders = [];
-
+								
+								// Second position : the position of the source, retrieved from memory - we need to re-create it
+								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 
 								// For each of my room having sender links
 								for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
@@ -194,8 +197,6 @@ var processLDEnergyInfo = {
 									for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 										// First position : the sender link assessed
 										let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
-										// Second position : the position of the source, retrieved from memory - we need to re-create it
-										let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 										
 										// We find the ideal path between the two
 										// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
@@ -284,7 +285,9 @@ var processLDEnergyInfo = {
 							// Gonna be an array containing number of sender links in each potential home room
 							let testedRoomsNumberSenders = [];
 							let finalIdealPath = null;//TEMP
-
+							
+							// Second position : the position of the source, retrieved from memory - we need to re-create it
+							let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 
 							// For each of my room having sender links
 							for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
@@ -292,8 +295,6 @@ var processLDEnergyInfo = {
 								for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 									// First position : the sender link assessed
 									let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
-									// Second position : the position of the source, retrieved from memory - we need to re-create it
-									let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 									
 									// We find the ideal path between the two
 									// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
