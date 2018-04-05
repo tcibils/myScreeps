@@ -203,8 +203,10 @@ var processLDEnergyInfo = {
 										
 										let currentDistance = 10000;
 										if(idealPath != undefined) {
-											// Check if path is not empty
-											currentDistance = idealPath.path.length;
+											if(!idealPath.incomplete) {
+												// Check if path is not empty
+												currentDistance = idealPath.path.length;
+											}
 										}
 										
 										if(currentDistance < closestRoomDistance) {
@@ -299,8 +301,10 @@ var processLDEnergyInfo = {
 									
 									let currentDistance = 10000;
 									if(idealPath != undefined) {
-										// Check if path is not empty
-										currentDistance = idealPath.path.length;
+										if(!idealPath.incomplete) {
+											// Check if path is not empty
+											currentDistance = idealPath.path.length;
+										}
 									}
 									
 									if(currentDistance < closestRoomDistance) {

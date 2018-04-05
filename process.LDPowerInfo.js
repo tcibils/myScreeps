@@ -105,8 +105,10 @@ var processLDPowerInfo = {
 									
 									let currentDistance = 10000;
 									if(idealPath != undefined) {
-										// Check if path is not empty
-										currentDistance = idealPath.path.length;
+										if(!idealPath.incomplete) {
+											// Check if path is not empty
+											currentDistance = idealPath.path.length;
+										}
 									}
 									
 									// If we get a distance better than what we have so far
