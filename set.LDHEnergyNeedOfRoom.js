@@ -3,7 +3,7 @@ var setLDHEnergyNeedOfRoom = {
 		
         // Ajouter un "every X tick" ?
 		
-		var showLDHEnergyDigest = false;
+		var showLDHEnergyDigest = true;
 		var showLDHEnergySpecificRoomDigest = false;
 		var showLDHEnergySpecificRoomDigestTarget = 'W44N51';
 		
@@ -14,7 +14,7 @@ var setLDHEnergyNeedOfRoom = {
 				
 				if(showLDHEnergySpecificRoomDigest) {
 					if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
-						console.log('Distant room ' + roomInMemory ' Digest : ');
+						console.log('Distant room ' + roomInMemory + ' Digest : ');
 					}
 				}
 				// For each of these sources
