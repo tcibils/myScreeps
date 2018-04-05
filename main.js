@@ -156,6 +156,9 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('fastMover');
         myRooms[currentRoomIndex].memory.priorities.push('fatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceSecurity');
+        myRooms[currentRoomIndex].memory.priorities.push('longDistanceCarryPower');
+        myRooms[currentRoomIndex].memory.priorities.push('longDistanceHealerPower');
+        myRooms[currentRoomIndex].memory.priorities.push('longDistanceAttackerPower');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('roomReserver');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
@@ -165,6 +168,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('extractor');
         myRooms[currentRoomIndex].memory.priorities.push('upgrader');
         myRooms[currentRoomIndex].memory.priorities.push('scout');
+		
 
 
         // CREEPS Data table
