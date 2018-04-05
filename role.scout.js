@@ -154,21 +154,19 @@ var scout = {
 				// And we take one at random, store it in the memory, and make the room we're in the current room.
 				let randomResult = Math.floor(Math.random() * possibilities.length);
 				creep.memory.targetRoomDirection = possibilities[randomResult];
+				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
 
 			}
 			else {
 				var localExit = creep.room.findExitTo(creep.memory.targetRoom);
 				// And we move towards our target !
 				creep.memory.targetRoomDirection = localExit;
+				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
 				creep.say('Yes, sir!');
 			}
 			creep.memory.currentRoom = creep.room.name;
         }
 		
-
-		// IMPROVEMENT HERE : arrêtre le findClosestByRange chaque tour, storer le résultat en mémoire genre avec ça :
-		// creep.memory.targetLocalExist = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
-
 
         // And now, moving the creep :
         // If there is a controller
@@ -183,12 +181,12 @@ var scout = {
             // If it is already signed, we move towards the exit.
             // TO BE IMPROVED; CPU EXPENSIVE TO FIND EACH TURN THE EXIT
             else {
-                creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+                creep.moveTo(creep.memory.targetLocalExit);
             }
         }
         // Same if there's no controller, we move towards the exit.
         else {
-            creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+            creep.moveTo(creep.memory.targetLocalExit);
         }
 
 
