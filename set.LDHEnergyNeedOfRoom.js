@@ -14,6 +14,7 @@ var setLDHEnergyNeedOfRoom = {
 				
 				if(showLDHEnergySpecificRoomDigest) {
 					if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
+
 						console.log('Distant room ' + roomInMemory + ' Digest : ');
 					}
 				}
