@@ -1,5 +1,7 @@
-var setLDHEnergyNeedOfRoom = {
+var setLDHPowerNeedOfRoom = {
     run: function(treatedRoom) {
+		
+				console.log('we got here ' + treatedRoom.name)
 		
         // Ajouter un "every X tick" ?
 		
@@ -94,4 +96,4 @@ var setLDHEnergyNeedOfRoom = {
     }
 }
 
-module.exports = setLDHEnergyNeedOfRoom;
+module.exports = setLDHPowerNeedOfRoom;
