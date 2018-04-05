@@ -143,7 +143,7 @@ var scout = {
 
 		
         // If we just arrived in a new room, or don't know where to go
-        if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined || creep.memory.targetRoom != "undefined") {
+        if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined) {
 			if(creep.memory.targetRoom === "undefined") {
 				// We define the possibilities, checking which exit exist
 				let possibilities = [];
@@ -172,7 +172,7 @@ var scout = {
 				// And we move towards our target !
 				creep.memory.targetRoomDirection = localExit;
 				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
-				creep.say('Yes, sir!');
+				creep.say('To ' + creep.memory.targetRoom);
 			}
 			creep.memory.currentRoom = creep.room.name;
         }

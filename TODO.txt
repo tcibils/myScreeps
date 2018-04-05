@@ -1,6 +1,7 @@
 power from deposit to power source
 
-debug distance function...
-first tests of power script
+first tests of power script - KO PTR, go prod I guess
 
+Second priority :
+change the LDHEnergy scripts to go to needOriginPos
 what about automating the needs of LDB on same model? Sounds good
