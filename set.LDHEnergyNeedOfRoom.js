@@ -3,9 +3,9 @@ var setLDHEnergyNeedOfRoom = {
 		
         // Ajouter un "every X tick" ?
 		
-		var showLDHEnergyDigest = true;
-		var showLDHEnergySpecificRoomDigest = false;
-		var showLDHEnergySpecificRoomDigestTarget = 'W44N51';
+		var showLDHEnergyDigest = false;
+		var showLDHEnergySpecificRoomDigest = true;
+		var showLDHEnergySpecificRoomDigestTarget = 'W43N43';
 		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
