@@ -43,6 +43,9 @@ var rolePowerHealer = {
 				potentialTarget.memory.healBuddyAttached = true;
 				creep.say('Got buddy!')
 			}
+			else{
+				creep.say('Buddy???')
+			}
 		}
 		
 		// If we have an attack buddy attached, we spam heal it to death.
