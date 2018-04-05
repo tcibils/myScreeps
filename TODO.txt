@@ -1,4 +1,5 @@
 power from deposit to power source
+noter que les rooms déjà prises pour le power pour pas les reprendre ?
 
 first tests of power script - KO PTR, go prod I guess
 

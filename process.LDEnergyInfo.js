@@ -119,9 +119,6 @@ var processLDEnergyInfo = {
 				if(Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders == undefined) {
 					Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTriedNumberSenders = [];
 				}
-				if(Memory.rooms[roomInMemory].finalIdealPathFound == undefined) {
-					Memory.rooms[roomInMemory].finalIdealPathFound = [];
-				}
 				
 				
 				// if the room is mine, or meets on of the above criteria, we don't do stuff
@@ -182,7 +179,6 @@ var processLDEnergyInfo = {
 								let closestRoomDistance = 10000;
 								let closestRoom = null;
 								let closestSenderLinkId = null;
-								let finalIdealPath = null;//TEMP
 								
 								// Gonna be an array of potential home rooms tested
 								let testedRooms = [];
@@ -215,8 +211,6 @@ var processLDEnergyInfo = {
 											closestRoomDistance = currentDistance;
 											closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
 											closestSenderLinkId = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex];
-											//TEMP
-											finalIdealPath = idealPath.path;
 										}
 									}
 									// Now that we parsed all links of a potential room, we add the home room in the list of tested rooms
@@ -225,8 +219,6 @@ var processLDEnergyInfo = {
 									testedRoomsNumberSenders.push(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length);
 								}
 								
-								//TEMP
-								Memory.rooms[roomInMemory].finalIdealPathFound.push(finalIdealPath);
 								
 								// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
 								Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried[sourceIndex] = testedRooms;
@@ -285,7 +277,6 @@ var processLDEnergyInfo = {
 							let testedRooms = [];
 							// Gonna be an array containing number of sender links in each potential home room
 							let testedRoomsNumberSenders = [];
-							let finalIdealPath = null;//TEMP
 							
 							// Second position : the position of the source, retrieved from memory - we need to re-create it
 							let sourcePosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
@@ -313,7 +304,6 @@ var processLDEnergyInfo = {
 										closestRoomDistance = currentDistance;
 										closestRoom = myRoomsWithSenderLink[myRoomIndex].name;
 										closestSenderLinkId = myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex];
-										finalIdealPath = idealPath.path;
 									}
 								}
 								// Now that we parsed all links of a potential room, we add the home room in the list of tested rooms
@@ -322,8 +312,6 @@ var processLDEnergyInfo = {
 								testedRoomsNumberSenders.push(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length);
 							}
 							
-								//TEMP
-								Memory.rooms[roomInMemory].finalIdealPathFound.push(finalIdealPath);
 							// And now that we've tested all potential rooms, we add the array of room tested in the memory of the room, under the correct source index
 							Memory.rooms[roomInMemory].sourcesHomeRoomsAlreadyTried.push(testedRooms);
 							
