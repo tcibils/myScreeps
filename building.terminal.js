@@ -58,7 +58,8 @@ var buildingTerminal = {
                     console.log('Selling ' + Math.min(buyOrdersEnergy[0].amount, terminal.store[RESOURCE_ENERGY]) + ' Energy, at price ' + buyOrdersEnergy[0].price +', result : ' + Game.market.deal(buyOrdersEnergy[0].id, Math.min(buyOrdersEnergy[0].amount, terminal.store[RESOURCE_ENERGY]), terminal.room.name))
                 }
             }
-            
+		}
+        if(Game.time % 20 == 0)
             if(_.sum(terminal.store) == terminal.storeCapacity) {
                 let buyOrdersEnergy = Game.market.getAllOrders(order => order.resourceType == RESOURCE_ENERGY && order.type == ORDER_BUY);
                 _.sortBy(buyOrdersEnergy, ['price']);
