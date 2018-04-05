@@ -33,8 +33,8 @@ var rolePowerHealer = {
 			// We search for one available
 			let potentialTarget = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: function(creep) {return 
 				creep.memory.role == 'longDistanceAttackerPower' &&
-				!creep.memory.healBuddyAttached &&
-				creep.memory.nearPowerSource
+				creep.memory.healBuddyAttached === 'false' &&
+				creep.memory.nearPowerSource === 'true'
 				}});
 			// If found, we set memories
 			if(potentialTarget != undefined) {
