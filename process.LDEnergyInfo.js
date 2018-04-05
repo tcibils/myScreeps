@@ -58,7 +58,7 @@ var processLDEnergyInfo = {
 
 				// We check if there's a reservation saved
 				if(Memory.rooms[roomInMemory].roomOwnerReservation != undefined) {
-					if(Memory.rooms[roomInMemory].roomOwnerReservation.username != 'Blaugaard') {
+					if(Memory.rooms[roomInMemory].roomOwnerReservation != 'Blaugaard') {
 						distantRoomReserved = true;
 					}
 				}
@@ -68,6 +68,7 @@ var processLDEnergyInfo = {
 					for(let exceptionIndex = 0; exceptionIndex < roomsExceptions.length; exceptionIndex++) {
 						if(roomsExceptions[exceptionIndex] == roomInMemory) {
 							distantRoomDiplomacy = true;
+							Memory.rooms[roomInMemory].diplomaticException = true;
 						}
 					}
 				}
@@ -189,18 +190,18 @@ var processLDEnergyInfo = {
 								let testedRoomsNumberSenders = [];
 								
 								// Second position : the position of the source, retrieved from memory - we need to re-create it
-								let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+								let sourcePosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 
 								// For each of my room having sender links
 								for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 									// We check the closeness of each source with each sender link
 									for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 										// First position : the sender link assessed
-										let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
+										let senderLinkPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
 										
 										// We find the ideal path between the two
 										// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
-										let idealPath = PathFinder.search(firstPosition, secondPosition);
+										let idealPath = PathFinder.search(senderLinkPosition, {pos: sourcePosition, range: 1});
 										
 										let currentDistance = 10000;
 										if(idealPath != undefined) {
@@ -287,18 +288,18 @@ var processLDEnergyInfo = {
 							let finalIdealPath = null;//TEMP
 							
 							// Second position : the position of the source, retrieved from memory - we need to re-create it
-							let secondPosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
+							let sourcePosition = new RoomPosition(Memory.rooms[roomInMemory].sourcesPos[sourceIndex].x, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].y, Memory.rooms[roomInMemory].sourcesPos[sourceIndex].roomName);
 
 							// For each of my room having sender links
 							for(let myRoomIndex = 0; myRoomIndex < myRoomsWithSenderLink.length; myRoomIndex++) {
 								// We check the closeness of each source with each sender link
 								for(let senderLinkIndex = 0; senderLinkIndex < myRoomsWithSenderLink[myRoomIndex].memory.senderLinks.length; senderLinkIndex++) {
 									// First position : the sender link assessed
-									let firstPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
+									let senderLinkPosition = Game.getObjectById(myRoomsWithSenderLink[myRoomIndex].memory.senderLinks[senderLinkIndex]).pos;
 									
 									// We find the ideal path between the two
 									// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
-									let idealPath = PathFinder.search(firstPosition, secondPosition);
+									let idealPath = PathFinder.search(senderLinkPosition, {pos: sourcePosition, range: 1});
 									
 									let currentDistance = 10000;
 									if(idealPath != undefined) {

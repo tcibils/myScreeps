@@ -16,6 +16,16 @@ var scout = {
         if(creep.memory.currentRoom == undefined) {
             creep.memory.currentRoom = creep.room.name;
         }
+		
+		if(creep.memory.targetLocalExit == undefined) {
+			if(creep.memory.targetRoomDirection != undefined) {
+				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
+			}
+			else {
+				creep.memory.targetLocalExit = "null";
+			}
+		}
+				
 
         // We only try to update the room memory if we just arrived in it
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
@@ -180,12 +190,17 @@ var scout = {
             }
             // If it is already signed, we move towards the exit.
             else {
-                creep.moveTo(creep.memory.targetLocalExit);
+                if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
+					creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+				}
+				
             }
         }
         // Same if there's no controller, we move towards the exit.
         else {
-            creep.moveTo(creep.memory.targetLocalExit);
+			    if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
+					creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+				}
         }
 
 

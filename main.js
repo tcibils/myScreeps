@@ -61,6 +61,7 @@ module.exports.loop = function () {
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
+    var showScoutsPositions = true;
 	
     var showRoomDashboardBuildings = false;
     var showRoomDashboardBuildingsToDisplay = 'W43N51';
@@ -91,7 +92,16 @@ module.exports.loop = function () {
             delete Memory.creeps[i];
         }
     }
-
+	
+	if(showScoutsPositions) {
+		let scouts = _.filter(Game.creeps, (creep) =>
+			creep.memory.role == 'scout'
+		);
+		console.log('Scout Listing Dashboard');
+		for(let scoutIndex = 0; scoutIndex < scouts.length; scoutIndex++) {
+			console.log('Scout ' + scouts[scoutIndex].name + ', position ' + scouts[scoutIndex].pos + ', target room : ' + scouts[scoutIndex].memory.targetRoom + ', target room direction : ' + scouts[scoutIndex].memory.targetRoomDirection + ', time to live ' + scouts[scoutIndex].ticksToLive + ', home room : ' + scouts[scoutIndex].memory.homeRoom);
+		}
+	}
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- ROOM MANAGEMENT ------------------------------------------------------------------------
