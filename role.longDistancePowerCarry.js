@@ -37,8 +37,8 @@ var rolePowerCarry = {
 		// If we are near source, and did not find power drop to pickup, and are gathering
 		if(creep.memory.nearPowerSource && !creep.memory.foundPowerToPickup && creep.memory.gathering) {
 			// We wait for the power drop
-			potentialTarget = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {filter: function(resource) {return 
-				resource.resourceType == RESOURCE_POWER}});
+			potentialTarget = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {filter: function(resource) {return (
+				resource.resourceType == RESOURCE_POWER)}});
 				
 			// If found, we pick it up
 			if(potentialTarget != undefined) {
