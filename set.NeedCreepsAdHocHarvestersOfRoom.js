@@ -40,10 +40,25 @@ var setNeedCreepsAdHocHarvestersOfRoom = {
             }
 
         }
-
+		
+		let workSufficient = true;
+		if(counterTotalWorkAttached == 0 && counterTotalWorkNeeded > 0 ) {
+			workSufficient = false;
+		}
+		
+		let carrySufficient = true;
+		if(counterTotalCarryAttached == 0 && counterTotalCarryNeeded > 0) {
+			carrySufficient = false;
+		}
+		
+		// With 150 energy we can spread a spreader if critical.
+		let spreadSufficient = true;
+		if(counterTotalSpreadNeeded > counterTotalSpreadAttached && room.energyAvailable < 150) {
+			spreadSufficient = false;
+		}
 
         // console.log('spreaders A ' + treatedRoom.memory.storageSpreaderAttached[0])
-        if(counterTotalWorkAttached < (counterTotalWorkNeeded / 3) || counterTotalCarryAttached < (counterTotalCarryNeeded / 3) || counterTotalSpreadNeeded > counterTotalSpreadAttached) {
+        if(!workSufficient || !carrySufficient || !spreadSufficient) {
             treatedRoom.memory.need.push(2);
         }
         else {
