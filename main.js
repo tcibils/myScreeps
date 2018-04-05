@@ -632,6 +632,16 @@ module.exports.loop = function () {
             roleFatHarvester.run(creep);
 //            console.log('Step 16 : ' + Game.cpu.getUsed() +', creep ' + creep.name +  ', after setting fastmover, before fatharvester')
         }
+		
+		if(creep.memory.role == 'longDistanceAttackerPower'){
+			rolelongDistancePowerAttacker.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceCarryPower'){
+			rolelongDistancePowerCarry.run(creep)
+		}
+		if(creep.memory.role == 'longDistanceHealerPower'){
+			rolelongDistancePowerHealer.run(creep)
+		}
 
         if(creep.memory.role == 'pureFighter') {
             rolePureFighter.run(creep);
@@ -687,15 +697,7 @@ module.exports.loop = function () {
             roleScout.run(creep);
         }
 		
-		if(creep.memory.role == 'longDistanceAttackerPower'){
-			rolelongDistancePowerAttacker.run(creep)
-		}
-		if(creep.memory.role == 'longDistanceCarryPower'){
-			rolelongDistancePowerCarry.run(creep)
-		}
-		if(creep.memory.role == 'longDistanceHealerPower'){
-			rolelongDistancePowerHealer.run(creep)
-		}
+
 
     }
     processLDEnergyInfo.run();
