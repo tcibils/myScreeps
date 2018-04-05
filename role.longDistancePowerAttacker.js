@@ -37,7 +37,7 @@ var rolePowerAttacker = {
 			}
 			
 			// We also update the hits in our memory, in order to be able to take a decision on carrying creeps.
-			for(let powerSourceIndex = 0; powerSourceIndex < room.memory.powerSources.length; powerSourceIndex++) {
+			for(let powerSourceIndex = 0; powerSourceIndex < creep.room.memory.powerSources.length; powerSourceIndex++) {
 				if(room.memory.powerSources[powerSourceIndex] == creep.memory.needOrigin) {
 					room.memory.powerSourcesHits[powerSourceIndex] = Game.getObjectById(creep.memory.needOrigin).hits;
 				}
