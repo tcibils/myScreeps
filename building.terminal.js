@@ -59,7 +59,7 @@ var buildingTerminal = {
                 }
             }
 		}
-        if(Game.time % 20 == 0)
+        if(Game.time % 20 == 0) {
             if(_.sum(terminal.store) == terminal.storeCapacity) {
                 let buyOrdersEnergy = Game.market.getAllOrders(order => order.resourceType == RESOURCE_ENERGY && order.type == ORDER_BUY);
                 _.sortBy(buyOrdersEnergy, ['price']);
