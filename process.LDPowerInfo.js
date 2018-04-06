@@ -89,6 +89,15 @@ var processLDPowerInfo = {
 							console.log('Before setting needs of attack and heal : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
+								// We first reset all tables								
+								Memory.rooms[roomInMemory].powerSourcesHomeRooms = [];
+								Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance = [];
+								Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms = [];
+								Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance = [];
+								Memory.rooms[roomInMemory].powerSourcesAttackNeed = [];
+								Memory.rooms[roomInMemory].powerSourcesHealNeed = [];
+								
+								
 								// We assess the distances - not before, as this is way more costly to do.
 								// We will need two rooms in order to make it fast enough.
 								let firstClosestRoomDistance = 10000;
@@ -195,6 +204,8 @@ var processLDPowerInfo = {
 							// This shouldn't be a problem as we wont call any expensive function here.
 							console.log('now setting carry needs : T T T - F needed')
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceFinished) {
+								Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
+								
 								// For carrys, if the source is already consequently damaged, then we need some, but not before.
 								// We do not need all the conditions to avoid the computations
 								let currentHits = Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex];
