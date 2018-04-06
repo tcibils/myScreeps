@@ -88,7 +88,6 @@ var processLDPowerInfo = {
 							console.log('Before setting needs : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
-								console.log('treating the power source')
 								// We assess the distances - not before, as this is way more costly to do.
 								// We will need two rooms in order to make it fast enough.
 								let firstClosestRoomDistance = 10000;
