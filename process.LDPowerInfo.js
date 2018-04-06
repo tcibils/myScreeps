@@ -155,6 +155,7 @@ var processLDPowerInfo = {
 									
 									// For carrys, if the source is already consequently damaged, then we need some, but not before.
 									if(Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex] < (Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex] / 4)) {
+										console.log('need carry power')
 										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
 									}
 									else {
