@@ -52,9 +52,9 @@ var processLDPowerInfo = {
 							// We need to assess if we will harvest it.
 							
 							// Condition 1 : will it live long enough for us to have the time to harvest it ?
-							let powerSourceLivingLongEngough = false;
+							let powerSourceLivingLongEngough = true;
 							if(Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex] > minimumPowerSourceLivingTime) {
-								powerSourceLivingLongEngough = false;
+								powerSourceLivingLongEngough = true;
 							}
 							
 							// Condition 2 : do we have enough space around it to harvest it without boosts ?
