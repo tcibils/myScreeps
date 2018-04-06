@@ -58,7 +58,7 @@ var rolePowerAttacker = {
 				// We randomly move away from it.
 				let direction = Math.ceil(Math.random * 8);
 				creep.move(direction);
-				creep.say('Mving aw')
+				creep.say('Mving ' + direction)
 			}
 			else {
 				creep.say('Off')
