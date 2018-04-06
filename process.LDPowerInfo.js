@@ -149,7 +149,7 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push(homeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push(potentialHomeRooms);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
-									
+									console.log('need assessed ')
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
 									
