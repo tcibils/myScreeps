@@ -154,6 +154,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('harvester');
         myRooms[currentRoomIndex].memory.priorities.push('spreaderEfficient');
         myRooms[currentRoomIndex].memory.priorities.push('slacker');
+        myRooms[currentRoomIndex].memory.priorities.push('spreaderPower');
         myRooms[currentRoomIndex].memory.priorities.push('fastMover');
         myRooms[currentRoomIndex].memory.priorities.push('fatHarvester');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceSecurity');
