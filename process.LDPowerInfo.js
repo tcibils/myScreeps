@@ -49,6 +49,7 @@ var processLDPowerInfo = {
 						
 						// For each power source
 						for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSources.length; powerSourceIndex++) {
+							console.log('room ' + roomInMemory + ' power bank ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] )
 							// We need to assess if we will harvest it.
 							
 							// Condition 1 : will it live long enough for us to have the time to harvest it ?
@@ -85,7 +86,7 @@ var processLDPowerInfo = {
 								powerSourceFinished = true;
 							}
 							
-							console.log('Before setting needs : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
+							console.log('Before setting needs of attack and heal : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
 								// We assess the distances - not before, as this is way more costly to do.
