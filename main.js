@@ -215,7 +215,7 @@ module.exports.loop = function () {
 		
         myRooms[currentRoomIndex].memory.attached.push();
         myRooms[currentRoomIndex].memory.role.push('spreaderPower');
-        myRooms[currentRoomIndex].memory.unity.push('number of creeps';
+        myRooms[currentRoomIndex].memory.unity.push('number of creeps');
         myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
         myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
         myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
