@@ -4,7 +4,7 @@ var rolePowerHealer = {
 		if(creep.memory.nearPowerSource == undefined) {
 			creep.memory.nearPowerSource = false;
 		}
-				if(creep.memory.needOriginPos != undefined) {
+		if(creep.memory.needOriginPos != undefined) {
 			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
 		}
 		else{
