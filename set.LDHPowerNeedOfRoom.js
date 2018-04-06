@@ -1,7 +1,7 @@
 var setLDHPowerNeedOfRoom = {
     run: function(treatedRoom) {
 		
-		let displayPowerSummary = true;
+		let displayPowerSummary = false;
 		
         // Ajouter un "every X tick" ?
 		
