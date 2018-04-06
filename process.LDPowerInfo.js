@@ -194,6 +194,9 @@ var processLDPowerInfo = {
 							// "Garbage collection" : we clean up the memory. Expiry is enough, no need to check if it's been destroyed.
 							// We get the expiry tick by summing the discovery time and the ticks to decay at the time of discovery.
 							let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
+							console.log('discovery : ' + Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] )
+							console.log('time to live : ' + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex])
+							console.log('result expiryTick : ' + expiryTick)
 							// Now if the power source has expired
 							if(Game.time > expiryTick) {
 								// We clean the memory of the whole room.
