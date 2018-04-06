@@ -6,7 +6,6 @@ var rolePowerHealer = {
 		}
 		
 		let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-		console.log('targetPowerSourcePos defined ' + targetPowerSourcePos)
 		
 		if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
 			creep.memory.nearPowerSource = true;
