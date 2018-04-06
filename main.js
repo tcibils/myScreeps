@@ -198,7 +198,7 @@ module.exports.loop = function () {
 
         myRooms[currentRoomIndex].memory.labels.push('Power Spreader');
 		
-		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storageOfRoom[0] != undefined)) {
+		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storageOfRoom[0]) != undefined)) {
 			if(Game.getObjectById(myRooms[currentRoomIndex].memory.storageOfRoom[0]).store[RESOURCE_POWER] > 0) {
 				myRooms[currentRoomIndex].memory.need.push(1);
 			}
