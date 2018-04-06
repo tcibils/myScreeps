@@ -535,7 +535,6 @@ module.exports.loop = function () {
                                     }
                                 }
 								
-								if(myRooms[currentRoomIndex].memory.needOriginPos[needIndex] == )
 								
                                 spawningResult = (Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).spawnCreep(
                                     creepBody,
