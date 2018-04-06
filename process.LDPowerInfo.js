@@ -205,9 +205,11 @@ var processLDPowerInfo = {
 						}
 					}
 					
-					else if(Memory.rooms[roomInMemory].powerSources.length == 0 && Memory.rooms[roomInMemory].powerSourcesHomeRooms.length > 0) {
-						// We clean the memory of the whole room.
-						delete Memory.rooms[roomInMemory];
+					else if(Memory.rooms[roomInMemory].powerSources.length == 0 && Memory.rooms[roomInMemory].powerSourcesHomeRooms != undefined) {
+						if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length > 0) {
+							// We clean the memory of the whole room.
+							delete Memory.rooms[roomInMemory];
+						}
 					}
 			// On va spawner 
 			// Warriors 20-20 x3 cout 2600
