@@ -52,7 +52,7 @@ var processLDPowerInfo = {
 							// We need to assess if we will harvest it.
 							
 							// Condition 1 : will it live long enough for us to have the time to harvest it ?
-							let powerSourceLivingLongEngough = true;
+							let powerSourceLivingLongEngough = false;
 							if(Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex] > minimumPowerSourceLivingTime) {
 								powerSourceLivingLongEngough = true;
 							}
@@ -72,7 +72,7 @@ var processLDPowerInfo = {
 							// Condition 4 : not having found the necessary already
 							let powerSourceAlreadyTreated = false;
 							if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length == Memory.rooms[roomInMemory].powerSources.length) {
-								powerSourceAlreadyTreated = false;
+								powerSourceAlreadyTreated = true;
 							}
 							
 							// Condition 5 :source has not yet dispeared
@@ -150,7 +150,6 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push(homeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push(potentialHomeRooms);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
-									console.log('need assessed ')
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
 									
@@ -160,7 +159,6 @@ var processLDPowerInfo = {
 									let hitsTreshold = maxHitsPowerSource/4;
 									console.log('current ' + currentHits + ' max ' + maxHitsPowerSource + ' tresh ' + hitsTreshold  )
 									if( currentHits< hitsTreshold) {
-										console.log('need carry power')
 										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
 									}
 									else {
