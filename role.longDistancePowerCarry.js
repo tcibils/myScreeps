@@ -83,7 +83,7 @@ var rolePowerCarry = {
 			}
 			
 			// If creep empty, gathering set to true again.
-			if(creep.carry[RESOURCE_POWER] == 0) {
+			if(_.sum(creep.carry) == 0) {
 				creep.memory.gathering = true;
 			}
 		}
