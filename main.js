@@ -26,6 +26,7 @@ var roleLongDistanceReserver = require('role.longDistanceReserver');
 var rolelongDistancePowerAttacker = require('role.longDistancePowerAttacker');
 var rolelongDistancePowerCarry = require('role.longDistancePowerCarry');
 var rolelongDistancePowerHealer = require('role.longDistancePowerHealer');
+var roleSpreaderPower = require('role.spreaderPower');
 
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 var processLDEnergyInfo = require('process.LDEnergyInfo');
@@ -192,6 +193,33 @@ module.exports.loop = function () {
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsAdHocHarvestersOfRoom.run(myRooms[currentRoomIndex]);
+		
+		
+
+        myRooms[currentRoomIndex].memory.labels.push('Power Spreader');
+		
+		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storageOfRoom[0] != undefined)) {
+			if(Game.getObjectById(myRooms[currentRoomIndex].memory.storageOfRoom[0]).store[RESOURCE_POWER] > 0) {
+				myRooms[currentRoomIndex].memory.need.push(1);
+			}
+			else {
+				myRooms[currentRoomIndex].memory.need.push(0);
+			}
+		}
+		else {
+			myRooms[currentRoomIndex].memory.need.push(0);
+		}
+		
+        var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == myRooms[currentRoomIndex].name));
+        myRooms[currentRoomIndex].memory.attached.push(spreadersPowerExisting.length);
+		
+        myRooms[currentRoomIndex].memory.attached.push();
+        myRooms[currentRoomIndex].memory.role.push('spreaderPower');
+        myRooms[currentRoomIndex].memory.unity.push('number of creeps';
+        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
+        myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
+        myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
+        myRooms[currentRoomIndex].memory.criticalNeed(false);
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
@@ -474,6 +502,13 @@ module.exports.loop = function () {
                                     }
                                 }
 								
+								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'spreaderPower') {
+									creepBody.push(MOVE);
+									creepBody.push(MOVE);
+									creepBody.push(CARRY);
+									creepBody.push(CARRY);
+								}
+								
 								// --------------- POWER CREEPS BODYS - According to excel computations
 								if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceAttackerPower') {
                                     for(let j = 0; j < 20; j++) {
@@ -643,6 +678,11 @@ module.exports.loop = function () {
 		if(creep.memory.role == 'longDistanceHealerPower'){
 			rolelongDistancePowerHealer.run(creep)
 		}
+		
+		
+        if(creep.memory.role == 'spreaderPower') {
+            roleSpreaderPower.run(creep);
+        }
 
         if(creep.memory.role == 'pureFighter') {
             rolePureFighter.run(creep);
