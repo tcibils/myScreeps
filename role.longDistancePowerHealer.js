@@ -4,13 +4,10 @@ var rolePowerHealer = {
 		if(creep.memory.nearPowerSource == undefined) {
 			creep.memory.nearPowerSource = false;
 		}
-		if(creep.memory.needOriginPos != undefined) {
-			let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-			console.log('targetPowerSourcePos defined ' + targetPowerSourcePos)
-		}
-		else{
-			console.log('ISSUE : POS OF POWER SOURCE NOT DEFINED IN MEMORY')
-		}
+		
+		let targetPowerSourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
+		console.log('targetPowerSourcePos defined ' + targetPowerSourcePos)
+		
 		if(creep.pos.getRangeTo(targetPowerSourcePos) < 4) {
 			creep.memory.nearPowerSource = true;
 		}
