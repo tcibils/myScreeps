@@ -61,7 +61,7 @@ module.exports.loop = function () {
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
-    var showScoutsPositions = true;
+    var showScoutsPositions = false;
 	
     var showRoomDashboardBuildings = false;
     var showRoomDashboardBuildingsToDisplay = 'W43N51';
@@ -186,7 +186,7 @@ module.exports.loop = function () {
         
 		// Sets the needs and fills the data structure above for different types of creeps
 		setNeedCreepsEnergyHarvestingOfRoom.run(myRooms[currentRoomIndex]);
-		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]); 
+		setNeedCreepsEnergySpreadingOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsBuildingsOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsMineralExtractorsOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
@@ -195,7 +195,7 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
-		// setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
+		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
 
         // SECURITY
@@ -534,7 +534,9 @@ module.exports.loop = function () {
                                         }
                                     }
                                 }
-
+								
+								if(myRooms[currentRoomIndex].memory.needOriginPos[needIndex] == )
+								
                                 spawningResult = (Game.getObjectById(myRooms[currentRoomIndex].memory.spawningPoints[spawnIndex]).spawnCreep(
                                     creepBody,
                                     myRooms[currentRoomIndex].memory.role[needIndex] + Game.time,
