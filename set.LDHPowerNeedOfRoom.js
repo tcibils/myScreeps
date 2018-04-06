@@ -13,7 +13,7 @@ var setLDHPowerNeedOfRoom = {
 				for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms.length; powerSourceIndex++) {
 
 					let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
-					if(Game.time > expiryTick) {
+					if(Game.time < expiryTick) {
 						if(displayPowerSummary) {
 							console.log('Distant room ' + roomInMemory + ', power source found : ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ', home rooms : ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex] + ', discovery ' + Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + ' time to live ' + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex] + ' thus expiry '  + expiryTick + '/' + Game.time)
 						}
