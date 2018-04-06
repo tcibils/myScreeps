@@ -68,11 +68,11 @@ var rolePowerCarry = {
 		// And if we're not gathering - which should mean that we just dropped power in storage
 		if(!creep.memory.gathering) {
 			// We look for storage in our home room
-			if(Game.rooms(creep.memory.homeRoom).memory.storages.length > 0) {
+			if(Game.rooms[creep.memory.homeRoom]).memory.storages.length > 0) {
 				// And try to transfer the power to it
-				if(creep.transfer(Game.getObjectById(Game.rooms(creep.memory.homeRoom).memory.storages[0]),RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
+				if(creep.transfer(Game.getObjectById(Game.rooms[creep.memory.homeRoom].memory.storages[0]),RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
 					// By moving towards it
-					creep.moveTo(Game.getObjectById(Game.rooms(creep.memory.homeRoom).memory.storages[0]));
+					creep.moveTo(Game.getObjectById(Game.rooms[creep.memory.homeRoom].memory.storages[0]));
 				}
 			}
 			
