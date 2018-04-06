@@ -1,7 +1,7 @@
 var setLDHPowerNeedOfRoom = {
     run: function(treatedRoom) {
 		
-		let displayPowerSummary = false;
+		let displayPowerSummary = true;
 		
         // Ajouter un "every X tick" ?
 		
@@ -11,14 +11,18 @@ var setLDHPowerNeedOfRoom = {
 			if(Memory.rooms[roomInMemory].powerSourcesHomeRooms != undefined) {
 				// For each of these power sources
 				for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms.length; powerSourceIndex++) {
-					if(displayPowerSummary) {
-						console.log('Distant room ' + roomInMemory + ', power source found : ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ', time to expiry when discovered ' + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex])
-					}
+
 					let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
+					if(displayPowerSummary) {
+						console.log('Distant room ' + roomInMemory + ', power source found : ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ', Expiry : ' + expiryTick)
+					}
 					if(Game.time > expiryTick) {
+						if(displayPowerSummary) {
+							console.log('Distant room ' + roomInMemory + ', power source found : ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ', home rooms : ' + Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex])
+						}
+
 						// Remember : we have multiple home rooms for the same power source !
 						for(let homeRoomOfPowerSourceIndex=0; homeRoomOfPowerSourceIndex < Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex].length; homeRoomOfPowerSourceIndex++) {
-									
 							// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 							if(Memory.rooms[roomInMemory].powerSourcesHomeRooms[powerSourceIndex][homeRoomOfPowerSourceIndex] == treatedRoom.name) {
 							
