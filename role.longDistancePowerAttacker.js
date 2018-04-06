@@ -56,7 +56,7 @@ var rolePowerAttacker = {
 			// If we are near the source
 			if(creep.memory.nearPowerSource) {
 				// We randomly move away from it.
-				let direction = Math.ceil(Math.random * 8);
+				let direction = Math.ceil(Math.random() * 8);
 				creep.move(direction);
 				creep.say('Mving ' + direction)
 			}
