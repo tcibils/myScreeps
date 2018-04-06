@@ -26,16 +26,15 @@ var roleSpreaderPower = {
 		}
 		
 		if(!creep.memory.gathering) {
-			console.log('OK here')
 			if(_.sum(creep.carry) > 0) {
 				if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
 				}
 			}
-			console.log('carrying' + _.sum(creep.carry))
 			if(_.sum(creep.carry) == 0) {
-				
-				creep.memory.gathering = true;
+				if(creep.ticksToLive >= 130){
+					creep.memory.gathering = true;
+				}
 			}
 		}
 		
