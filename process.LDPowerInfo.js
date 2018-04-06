@@ -166,8 +166,8 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance.push(homeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms.push(potentialHomeRooms);
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
-									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
-									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
+									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(Math.min(Memory.rooms[roomInMemory].powerSourceFreeSpots[powerSourceIndex],4));
+									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(Math.min(Memory.rooms[roomInMemory].powerSourceFreeSpots[powerSourceIndex],4));
 
 								}
 								// If the closest home rooms are too far, we don't bother.
