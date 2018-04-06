@@ -52,6 +52,7 @@ var processLDPowerInfo = {
 							// We need to assess if we will harvest it.
 							
 							// Condition 1 : will it live long enough for us to have the time to harvest it ?
+							// Note that here we check the time to live of the source at the time of finding
 							let powerSourceLivingLongEngough = false;
 							if(Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex] > minimumPowerSourceLivingTime) {
 								powerSourceLivingLongEngough = true;
@@ -75,7 +76,8 @@ var processLDPowerInfo = {
 								powerSourceAlreadyTreated = true;
 							}
 							
-							// Condition 5 :source has not yet dispeared
+							// Condition 5 : source has not yet dispeared
+							// We check that the game time is not passed the source expiration
 							let powerSourceFinished = false;					
 							let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
 
@@ -83,7 +85,7 @@ var processLDPowerInfo = {
 								powerSourceFinished = true;
 							}
 							
-							console.log('we a re here and living: ' + powerSourceLivingLongEngough + ' space ' + powerSourceEnoughSpace + ', rooma ttached : ' + powerSourceAttachedRoomAlready + ' treated ' + powerSourceAlreadyTreated + ' finished ' + powerSourceFinished)
+							console.log('Before setting needs : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
 								console.log('treating the power source')
@@ -152,18 +154,7 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(3);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
-									
-									// For carrys, if the source is already consequently damaged, then we need some, but not before.
-									let currentHits = Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex];
-									let maxHitsPowerSource = Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex];
-									let hitsTreshold = maxHitsPowerSource/4;
-									console.log('current ' + currentHits + ' max ' + maxHitsPowerSource + ' tresh ' + hitsTreshold  )
-									if( currentHits< hitsTreshold) {
-										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
-									}
-									else {
-										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
-									}
+
 								}
 								// If the closest home rooms are too far, we don't bother.
 								else {
@@ -173,7 +164,6 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance.push(potentialHomeRoomsDistances);
 									Memory.rooms[roomInMemory].powerSourcesAttackNeed.push(0);
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
-									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
 								}
 							}
 							
@@ -198,6 +188,28 @@ var processLDPowerInfo = {
 								if(Memory.rooms[roomInMemory].powerSourcesHealNeed.length < Memory.rooms[roomInMemory].powerSources.length) {
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(0);
 								}
+							}
+							
+							// For the power creeps, we have fewer conditions - especially not the "powerSourceAlreadyTreated"
+							// Indeed, the carrys need would be set to 0, and never changed again. So we need to check more often
+							// This shouldn't be a problem as we wont call any expensive function here.
+							console.log('now setting carry needs : T T T - F needed')
+							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceFinished) {
+								// For carrys, if the source is already consequently damaged, then we need some, but not before.
+								// We do not need all the conditions to avoid the computations
+								let currentHits = Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex];
+								let maxHitsPowerSource = Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex];
+								let hitsTreshold = maxHitsPowerSource/4;
+								console.log('current hits : ' + currentHits + ', max ' + maxHitsPowerSource + ', tresh : ' + hitsTreshold)
+								console.log('if ' + currentHits '<' + hitsTreshold + ' then need ' + Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000) )
+								if( currentHits< hitsTreshold) {
+									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
+								}
+								else {
+									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
+								}
+							}
+							else {
 								if(Memory.rooms[roomInMemory].powerSourcesCarryNeed.length < Memory.rooms[roomInMemory].powerSources.length) {
 									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(0);
 								}
@@ -214,6 +226,7 @@ var processLDPowerInfo = {
 							
 
 						}
+						// End of "for" loop on power sources
 					}
 					
 					else if(Memory.rooms[roomInMemory].powerSources.length == 0 && Memory.rooms[roomInMemory].powerSourcesHomeRooms != undefined) {
