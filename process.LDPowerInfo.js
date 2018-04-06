@@ -154,7 +154,11 @@ var processLDPowerInfo = {
 									Memory.rooms[roomInMemory].powerSourcesHealNeed.push(3);
 									
 									// For carrys, if the source is already consequently damaged, then we need some, but not before.
-									if(Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex] < (Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex] / 4)) {
+									let currentHits = Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex];
+									let maxHitsPowerSource = Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex];
+									let hitsTreshold = maxHitsPowerSource/4;
+									console.log('current ' + currentHits + ' max ' + maxHitsPowerSource + ' tresh ' + hitsTreshold  )
+									if( currentHits< hitsTreshold) {
 										console.log('need carry power')
 										Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
 									}
