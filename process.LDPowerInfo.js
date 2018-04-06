@@ -74,7 +74,7 @@ var processLDPowerInfo = {
 							// Condition 4 : not having found the necessary already
 							let powerSourceAlreadyTreated = false;
 							if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length == Memory.rooms[roomInMemory].powerSources.length) {
-								powerSourceAlreadyTreated = true;
+								powerSourceAlreadyTreated = false;
 							}
 							
 							// Condition 5 : source has not yet dispeared
