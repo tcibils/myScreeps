@@ -201,7 +201,7 @@ var processLDPowerInfo = {
 								let maxHitsPowerSource = Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex];
 								let hitsTreshold = maxHitsPowerSource/4;
 								console.log('current hits : ' + currentHits + ', max ' + maxHitsPowerSource + ', tresh : ' + hitsTreshold)
-								console.log('if ' + currentHits '<' + hitsTreshold + ' then need ' + Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000) )
+								console.log('if ' + currentHits + '<' + hitsTreshold + ' then need ' + Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000) )
 								if( currentHits< hitsTreshold) {
 									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
 								}
