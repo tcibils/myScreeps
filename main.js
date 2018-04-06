@@ -219,7 +219,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
         myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
         myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
-        myRooms[currentRoomIndex].memory.criticalNeed(false);
+        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
