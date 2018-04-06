@@ -290,7 +290,7 @@ var processLDEnergyInfo = {
 									
 									// We find the ideal path between the two
 									// HIGHLY EXPENSIVE AND INSIDE MULTIPLE LOOPS - Crashes the CPU easily...
-									let idealPath = PathFinder.search(senderLinkPosition, {pos: sourcePosition, range: 1});
+									let idealPath = PathFinder.search(senderLinkPosition, {pos: sourcePosition, range: 1}, {maxRooms: 3});
 									
 									let currentDistance = 10000;
 									if(idealPath != undefined) {
