@@ -83,7 +83,7 @@ var processLDPowerInfo = {
 								powerSourceFinished = true;
 							}
 							
-							
+							console.log('we a re here and btw ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
 								// We assess the distances - not before, as this is way more costly to do.
