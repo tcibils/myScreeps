@@ -80,10 +80,15 @@ var processLDPowerInfo = {
 							// Condition 5 : source has not yet dispeared
 							// We check that the game time is not passed the source expiration
 							let powerSourceFinished = false;					
+							let powerSourceFinishedTotal = false;					
 							let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
 
 							if(Game.time > expiryTick) {
 								powerSourceFinished = true;
+							}
+							
+							if(Game.time > expiryTick + 750) {
+								powerSourceFinishedTotal = true;
 							}
 							
 							console.log('Before setting needs of attack and heal : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
@@ -178,7 +183,13 @@ var processLDPowerInfo = {
 							
 							// If the power source do not meet the first criterias, we don't bother
 							else {
-								
+								// We first reset all tables								
+								Memory.rooms[roomInMemory].powerSourcesHomeRooms = [];
+								Memory.rooms[roomInMemory].powerSourcesHomeRoomsDistance = [];
+								Memory.rooms[roomInMemory].powerSourcesPotentialHomeRooms = [];
+								Memory.rooms[roomInMemory].powerSourcesPotentialHomeRoomsDistance = [];
+								Memory.rooms[roomInMemory].powerSourcesAttackNeed = [];
+								Memory.rooms[roomInMemory].powerSourcesHealNeed = [];
 								if(Memory.rooms[roomInMemory].powerSourcesHomeRooms.length < Memory.rooms[roomInMemory].powerSources.length) {
 									Memory.rooms[roomInMemory].powerSourcesHomeRooms.push('null');
 								}
@@ -203,7 +214,7 @@ var processLDPowerInfo = {
 							// Indeed, the carrys need would be set to 0, and never changed again. So we need to check more often
 							// This shouldn't be a problem as we wont call any expensive function here.
 							console.log('now setting carry needs : T T T - F needed')
-							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceFinished) {
+							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceFinishedTotal	) {
 								Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
 								
 								// For carrys, if the source is already consequently damaged, then we need some, but not before.
