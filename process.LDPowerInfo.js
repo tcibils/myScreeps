@@ -75,9 +75,17 @@ var processLDPowerInfo = {
 								powerSourceAlreadyTreated = true;
 							}
 							
+							// Condition 5 :source has not yet dispeared
+							let powerSourceFinished = false;					
+							let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
+
+							if(Game.time > expiryTick) {
+								powerSourceFinished = true;
+							}
+							
 							
 							// If we have the above conditions
-							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated) {
+							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
 								// We assess the distances - not before, as this is way more costly to do.
 								// We will need two rooms in order to make it fast enough.
 								let firstClosestRoomDistance = 10000;
@@ -193,10 +201,9 @@ var processLDPowerInfo = {
 							
 							// "Garbage collection" : we clean up the memory. Expiry is enough, no need to check if it's been destroyed.
 							// We get the expiry tick by summing the discovery time and the ticks to decay at the time of discovery.
-							let expiryTick = Memory.rooms[roomInMemory].powerSourcesDiscoveryTime[powerSourceIndex] + Memory.rooms[roomInMemory].powerSourcesTime[powerSourceIndex];
-
+							
 							// Now if the power source has expired
-							if(Game.time > expiryTick) {
+							if(powerSourceFinished) {
 								// We clean the memory of the whole room.
 								delete Memory.rooms[roomInMemory];
 							}
