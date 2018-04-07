@@ -31,6 +31,28 @@ var longDistanceFastMover = {
                 creep.suicide();
             }
         }
+
+        // If he does not know where to deposit it
+        if(Game.getObjectById(creep.memory.depositTarget) == null) {
+            // We convert the sender links memorized positions
+            let arrayOfPotentialDeposits = [];
+            for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
+                let senderLinkIndexedPosition = new RoomPosition(Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].x, Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].y, creep.memory.homeRoom);
+                arrayOfPotentialDeposits.push(senderLinkIndexedPosition);
+            }
+
+            if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
+                if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
+                    arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
+                }
+            }
+
+            var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
+            if(potentialTarget != null) {
+                creep.memory.depositTarget = potentialTarget.id;
+            }
+        }
+
         
         
         // If creep is not gathering, meaning he's going back home with energy
@@ -39,30 +61,11 @@ var longDistanceFastMover = {
             if(creep.room.name == creep.memory.homeRoom) {
                 // If he has some energy
                 if(creep.carry[RESOURCE_ENERGY] > 0) {
-                    // If he does not know where to deposit it
-                    if(Game.getObjectById(creep.memory.depositTarget) == null) {
-                        
-                        var primaryTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                                filter: (structure) => {return (structure.structureType == STRUCTURE_LINK) && structure.energy < structure.energyCapacity}
-                            });
-                        if(primaryTarget != null) {
-                            creep.memory.depositTarget = primaryTarget.id;
-                        }
-                        
-                        if(primaryTarget == null) {
-                            var secondaryTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                                filter: (structure) => {return (structure.structureType == STRUCTURE_STORAGE)}
-                            });
-                            if(secondaryTarget != null) {
-                                creep.memory.depositTarget = secondaryTarget.id;
-                            }
-                        }
-                    }
                     // If he knows where to deposit
                     if(Game.getObjectById(creep.memory.depositTarget) != null) {
                         // Then he tries to transfer and go there.
                         if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}});
                         }
                     }
                 }
@@ -73,10 +76,11 @@ var longDistanceFastMover = {
                 }
             }
             
-            // If the creep is not in his home, he gets back - this is EXPENSIVE
+            // If the creep is not in his home, he gets back
             if(creep.room.name != creep.memory.homeRoom) {
-                var localExit = creep.room.findExitTo(creep.memory.homeRoom);
-                creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                if(Game.getObjectById(creep.memory.depositTarget) != null) {
+                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                }
             }
         }
         
