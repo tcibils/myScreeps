@@ -12,6 +12,9 @@ Loop
 
 var underAttackCreepMemory = require('info.underAttackCreepMemory');
 
+// Improvement idea 1 : set deposit target based on room memory, go there directly
+// Improvement idea 2 : move toward needOriginPos stored in memory directly
+
 var longDistanceFastMover = {
     run: function(creep) {
         
@@ -30,10 +33,13 @@ var longDistanceFastMover = {
         }
         
         
-        
+        // If creep is not gathering, meaning he's going back home with energy
         if(creep.memory.gathering == false) {
+            // If he's home
             if(creep.room.name == creep.memory.homeRoom) {
+                // If he has some energy
                 if(creep.carry[RESOURCE_ENERGY] > 0) {
+                    // If he does not know where to deposit it
                     if(Game.getObjectById(creep.memory.depositTarget) == null) {
                         
                         var primaryTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
@@ -52,19 +58,22 @@ var longDistanceFastMover = {
                             }
                         }
                     }
-                    
+                    // If he knows where to deposit
                     if(Game.getObjectById(creep.memory.depositTarget) != null) {
+                        // Then he tries to transfer and go there.
                         if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
                         }
                     }
                 }
                 
+                // If the creep is empty, he goes gathering !
                 if(creep.carry[RESOURCE_ENERGY] == 0 && creep.ticksToLive > 150) {
                     creep.memory.gathering = true;
                 }
             }
             
+            // If the creep is not in his home, he gets back - this is EXPENSIVE
             if(creep.room.name != creep.memory.homeRoom) {
                 var localExit = creep.room.findExitTo(creep.memory.homeRoom);
                 creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
@@ -73,15 +82,21 @@ var longDistanceFastMover = {
         
         // TO BE IMPROVED : if creep life just long enough to get back to base, then get back to base. don't wait to be full.
         
+        // If the creep is gathering
         if(creep.memory.gathering == true) {
+            // If he is in its target room
             if(creep.room.name == creep.memory.targetRoom) {
+                // And is full, then we stop gathering. We set deposit target to null to reset it, in case link is full.
                 if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
                     creep.memory.gathering = false;
                     creep.memory.depositTarget = null;
                 }
                 
+                // If we're under capacity
                 if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity) {
                     
+                    // If we have no target or if it's empty, we do a compliacted rocade to find one.
+
                     // TO BE IMPROVED : each containuer, quantity minus creeps already attached to it
                     if(Game.getObjectById(creep.memory.containerTarget) == null || Game.getObjectById(creep.memory.containerTarget).store[RESOURCE_ENERGY] == 0) {
                         var maximumContained = 0;
@@ -120,6 +135,7 @@ var longDistanceFastMover = {
                         
                     }
                     
+                    // now we target our container to picup energy
                     if(Game.getObjectById(creep.memory.containerTarget) != null) {
                         if(creep.withdraw(Game.getObjectById(creep.memory.containerTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                             if(creep.moveTo(Game.getObjectById(creep.memory.containerTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5, maxRooms: 1})== ERR_NO_PATH) {
@@ -127,6 +143,7 @@ var longDistanceFastMover = {
                             }
                         }
                     }
+                    // Or dropped energy if container is full
                     else if(Game.getObjectById(creep.memory.droppedEnergy) != null) {
                         if(creep.pickup(Game.getObjectById(creep.memory.droppedEnergy)) == ERR_NOT_IN_RANGE) {
                             if(creep.moveTo(Game.getObjectById(creep.memory.droppedEnergy), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5, maxRooms: 1}) == ERR_NO_PATH) {
@@ -137,9 +154,11 @@ var longDistanceFastMover = {
                 }
             }
             
+            // And if we're not in our target room, we move towards it.
             if(creep.room.name != creep.memory.targetRoom) {
-                var localExit = creep.room.findExitTo(creep.memory.targetRoom);
-                creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});                
+                
+        		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
+                creep.moveTo(targetEnergySourcePos);                
             }
             
         }
