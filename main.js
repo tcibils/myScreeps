@@ -58,7 +58,7 @@ module.exports.loop = function () {
     // -------------------------------------- PARAMETERS DASHBOARD ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
-
+    let CPUusageBefore = Game.cpu.getUsed();
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
@@ -82,6 +82,10 @@ module.exports.loop = function () {
     var longDistanceBuildRoomsHomeRooms = ['W42N48'];
     // Number of builders to use.
     var longDistanceBuildRoomsBuilders = [0];
+
+    let CPUusageAfter = Game.cpu.getUsed();
+    let result = CPUusageAfter - CPUusageBefore;
+    console.log('Here, CPU used : ' + result)
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
