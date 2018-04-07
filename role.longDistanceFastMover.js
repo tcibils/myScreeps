@@ -46,8 +46,10 @@ var longDistanceFastMover = {
                     arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
                 }
             }
+			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDeposits)
 
             var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
+			console.log('potential target: ' +potentialTarget )
             if(potentialTarget != null) {
                 creep.memory.depositTarget = potentialTarget.id;
             }
