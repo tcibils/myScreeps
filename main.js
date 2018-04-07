@@ -870,13 +870,15 @@ module.exports.loop = function () {
     CPUusageAfter = Game.cpu.getUsed();
     result = CPUusageAfter - CPUusageBefore;
     console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', sec, CPU used' )
-
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if(creep.memory.role == 'scout') {
             roleScout.run(creep);
         }
     }
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', scout, CPU used' )
 		
 
 
