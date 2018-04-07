@@ -35,37 +35,25 @@ var longDistanceFastMover = {
         // If he does not know where to deposit it
         if(Game.getObjectById(creep.memory.depositTarget) == null || creep.memory.depositTargetPos == undefined) {
             // We convert the sender links memorized positions
-            let arrayOfPotentialDepositsPos = [];
 			let arrayOfPotentialDeposits = [];
-			/*
-            for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
-                let senderLinkIndexedPosition = new RoomPosition(Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].x, Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].y, creep.memory.homeRoom);
-                arrayOfPotentialDepositsPos.push(senderLinkIndexedPosition);
-				arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]);
+			
+            for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinks.length; senderLinkIndex++) {
+				arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]));
             }
-*/
+
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
-                    arrayOfPotentialDepositsPos.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
-					arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].storages[0]);
+					arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
                 }
             }
 			
-			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDepositsPos)
+			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDeposits)
 
-            var potentialTargetPos = arrayOfPotentialDepositsPos[0]; /*creep.pos.findClosestByPath(arrayOfPotentialDepositsPos);*/
+            var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
 			
-			let idOfPotentialTargetPos = 0;
-			for(let fuckingIndex = 0; fuckingIndex < arrayOfPotentialDepositsPos.length; fuckingIndex++) {
-				if(arrayOfPotentialDepositsPos[fuckingIndex] == potentialTargetPos) {
-					idOfPotentialTargetPos = arrayOfPotentialDeposits[fuckingIndex];
-				}
-			}
-			
-			console.log('potential target: ' +potentialTargetPos + ' id ' + idOfPotentialTargetPos)
-            if(potentialTargetPos != null) {
-                creep.memory.depositTargetPos = potentialTargetPos;
-				creep.memory.depositTarget = idOfPotentialTargetPos;
+			console.log('potential target: ' +potentialTarget)
+            if(potentialTarget != null) {
+				creep.memory.depositTarget = potentialTarget;
             }
         }
 
