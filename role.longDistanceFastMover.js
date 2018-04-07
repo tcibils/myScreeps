@@ -57,7 +57,7 @@ var longDistanceFastMover = {
 			
 			console.log('potential target: ' +potentialTarget )
             if(potentialTarget != null) {
-				creep.memory.depositTarget = potentialTarget;
+				creep.memory.depositTarget = potentialTarget.id;
             }
         }
 
