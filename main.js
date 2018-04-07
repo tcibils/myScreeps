@@ -495,7 +495,7 @@ module.exports.loop = function () {
 								
                                 // OK for spawning prototype - target room and home room
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFastMover') {
-                                    for(let j = 0; j<8; j++) {
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 100) &&j<16; j++) {
                                         creepBody.push(MOVE);
                                         creepBody.push(CARRY);
                                     }
@@ -639,7 +639,7 @@ module.exports.loop = function () {
 		// Power spawn : if enough ressources, we process power.
 		if(myRooms[currentRoomIndex].memory.powerSpawningPoints.length > 0) {
 			for(let powerSpawnIndex = 0; powerSpawnIndex < myRooms[currentRoomIndex].memory.powerSpawningPoints.length; powerSpawnIndex++) {
-				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).energy > 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).power > 1) {
+				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).energy >= 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).power > 0) {
 					Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).processPower();
 				}
 			}
