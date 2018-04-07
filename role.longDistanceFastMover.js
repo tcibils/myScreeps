@@ -87,7 +87,7 @@ var longDistanceFastMover = {
             // If the creep is not in his home, he gets back
             if(creep.room.name != creep.memory.homeRoom) {
                 if(creep.memory.depositTarget != undefined) {
-                    creep.moveTo(Game.getObjectById(depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
+                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
                 }
 				else {
 					let tempTarget = new RoomPosition(25,25,creep.memory.homeRoom);
