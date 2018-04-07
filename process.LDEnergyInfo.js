@@ -5,10 +5,13 @@
 
 var processLDEnergyInfo = {
     run: function() {
+
+
         
 		// Do all that every 2000 or 5000 turns for instance - we only need to update it if I got a new room
         if(Game.time % 1000 == 0) {
 
+			let distancePerCreepUnit = 23;
 			// GLOBAL ISSUE : I have doubts about th paths found.
 			// It links W44N49 to W44N47 with a path of 35. This is not posssible.
 			// Debug : store path to see it on the map...
@@ -247,7 +250,7 @@ var processLDEnergyInfo = {
 									// typical LDFH have 3 work parts, thus produce 6 per turn
 									// As LDFM move 1 tile per turn, we want one creep per 400/6 = 66 tiles of distance
 									
-									let carryNeeded = Math.ceil(closestRoomDistance / (30));
+									let carryNeeded = Math.ceil(closestRoomDistance / (distancePerCreepUnit));
 									Memory.rooms[roomInMemory].sourcesCarryNeed[sourceIndex] = carryNeeded;
 									Memory.rooms[roomInMemory].sourcesSenderLink[sourceIndex] = closestSenderLinkId;
 								}
@@ -339,7 +342,7 @@ var processLDEnergyInfo = {
 								// typical LDFH have 3 work parts, thus produce 6 per turn
 								// As LDFM move 1 tile per turn, we want one creep per 400/6 = 66 tiles of distance
 								
-								let carryNeeded = Math.ceil(closestRoomDistance / (30));
+								let carryNeeded = Math.ceil(closestRoomDistance / (distancePerCreepUnit));
 								Memory.rooms[roomInMemory].sourcesCarryNeed.push(carryNeeded);
 								Memory.rooms[roomInMemory].sourcesSenderLink.push(closestSenderLinkId);
 							}
