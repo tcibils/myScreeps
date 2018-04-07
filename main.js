@@ -58,11 +58,10 @@ module.exports.loop = function () {
     // -------------------------------------- PARAMETERS DASHBOARD ------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    let CPUusageBefore = Game.cpu.getUsed();
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
-    var showScoutsPositions = true;
+    var showScoutsPositions = false;
 	
     var showRoomDashboardBuildings = false;
     var showRoomDashboardBuildingsToDisplay = 'W43N51';
@@ -83,20 +82,22 @@ module.exports.loop = function () {
     // Number of builders to use.
     var longDistanceBuildRoomsBuilders = [0];
 
-    let CPUusageAfter = Game.cpu.getUsed();
-    let result = CPUusageAfter - CPUusageBefore;
-    console.log('Here, CPU used : ' + result)
 
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
 
+    let CPUusageBefore = Game.cpu.getUsed();
     // Cleaning up memeory
     for(var i in Memory.creeps) {
         if(!Game.creeps[i]) {
             delete Memory.creeps[i];
         }
     }
+
+    let CPUusageAfter = Game.cpu.getUsed();
+    let result = CPUusageAfter - CPUusageBefore;
+    console.log('Creep memory cleaning CPU used : ' + result )
 	
 	if(showScoutsPositions) {
 		let scouts = _.filter(Game.creeps, (creep) =>
@@ -120,7 +121,6 @@ module.exports.loop = function () {
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
         myRoomsNames.push(myRooms[currentRoomIndex].name);
     }
-
 
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
 		
@@ -147,7 +147,9 @@ module.exports.loop = function () {
             myRooms[currentRoomIndex].memory.receiverLinks = [];
         }
 		
-		
+        
+        
+        
 		// Sets the existing buildings in the room memory, filling the above tables
 		setExistingBuildingsOfRoom.run(myRooms[currentRoomIndex]);
 
@@ -228,8 +230,9 @@ module.exports.loop = function () {
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
-		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
+		
 
+		setLDHPowerNeedOfRoom.run(myRooms[currentRoomIndex]);
 
         // SECURITY
 
@@ -252,6 +255,7 @@ module.exports.loop = function () {
         else {
             myRooms[currentRoomIndex].memory.underAttack = false;
         }
+    
 		
 	}
 
@@ -611,6 +615,8 @@ module.exports.loop = function () {
 
         }
 
+        
+
         if(myRooms[currentRoomIndex].memory.towers.length > 0) {
             for(let i = 0; i< myRooms[currentRoomIndex].memory.towers.length; i++) {
                 functionTower.run(Game.getObjectById(myRooms[currentRoomIndex].memory.towers[i]));
@@ -652,28 +658,129 @@ module.exports.loop = function () {
                 creep.memory.creepSpawning = false;
             }
         }
+    }
 
+    CPUusageBefore = Game.cpu.getUsed();
+    // Home rooms functions
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
+    }
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', harvesters, CPU used' )
 
+    CPUusageBefore = Game.cpu.getUsed();
+        for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
         if(creep.memory.role == 'upgrader') {
             roleUpgrader.run(creep);
             //console.log('Step 13 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + 'after setting harvester, before upgrader')
         }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', upgraders, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+        for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
         if(creep.memory.role == 'builder') {
             roleBuilder.run(creep);
             //console.log('Step 14 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting upgrader, before builder')
         }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Builders, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
         if(creep.memory.role == 'fastMover') {
             roleFastMover.run(creep);
 //            console.log('Step 15 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting builder, before fastmover')
         }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Fast Movers, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
         if(creep.memory.role == 'fatHarvester') {
             roleFatHarvester.run(creep);
 //            console.log('Step 16 : ' + Game.cpu.getUsed() +', creep ' + creep.name +  ', after setting fastmover, before fatharvester')
         }
-		
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Fat Harvesters, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'repairer') {
+            roleRepairer.run(creep);
+
+        //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
+        }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Repairers, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'extractor') {
+            roleExtractor.run(creep);
+
+        //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
+        }        
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Extractors, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'slacker'){
+            roleSlacker.run(creep);
+        }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Slacker, CPU used' )
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'spreaderEfficient') {
+            roleSpreaderEfficient.run(creep);
+        }
+    }
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Spreaders, CPU used' )
+
+
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
+        // POWER CREEPS GROUP
+        
 		if(creep.memory.role == 'longDistanceAttackerPower'){
 			rolelongDistancePowerAttacker.run(creep)
 		}
@@ -682,12 +789,21 @@ module.exports.loop = function () {
 		}
 		if(creep.memory.role == 'longDistanceHealerPower'){
 			rolelongDistancePowerHealer.run(creep)
-		}
-		
+        }
 		
         if(creep.memory.role == 'spreaderPower') {
             roleSpreaderPower.run(creep);
         }
+    }
+    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', LDP, CPU used' )
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+
+        // Other less used roles
 
         if(creep.memory.role == 'pureFighter') {
             rolePureFighter.run(creep);
@@ -704,49 +820,68 @@ module.exports.loop = function () {
 
         //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
         }
-        if(creep.memory.role == 'repairer') {
-            roleRepairer.run(creep);
 
-        //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
-        }
+
         if(creep.memory.role == 'roomReserver') {
             roleLongDistanceReserver.run(creep);
 
         //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
         }
-        if(creep.memory.role == 'spreader') {
-            roleSpreader.run(creep);
+    }
 
-        //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
-        }
-        if(creep.memory.role == 'extractor') {
-            roleExtractor.run(creep);
-
-        //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
-        }
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
         if(creep.memory.role == 'longDistanceFatHarvester') {
             roleLongDistanceFatHarvester.run(creep);
         }
+    }
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', LDFH, CPU used' )
+ 
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+ 
         if(creep.memory.role == 'longDistanceFastMover') {
             roleLongDistanceFastMover.run(creep);
         }
+    }    
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', LDFM, CPU used' )
+
+    
+    CPUusageBefore = Game.cpu.getUsed();
+    for(var name in Game.creeps) {
+            var creep = Game.creeps[name];
+    
+ 
         if(creep.memory.role == 'longDistanceSecurity') {
             roleLongDistanceSecurity.run(creep);
         }
-        if(creep.memory.role == 'slacker'){
-            roleSlacker.run(creep);
-        }
-        if(creep.memory.role == 'spreaderEfficient') {
-            roleSpreaderEfficient.run(creep);
-        }
+    }
+    CPUusageAfter = Game.cpu.getUsed();
+    result = CPUusageAfter - CPUusageBefore;
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', sec, CPU used' )
+
+    for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
         if(creep.memory.role == 'scout') {
             roleScout.run(creep);
         }
+    }
 		
 
 
-    }
-	processLDPowerInfo.run();
+    
+
+    processLDPowerInfo.run();
+
     processLDEnergyInfo.run();
+
+
+
     // console.log('Step 21 : ' + Game.cpu.getUsed() + ', after setting ALL roles')
 }
