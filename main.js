@@ -131,13 +131,18 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.storages = [];
         myRooms[currentRoomIndex].memory.towers = [];
 		
-		if(Game.time % 500 == 0) {
+		if(Game.time % 1000 == 0) {
             myRooms[currentRoomIndex].memory.receiverLinks = null;
             myRooms[currentRoomIndex].memory.senderLinks = null;
+            myRooms[currentRoomIndex].memory.senderLinksPos = null;
         }
         // We first define the two arays
         if(myRooms[currentRoomIndex].memory.senderLinks == null) {
             myRooms[currentRoomIndex].memory.senderLinks = [];
+        }
+        // We first define the two arays
+        if(myRooms[currentRoomIndex].memory.senderLinksPos == null) {
+            myRooms[currentRoomIndex].memory.senderLinksPos = [];
         }
         if(myRooms[currentRoomIndex].memory.receiverLinks == null) {
             myRooms[currentRoomIndex].memory.receiverLinks = [];

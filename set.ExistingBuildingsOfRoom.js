@@ -78,6 +78,7 @@ var setExistingBuildingsOfRoom = {
                     }
                     else {
                         treatedRoom.memory.senderLinks.push(linksOfRoom[k].id);
+                        treatedRoom.memory.senderLinksPos.push(linksOfRoom[k].pos);
                     }
                 }
 
