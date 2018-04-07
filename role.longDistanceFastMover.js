@@ -42,16 +42,18 @@ var longDistanceFastMover = {
                 arrayOfPotentialDepositsPos.push(senderLinkIndexedPosition);
 				arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]);
             }
-
+/*
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
                     arrayOfPotentialDepositsPos.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
 					arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].storages[0]);
                 }
             }
+			*/
 			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDepositsPos)
 
-            var potentialTargetPos = creep.pos.findClosestByRange(arrayOfPotentialDepositsPos);
+            var potentialTargetPos = creep.pos.findClosestByPath(arrayOfPotentialDepositsPos);
+			
 			let idOfPotentialTargetPos = 0;
 			for(let fuckingIndex = 0; fuckingIndex < arrayOfPotentialDepositsPos.length; fuckingIndex++) {
 				if(arrayOfPotentialDepositsPos[fuckingIndex] == potentialTargetPos) {
