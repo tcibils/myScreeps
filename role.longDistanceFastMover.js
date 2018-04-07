@@ -37,19 +37,20 @@ var longDistanceFastMover = {
             // We convert the sender links memorized positions
             let arrayOfPotentialDepositsPos = [];
 			let arrayOfPotentialDeposits = [];
+			/*
             for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
                 let senderLinkIndexedPosition = new RoomPosition(Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].x, Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].y, creep.memory.homeRoom);
                 arrayOfPotentialDepositsPos.push(senderLinkIndexedPosition);
 				arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]);
             }
-/*
+*/
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
                     arrayOfPotentialDepositsPos.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
 					arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].storages[0]);
                 }
             }
-			*/
+			
 			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDepositsPos)
 
             var potentialTargetPos = creep.pos.findClosestByPath(arrayOfPotentialDepositsPos);
