@@ -487,7 +487,7 @@ module.exports.loop = function () {
 								
                                 // OK for spawning prototype - target room and home room
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'longDistanceFastMover') {
-                                    for(let j = 0; j<8; j++) {
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 100) &&j<16; j++) {
                                         creepBody.push(MOVE);
                                         creepBody.push(CARRY);
                                     }
