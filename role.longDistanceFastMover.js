@@ -51,7 +51,7 @@ var longDistanceFastMover = {
             }
 			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDepositsPos)
 
-            var potentialTargetPos = creep.pos.findClosestByPath(arrayOfPotentialDepositsPos);
+            var potentialTargetPos = creep.pos.findClosestByRange(arrayOfPotentialDepositsPos);
 			let idOfPotentialTargetPos = 0;
 			for(let fuckingIndex = 0; fuckingIndex < arrayOfPotentialDepositsPos.length; fuckingIndex++) {
 				if(arrayOfPotentialDepositsPos[fuckingIndex] == potentialTargetPos) {
