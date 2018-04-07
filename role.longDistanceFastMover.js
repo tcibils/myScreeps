@@ -33,25 +33,36 @@ var longDistanceFastMover = {
         }
 
         // If he does not know where to deposit it
-        if(Game.getObjectById(creep.memory.depositTarget) == null) {
+        if(Game.getObjectById(creep.memory.depositTarget) == null || creep.memory.depositTargetPos == undefined) {
             // We convert the sender links memorized positions
-            let arrayOfPotentialDeposits = [];
+            let arrayOfPotentialDepositsPos = [];
+			let arrayOfPotentialDeposits = [];
             for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
                 let senderLinkIndexedPosition = new RoomPosition(Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].x, Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].y, creep.memory.homeRoom);
-                arrayOfPotentialDeposits.push(senderLinkIndexedPosition);
+                arrayOfPotentialDepositsPos.push(senderLinkIndexedPosition);
+				arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]);
             }
 
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
-                    arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
+                    arrayOfPotentialDepositsPos.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
+					arrayOfPotentialDeposits.push(Memory.rooms[creep.memory.homeRoom].storages[0]);
                 }
             }
-			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDeposits)
+			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDepositsPos)
 
-            var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
-			console.log('potential target: ' +potentialTarget )
-            if(potentialTarget != null) {
-                creep.memory.depositTarget = potentialTarget.id;
+            var potentialTargetPos = creep.pos.findClosestByPath(arrayOfPotentialDepositsPos);
+			let idOfPotentialTargetPos = 0;
+			for(let fuckingIndex = 0; fuckingIndex < arrayOfPotentialDepositsPos.length; fuckingIndex++) {
+				if(arrayOfPotentialDepositsPos[fuckingIndex] == potentialTargetPos) {
+					idOfPotentialTargetPos = arrayOfPotentialDeposits[fuckingIndex];
+				}
+			}
+			
+			console.log('potential target: ' +potentialTargetPos + ' id ' + idOfPotentialTargetPos)
+            if(potentialTargetPos != null) {
+                creep.memory.depositTargetPos = potentialTargetPos;
+				creep.memory.depositTarget = idOfPotentialTargetPos;
             }
         }
 
@@ -67,7 +78,7 @@ var longDistanceFastMover = {
                     if(Game.getObjectById(creep.memory.depositTarget) != null) {
                         // Then he tries to transfer and go there.
                         if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}});
+                            creep.moveTo(creep.memory.depositTargetPos, {visualizePathStyle: {stroke: '#08ff00'}});
                         }
                     }
                 }
@@ -80,8 +91,8 @@ var longDistanceFastMover = {
             
             // If the creep is not in his home, he gets back
             if(creep.room.name != creep.memory.homeRoom) {
-                if(Game.getObjectById(creep.memory.depositTarget) != null) {
-                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                if(creep.memory.depositTargetPos != undefined) {
+                    creep.moveTo(creep.memory.depositTargetPos, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
                 }
             }
         }
@@ -96,6 +107,7 @@ var longDistanceFastMover = {
                 if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
                     creep.memory.gathering = false;
                     creep.memory.depositTarget = null;
+                    creep.memory.depositTargetPos = null;
                 }
                 
                 // If we're under capacity
