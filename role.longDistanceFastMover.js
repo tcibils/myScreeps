@@ -96,7 +96,7 @@ var longDistanceFastMover = {
             if(creep.room.name != creep.memory.homeRoom) {
                 if(creep.memory.depositTargetPos != undefined) {
 					let depositTargetPosition = new RoomPosition(creep.memory.depositTargetPos.x, creep.memory.depositTargetPos.y, creep.memory.depositTargetPos.roomName)
-                    creep.moveTo(depositTargetPosition, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                    creep.moveTo(depositTargetPosition, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
                 }
             }
         }
@@ -180,7 +180,7 @@ var longDistanceFastMover = {
             if(creep.room.name != creep.memory.targetRoom) {
                 
         		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-                creep.moveTo(targetEnergySourcePos);                
+                creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});                
             }
             
         }
