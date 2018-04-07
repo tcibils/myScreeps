@@ -80,10 +80,8 @@ var longDistanceFastMover = {
                     // If he knows where to deposit
                     if(Game.getObjectById(creep.memory.depositTarget) != null) {
                         // Then he tries to transfer and go there.
-						console.log('transfer : ' + creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY))
-						console.log('deposit target : ' + Game.getObjectById(creep.memory.depositTarget))
                         if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(creep.memory.depositTargetPos, {visualizePathStyle: {stroke: '#08ff00'}});
+                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget).pos, {visualizePathStyle: {stroke: '#08ff00'}});
                         }
                     }
                 }
