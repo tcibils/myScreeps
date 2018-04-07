@@ -629,7 +629,7 @@ module.exports.loop = function () {
 		// Power spawn : if enough ressources, we process power.
 		if(myRooms[currentRoomIndex].memory.powerSpawningPoints.length > 0) {
 			for(let powerSpawnIndex = 0; powerSpawnIndex < myRooms[currentRoomIndex].memory.powerSpawningPoints.length; powerSpawnIndex++) {
-				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).energy > 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).power > 1) {
+				if(Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).energy >= 50 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).power > 0) {
 					Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[powerSpawnIndex]).processPower();
 				}
 			}
