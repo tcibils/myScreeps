@@ -55,7 +55,7 @@ var longDistanceFastMover = {
             var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
 			
 			
-			console.log('potential target: ' +arrayOfPotentialDeposits )
+			console.log('potential target: ' +potentialTarget )
             if(potentialTarget != null) {
 				creep.memory.depositTarget = potentialTarget;
             }
