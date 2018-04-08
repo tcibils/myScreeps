@@ -57,8 +57,14 @@ var scout = {
             }
 			
 			if(creep.room.memory.controller == undefined || creep.room.memory.controllerPos == undefined) {
-				creep.room.memory.controller = creep.room.controller.id;
-				creep.room.memory.controllerPos = creep.room.controller.pos;
+				if(creep.room.controller) {
+					creep.room.memory.controller = creep.room.controller.id;
+					creep.room.memory.controllerPos = creep.room.controller.pos;
+				}
+				else {
+					creep.room.memory.controller = 'undefined';
+					creep.room.memory.controllerPos = 'undefined';
+				}
 			}
 
             // Storing the owner of the room, if undefined or out of date
