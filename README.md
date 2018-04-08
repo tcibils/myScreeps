@@ -76,6 +76,10 @@ Finally, there is a small "power spreading creep" that passes the power from sto
  - Better management of ramparts and walls
  - Rewrite the withdraw source script in the same way as the deposit source script - it's currently terrible
  
+ *TODO LIST - To be finished*
+ - LDFHarvesters should use their needOrigin
+ 
+ 
  *Additional - Grunt*
  
 My screeps account "default" branch is automatically updated with the main branch in github. To update other branches in screeps with other branches from github, one need to use "grunt". To do so, you need "node.js", "npm" and finally grunt itself - see here http://docs.screeps.com/commit.html . Then, before launching the "grunt screeps" sequence, you need a ".screeps.json" file, which is not in the git folder (gitignore). It must be as follows :
