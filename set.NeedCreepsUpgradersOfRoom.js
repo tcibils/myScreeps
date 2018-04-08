@@ -12,16 +12,23 @@ var setNeedCreepsUpgradersOfRoom = {
         treatedRoom.memory.needOriginPos.push('undefined')
         treatedRoom.memory.criticalNeed.push(false);
 
-        // à améliorer : upgrader "lite" ?
-        if(treatedRoom.controller.level == 8) {
-            treatedRoom.memory.need.push(1);
-        }
+
 
         // This variable is the energy the upgrader creep is supposed to consume during its life
         let baseUnitUpgradersNeed = 40000;
 
         // Max harvesters in order not to clog the room
         let maxUpgraders = 4;
+		
+		// à améliorer : upgrader "lite" ?
+        if(treatedRoom.controller.level == 8) {
+			if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY] > baseUnitUpgradersNeed) {
+				treatedRoom.memory.need.push(1);
+			}
+			else {
+				treatedRoom.memory.need.push(0);
+			}
+		}
 
         if(treatedRoom.controller.level < 8) {
             // If we have a storage
