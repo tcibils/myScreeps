@@ -1,7 +1,8 @@
 var setNeedCreepsAdHocHarvestersOfRoom = {
     run: function(treatedRoom) {
 		let naturallyDeadTime = 100;
-        // CATASTROPHE
+        // CATASTROPHE SCENARIO
+		// These creeps are supposed to help with gathering the very first energy
 
         treatedRoom.memory.labels.push('AdHoc Harvesters')
         treatedRoom.memory.role.push('harvester')
@@ -15,6 +16,7 @@ var setNeedCreepsAdHocHarvestersOfRoom = {
         var harvesters = _.filter(Game.creeps, (creep) => (creep.memory.role == 'harvester' && creep.memory.homeRoom == treatedRoom.name));
         treatedRoom.memory.attached.push(harvesters.length);
 
+		// We coung the number of working body parts and carrying body parts and spreaders
         let counterTotalWorkNeeded = 0;
         let counterTotalWorkAttached = 0;
         let counterTotalCarryNeeded = 0;
@@ -41,24 +43,29 @@ var setNeedCreepsAdHocHarvestersOfRoom = {
 
         }
 		
+		// Once counted, we see if we are in a critical situation
+		// For working body parts
 		let workSufficient = true;
 		if(counterTotalWorkAttached == 0 && counterTotalWorkNeeded > 0 ) {
 			workSufficient = false;
 		}
 		
+		// For carry parts
 		let carrySufficient = true;
 		if(counterTotalCarryAttached == 0 && counterTotalCarryNeeded > 0) {
 			carrySufficient = false;
 		}
 		
+		// Or no spreaders !
 		// With 150 energy we can spread a spreader if critical.
 		let spreadSufficient = true;
 		if(counterTotalSpreadNeeded > counterTotalSpreadAttached && room.energyAvailable < 150) {
 			spreadSufficient = false;
 		}
-
-        // console.log('spreaders A ' + treatedRoom.memory.storageSpreaderAttached[0])
+		
+		// If we lack working creeps, or carrying creeps to bring back the energy, or a spreader to spread it from the storage
         if(!workSufficient || !carrySufficient || !spreadSufficient) {
+			// Then we need emergency creeps.
             treatedRoom.memory.need.push(2);
         }
         else {
