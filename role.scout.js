@@ -17,8 +17,11 @@ var scout = {
             creep.memory.currentRoom = creep.room.name;
         }
 		
+		// We compute the local exit for the first time
 		if(creep.memory.targetLocalExit == undefined) {
+			// If we have a direction
 			if(creep.memory.targetRoomDirection != undefined) {
+				// Then we'll move towards it
 				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
 			}
 			else {
@@ -26,15 +29,18 @@ var scout = {
 			}
 		}
 		
+		// If we reached the target room imposed by "god" - player manipulating the creep - or if the target room is undefined
 		if(creep.memory.targetRoom == creep.room.name || creep.memory.targetRoom == undefined) {
+			// We set the target toom as undefined
 			creep.memory.targetRoom = "undefined";
 		}
 				
 
         // We only try to update the room memory if we just arrived in it
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
+		// current room memory will be different from creep room only the first time it gets in a new room
         if(creep.memory.currentRoom != creep.room.name) {
-            // Storing sources of the room : ID, position and maxEnergy
+            // Storing sources of the room : ID, position and maxEnergy - only if undefined, as it won't change in time...
             if(creep.room.memory.sources == undefined || creep.room.memory.sourcesPos == undefined || creep.room.memory.sourcesMax == undefined) {
                 creep.room.memory.sources = [];
                 creep.room.memory.sourcesPos = [];
@@ -109,14 +115,16 @@ var scout = {
             creep.room.memory.powerSourcesMax = [];
             creep.room.memory.powerSourcesHits = [];
             creep.room.memory.powerSourcesHitsMax = [];
-            creep.room.memory.powerSourcesTime = [];
+            creep.room.memory.powerSourcesTime = []; // time to live of power source
             creep.room.memory.powerSourcesDiscoveryTime = [];
             creep.room.memory.powerSourceFreeSpots = [];
 			
-
+			// We find the power sources
             var powerSourcesOfRoom = creep.room.find(FIND_STRUCTURES, {filter: function(object) {return object.structureType == STRUCTURE_POWER_BANK}});
-
+			
+			// If there is some
             if(powerSourcesOfRoom.length > 0) {
+				// We store all their information in the memory
                 for(let currentPowerSourceIndex = 0; currentPowerSourceIndex < powerSourcesOfRoom.length; currentPowerSourceIndex++) {
                     creep.room.memory.powerSources.push(powerSourcesOfRoom[currentPowerSourceIndex].id);
                     creep.room.memory.powerSourcesPos.push(powerSourcesOfRoom[currentPowerSourceIndex].pos);
@@ -126,6 +134,8 @@ var scout = {
                     creep.room.memory.powerSourcesTime.push(powerSourcesOfRoom[currentPowerSourceIndex].ticksToDecay);
                     creep.room.memory.powerSourcesDiscoveryTime.push(Game.time);
 					
+					// Here we look around the power bank to see how much free spots there are.
+					// 1 is too less for us to harvest it.
 					var counter = 0;
 					for(var a = -1; a<=1; a++) {
 						for(var b = -1; b<=1; b++) {
@@ -144,6 +154,7 @@ var scout = {
 		
         // If we just arrived in a new room, or don't know where to go
         if(creep.memory.currentRoom != creep.room.name || creep.memory.targetRoomDirection == undefined) {
+			// If the player did not define a target room
 			if(creep.memory.targetRoom === "undefined") {
 				// We define the possibilities, checking which exit exist
 				let possibilities = [];
@@ -167,11 +178,14 @@ var scout = {
 				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
 
 			}
+			// If the player defined a target room, we'll go to it
 			else {
+				// We find the local exit to the target room.
 				var localExit = creep.room.findExitTo(creep.memory.targetRoom);
 				// And we move towards our target !
 				creep.memory.targetRoomDirection = localExit;
 				creep.memory.targetLocalExit = creep.pos.findClosestByRange(creep.memory.targetRoomDirection);
+				// We acknowledge the direction.
 				creep.say('To ' + creep.memory.targetRoom);
 			}
 			creep.memory.currentRoom = creep.room.name;
@@ -193,18 +207,14 @@ var scout = {
                 if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
 					creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
 				}
-				
             }
         }
         // Same if there's no controller, we move towards the exit.
         else {
-			    if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
-					creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
-				}
+		    if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
+				creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+			}
         }
-
-
-
 
     }
 };

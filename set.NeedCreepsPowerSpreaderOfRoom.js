@@ -21,6 +21,7 @@ var setNeedCreepsPowerSpreaderOfRoom = {
         var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == treatedRoom.name));
         treatedRoom.memory.attached.push(spreadersPowerExisting.length);
 		
+		// Filling the rest of the data tables
         treatedRoom.memory.role.push('spreaderPower');
         treatedRoom.memory.unity.push('number of creeps');
         treatedRoom.memory.targetRoom.push('undefined')
