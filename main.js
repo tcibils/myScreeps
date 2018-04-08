@@ -11,7 +11,6 @@ var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
 var functionLink = require('building.link');
 var functionTower = require('building.tower');
 var functionTerminal = require('building.terminal');
-var spreaderNeededOfLink = require('get.spreaderNeededOfLink');
 var roleLongDistanceFatHarvester = require('role.longDistanceFatHarvester');
 var roleLongDistanceFastMover = require('role.longDistanceFastMover');
 var roleLongDistanceSecurity = require('role.longDistanceSecurity');
