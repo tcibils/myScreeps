@@ -7,6 +7,10 @@
  * mod.thing == 'a thing'; // true
  */
 
+ // We check if there's a sender link close to a given source
+ // This is useful to define if we need carry, or if the fat harvester can do the job by putting the energy in the link
+ // Do not mistake with the reverse : we are not defining if a link is a sender here !
+ 
 var senderLinkCloseToSource = {
 
     /** @param {Creep} creep **/
