@@ -40,6 +40,7 @@ var setNeedCreepsBuildingsOfRoom = require('set.NeedCreepsBuildingsOfRoom')
 var setNeedCreepsMineralExtractorsOfRoom = require('set.NeedCreepsMineralExtractorsOfRoom')
 var setNeedCreepsUpgradersOfRoom = require('set.NeedCreepsUpgradersOfRoom')
 var setNeedCreepsScoutOfRoom = require('set.NeedCreepsScoutOfRoom')
+var setNeedCreepsPowerSpreaderOfRoom = require('set.NeedCreepsPowerSpreaderOfRoom')
 var setNeedCreepsAdHocHarvestersOfRoom = require('set.NeedCreepsAdHocHarvestersOfRoom')
 var setExistingBuildingsOfRoom = require('set.ExistingBuildingsOfRoom')
 /*
@@ -199,33 +200,8 @@ module.exports.loop = function () {
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsAdHocHarvestersOfRoom.run(myRooms[currentRoomIndex]);
-		
-		
-
-        myRooms[currentRoomIndex].memory.labels.push('Power Spreader');
-		
-		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]) != undefined) {
-			if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_POWER] > 0 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[0]).energy == Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[0]).energyCapacity) {
-				myRooms[currentRoomIndex].memory.need.push(1);
-			}
-			else {
-				myRooms[currentRoomIndex].memory.need.push(0);
-			}
-		}
-		else {
-			myRooms[currentRoomIndex].memory.need.push(0);
-		}
-		
-        var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == myRooms[currentRoomIndex].name));
-        myRooms[currentRoomIndex].memory.attached.push(spreadersPowerExisting.length);
-		
-        myRooms[currentRoomIndex].memory.attached.push();
-        myRooms[currentRoomIndex].memory.role.push('spreaderPower');
-        myRooms[currentRoomIndex].memory.unity.push('number of creeps');
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
-        myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
+		setNeedCreepsPowerSpreaderOfRoom.run(myRooms[currentRoomIndex]);
+	
 
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
