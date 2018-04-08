@@ -31,6 +31,9 @@ var longDistanceFastMover = {
                 creep.suicide();
             }
         }
+		
+		// This "first job done" is an had-hoc fix to find the optimal link or deposit for the creep.
+		// It is false when it spawns, and once it has pickup its first load, it goes back to its home room
 		if(creep.memory.firstJobDone == undefined) {
 			creep.memory.firstJobDone = false;
 		}
@@ -38,34 +41,35 @@ var longDistanceFastMover = {
 				creep.memory.firstJobDone = true;
 		}
 		
-        // If he does not know where to deposit it
+		// And when it gets back to its home room, he finds the closest link or deposit, which will become forever its deposit target
+		// Thus we needed the firstJobDone to search for this target not when the creep spawned, but when it gets back home for first time.
+		// FindClosestByPath only works within one room, so we cannot use it from target source to home room.
         if(Game.getObjectById(creep.memory.depositTarget) == null && creep.memory.homeRoom == creep.room.name && creep.memory.firstJobDone) {
-            // We convert the sender links memorized positions
+            // We convert the sender links ids to real object
 			let arrayOfPotentialDeposits = [];
 			
             for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
 				arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]));
             }
 
+			// We also add the deposit
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
 					arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
                 }
             }
 			
-			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDeposits)
-
+			// And we take the closest of the objects.
             var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
 			
-			
-			console.log('potential target: ' +potentialTarget )
+			// If it exists
             if(potentialTarget != null) {
+				// We set it as final target.
 				creep.memory.depositTarget = potentialTarget.id;
             }
         }
 
-        
-        
+		
         // If creep is not gathering, meaning he's going back home with energy
         if(creep.memory.gathering == false) {
             // If he's home
@@ -89,10 +93,14 @@ var longDistanceFastMover = {
             
             // If the creep is not in his home, he gets back
             if(creep.room.name != creep.memory.homeRoom) {
+				// If we have a deposit (meaning we already took time to define it)
                 if(creep.memory.depositTarget != undefined) {
+					// Then we move towards it. Works cross-rooms.
                     creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
                 }
+				// If we don't have a deposit (first time it comes back)
 				else {
+					// Then we simply target "center of home room", and we'll get more precise later
 					let tempTarget = new RoomPosition(25,25,creep.memory.homeRoom);
 					creep.moveTo(tempTarget, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
 				}
@@ -105,7 +113,7 @@ var longDistanceFastMover = {
         if(creep.memory.gathering == true) {
             // If he is in its target room
             if(creep.room.name == creep.memory.targetRoom) {
-                // And is full, then we stop gathering. We set deposit target to null to reset it, in case link is full.
+                // And is full, then we stop gathering.
                 if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
 					creep.memory.firstJobDone = true;
                     creep.memory.gathering = false;
@@ -115,9 +123,13 @@ var longDistanceFastMover = {
                 if(creep.carry[RESOURCE_ENERGY] < creep.carryCapacity) {
                     
                     // If we have no target or if it's empty, we do a compliacted rocade to find one.
+					// The goal of this rocade it to take a container that doesn't already have LDFM creeps attached.
+					// I'm not so sure it works well. It dates from before I set the needOrigin for creeps, when they only had target room
+					// Thus they had to find a target by themselves in the target room. Probably going to needOrigin might be sufficient here.
 
                     // TO BE IMPROVED : each containuer, quantity minus creeps already attached to it
                     if(Game.getObjectById(creep.memory.containerTarget) == null || Game.getObjectById(creep.memory.containerTarget).store[RESOURCE_ENERGY] == 0) {
+						
                         var maximumContained = 0;
                         var finalTarget = null;
                         var roomContainers = creep.room.find(FIND_STRUCTURES, {
@@ -175,7 +187,7 @@ var longDistanceFastMover = {
             
             // And if we're not in our target room, we move towards it.
             if(creep.room.name != creep.memory.targetRoom) {
-                
+                // Using the need origin position.
         		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
                 creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});                
             }
