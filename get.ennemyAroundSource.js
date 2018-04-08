@@ -1,4 +1,6 @@
 
+// Old function, coded in simulation, to see if there's an enemy creep arround the source.
+// Obsolete I guess.
 
 var ennemyAroundSource = {
     run: function(toBeAssessed) {
