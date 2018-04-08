@@ -32,7 +32,7 @@ var longDistanceFatHarvester = {
             if(creep.room.name != creep.memory.targetRoom) {
                 var localExit = creep.room.findExitTo(creep.memory.targetRoom);
                 // console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', not in target toom, target : ' + creep.memory.targetRoom + ', move : ' + creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#ffbc11'}, reusePath: 5}))
-                creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#ffbc11'}, reusePath: 5});
+                creep.moveTo(creep.pos.findClosestByRange(localExit), {visualizePathStyle: {stroke: '#ffbc11'}, reusePath: 10});
             }
 
             // Step 1 : complete

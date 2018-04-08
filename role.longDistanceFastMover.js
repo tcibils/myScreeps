@@ -31,25 +31,33 @@ var longDistanceFastMover = {
                 creep.suicide();
             }
         }
+		if(creep.memory.firstJobDone == undefined) {
+			creep.memory.firstJobDone = false;
+		}
 
         // If he does not know where to deposit it
-        if(Game.getObjectById(creep.memory.depositTarget) == null) {
+        if(Game.getObjectById(creep.memory.depositTarget) == null && creep.memory.homeRoom == creep.room.name && creep.memory.firstJobDone) {
             // We convert the sender links memorized positions
-            let arrayOfPotentialDeposits = [];
+			let arrayOfPotentialDeposits = [];
+			
             for(let senderLinkIndex = 0; senderLinkIndex < Memory.rooms[creep.memory.homeRoom].senderLinksPos.length; senderLinkIndex++) {
-                let senderLinkIndexedPosition = new RoomPosition(Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].x, Memory.rooms[creep.memory.homeRoom].senderLinksPos[senderLinkIndex].y, creep.memory.homeRoom);
-                arrayOfPotentialDeposits.push(senderLinkIndexedPosition);
+				arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].senderLinks[senderLinkIndex]));
             }
 
             if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
                 if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
-                    arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).pos)
+					arrayOfPotentialDeposits.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
                 }
             }
+			
+			console.log('creep ' + creep.name + ' arrayOfPotentialDeposits : ' + arrayOfPotentialDeposits)
 
             var potentialTarget = creep.pos.findClosestByPath(arrayOfPotentialDeposits);
+			
+			
+			console.log('potential target: ' +potentialTarget )
             if(potentialTarget != null) {
-                creep.memory.depositTarget = potentialTarget.id;
+				creep.memory.depositTarget = potentialTarget.id;
             }
         }
 
@@ -65,7 +73,7 @@ var longDistanceFastMover = {
                     if(Game.getObjectById(creep.memory.depositTarget) != null) {
                         // Then he tries to transfer and go there.
                         if(creep.transfer(Game.getObjectById(creep.memory.depositTarget), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}});
+                            creep.moveTo(Game.getObjectById(creep.memory.depositTarget).pos, {visualizePathStyle: {stroke: '#08ff00'}});
                         }
                     }
                 }
@@ -78,9 +86,13 @@ var longDistanceFastMover = {
             
             // If the creep is not in his home, he gets back
             if(creep.room.name != creep.memory.homeRoom) {
-                if(Game.getObjectById(creep.memory.depositTarget) != null) {
-                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 5});
+                if(creep.memory.depositTarget != undefined) {
+                    creep.moveTo(Game.getObjectById(creep.memory.depositTarget), {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
                 }
+				else {
+					let tempTarget = new RoomPosition(25,25,creep.memory.homeRoom);
+					creep.moveTo(tempTarget, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});
+				}
             }
         }
         
@@ -92,8 +104,8 @@ var longDistanceFastMover = {
             if(creep.room.name == creep.memory.targetRoom) {
                 // And is full, then we stop gathering. We set deposit target to null to reset it, in case link is full.
                 if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
+					creep.memory.firstJobDone = true;
                     creep.memory.gathering = false;
-                    creep.memory.depositTarget = null;
                 }
                 
                 // If we're under capacity
@@ -162,7 +174,7 @@ var longDistanceFastMover = {
             if(creep.room.name != creep.memory.targetRoom) {
                 
         		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
-                creep.moveTo(targetEnergySourcePos);                
+                creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});                
             }
             
         }
