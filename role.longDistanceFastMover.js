@@ -188,6 +188,9 @@ var longDistanceFastMover = {
             // And if we're not in our target room, we move towards it.
             if(creep.room.name != creep.memory.targetRoom) {
                 // Using the need origin position.
+				if(creep.memory.needOriginPos == undefined ) {
+					console.log('creep ' + creep.name + ' in room ' + creep.room.name + ' has no need origin pos')
+				}
         		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
                 creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#08ff00'}, reusePath: 10});                
             }

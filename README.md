@@ -5,15 +5,15 @@
 
 Data is stored by room, in each room memory. They have stored information in their memory on their needs and attached creeps. This allows modular code : filling information on one hand, and taking decisions with the data structured in the other.
 
- - myRooms[currentRoomIndex].memory.labels = [];
- - myRooms[currentRoomIndex].memory.need = [];
- - myRooms[currentRoomIndex].memory.attached = [];
- - myRooms[currentRoomIndex].memory.role = [];
- - myRooms[currentRoomIndex].memory.unity = [];
- - myRooms[currentRoomIndex].memory.targetRoom = [];
- - myRooms[currentRoomIndex].memory.needOrigin = [];
- - myRooms[currentRoomIndex].memory.needOriginPos = [];
- - myRooms[currentRoomIndex].memory.criticalNeed = [];
+ - myRooms[currentRoomIndex].memory.labels = []; -> Free-text labels for ease of reading the memory. Not used by mechanism.
+ - myRooms[currentRoomIndex].memory.need = []; -> Quantity of creeps needed
+ - myRooms[currentRoomIndex].memory.attached = []; -> Quantity of creeps currently attached
+ - myRooms[currentRoomIndex].memory.role = []; -> Role of the creep in question - will define its role when spawned
+ - myRooms[currentRoomIndex].memory.unity = []; -> Unity of the need and attachement - in general, its number of creeps. Free text for user.
+ - myRooms[currentRoomIndex].memory.targetRoom = []; -> Target room of the creep, generaly obsolete due to needOriginPos, but useful to know what is the creep target. Stored in creep memory.
+ - myRooms[currentRoomIndex].memory.needOrigin = []; -> What caused the creep to be spawned - energy source, power bank, controller to reserve...
+ - myRooms[currentRoomIndex].memory.needOriginPos = []; -> Position of the above
+ - myRooms[currentRoomIndex].memory.criticalNeed = []; -> If critical, we'll spawn the creep with as much energy as we currently have. Spreaders can have critical need.
  - And buildings ID as well
 
 This information is filled through the dedicated scripts, that set each room's needs. 
