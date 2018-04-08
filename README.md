@@ -32,9 +32,11 @@ Based on this informations, we cross it with a priorities tables in the main, to
  - Deposit and withdraw target are for most creeps defined in dedicated modules. Always towers first, then spawn and extensions - keep them filled !
 
  
- - *Markets :* Automatic harvesting if terminal + extractor. Automatic sale of K,U,H,O,L. Just selling, no lab etc., stacking credits. Also selling energy if too much.
- - *Defense :* Tower(s) will be refilled to max ASAP and will only focus on destroying ennemies[0]. Lame. Automatic safe mode if > 4 ennemies attack parts in the room. Walls and ramparts are shit.
- - *Attack  :* "PureFighter" available, just plain attacking code based on flags. Lame. No nuke code.
+*Markets :* Automatic harvesting if terminal + extractor. Automatic sale of K,U,H,O,L. Just selling, no lab etc., stacking credits. Also selling energy if too much.
+
+*Defense :* Tower(s) will be refilled to max ASAP and will only focus on destroying ennemies[0]. Lame. Automatic safe mode if > 4 ennemies attack parts in the room. Walls and ramparts are shit.
+
+*Attack  :* "PureFighter" available, just plain attacking code based on flags. Lame. No nuke code.
 
 
 *Room reservation :* 
@@ -45,7 +47,7 @@ Game.spawns['SpawnX'].spawnCreep([CLAIM,MOVE], 'Claimer' + Game.time,  {memory: 
 */
 
 
-*Power harvesting*
+*Power harvesting :*
 
 Scouts find power sources in rooms, and store them in the rooms memories. 
 Then, the power processing script descides wether its a good idea to go pick it up or not, the needed creeps, and what would be the home rooms, etc.
@@ -74,6 +76,7 @@ Finally, there is a small "power spreading creep" that passes the power from sto
  - Better management of ramparts and walls
  
  *Additional - Grunt*
+ 
 My screeps account "default" branch is automatically updated with the main branch in github. To update other branches in screeps with other branches from github, one need to use "grunt". To do so, you need "node.js", "npm" and finally grunt itself - see here http://docs.screeps.com/commit.html . Then, before launching the "grunt screeps" sequence, you need a ".screeps.json" file, which is not in the git folder (gitignore). It must be as follows :
 
 {
