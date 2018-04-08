@@ -6,6 +6,9 @@
  * var mod = require('role.longDistancePillageCarry');
  * mod.thing == 'a thing'; // true
  */
+ 
+ // INCOMPLETE - WORK IN PROGRESS
+ // The goal here is to go to a parameter-defined room, and loot the remainings of a deconected player.
 
 
 var longDistancePillageCarry = {
