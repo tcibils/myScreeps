@@ -1,6 +1,5 @@
 var placesOfSource = require('get.placesOfSource');
 var freeSpotsOfSource = require('get.freeSpotsOfSource');
-var ennemyAroundSource = require('get.ennemyAroundSource');
 var getDepositTarget = require('get.depositTarget');
 
 var roleHarvester = {
@@ -23,7 +22,7 @@ var roleHarvester = {
             // If creep is not filled, it goes search for energy
 	        if(creep.carry.energy < creep.carryCapacity) {
 	            // If the source attached has as much creeps as room, we continue to mine it (>= 0 bc we take this creep into account)
-                if(freeSpotsOfSource.run(Game.getObjectById(creep.memory.attachedSource)) >= 0 && !ennemyAroundSource.run(Game.getObjectById(creep.memory.attachedSource))) { 
+                if(freeSpotsOfSource.run(Game.getObjectById(creep.memory.attachedSource)) >= 0) { 
                     if(creep.harvest(Game.getObjectById(creep.memory.attachedSource)) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(Game.getObjectById(creep.memory.attachedSource), {visualizePathStyle: {stroke: '#ffaa00'}});
                     }
@@ -34,7 +33,7 @@ var roleHarvester = {
 	                // If there is a source with some space, we attach it to the creep
                     var sources= creep.room.find(FIND_SOURCES);
     	            for(var i = 0; i<sources.length; i++) {
-	                    if(freeSpotsOfSource.run(sources[i]) > 0 && !ennemyAroundSource.run(sources[i])) {
+	                    if(freeSpotsOfSource.run(sources[i]) > 0) {
 	                        creep.memory.attachedSource = sources[i].id;
 	                        creepHasFoundANewSource = true;
 	                        if(creep.harvest(sources[i]) == ERR_NOT_IN_RANGE) {

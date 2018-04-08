@@ -1,5 +1,4 @@
 var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
-var ennemyAroundSource = require('get.ennemyAroundSource');
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 
 var roleFatHarvester = {

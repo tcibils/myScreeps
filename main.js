@@ -5,7 +5,6 @@ var roleFatHarvester = require('role.fatharvester');
 var roleFastMover = require('role.fastmover');
 var placesOfSource = require('get.placesOfSource');
 var freeSpotsOfSource = require('get.freeSpotsOfSource');
-var ennemyAroundSource = require('get.ennemyAroundSource');
 var rolePureFighter = require('role.pureFighter');
 var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
 var functionLink = require('building.link');

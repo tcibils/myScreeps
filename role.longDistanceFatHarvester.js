@@ -1,5 +1,4 @@
 var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
-var ennemyAroundSource = require('get.ennemyAroundSource');
 var workPartsNeededOfSource = require('get.workPartsNeededOfSource');
 var underAttackCreepMemory = require('info.underAttackCreepMemory');
 
@@ -44,7 +43,7 @@ var longDistanceFatHarvester = {
                         // Then we look for the closest source with free spots, no ennemy, and needing at least as many work parts as we have
       //                  potentialSource = creep.pos.findClosestByPath(FIND_SOURCES, {
         //                    filter: (source) => {
-          //                  return (freeFatSpotsOfSource.run(source) > 0 && !ennemyAroundSource.run(source) && workPartsNeededOfSource.run(source) >= counterOfCurrentWorkBodyParts)}
+          //                  return (freeFatSpotsOfSource.run(source) > 0 && workPartsNeededOfSource.run(source) >= counterOfCurrentWorkBodyParts)}
             //            });
   //                  }
     //                if(creep.room.controller.reservation == null) {
