@@ -69,13 +69,7 @@ module.exports.loop = function () {
     var showRoomDashboardCreeps = false;
     var showRoomDashboardCreepToDisplay = 'W43N51';
 
-    // Room to pillage. To be emptied manually when finished.
-    var longDistancePillageRooms = [];
-    // Warriors not needed for storage looting. For terminals ?
-    var longDistancePillageRoomsWarriorNeeded = [];
-    // Cannot compute automatically carry needed, due to visibility. Please input manually here.
-    var longDistancePillageRoomsCarryNeeded = [];
-
+	
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
     var longDistanceBuildRooms = ['W37N47'];
     // Pas s'emmerder avec l'automatique, c'est Ã  changer anyway
@@ -236,10 +230,6 @@ module.exports.loop = function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- LONG DISTANCE ---------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-
-    var longDistancePillageRoomsHomeRooms = [];
-    var longDistancePillageRoomsWarriorAttached = [];
-    var longDistancePillageRoomsCarryAttached = [];
 
     // For each room,
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
