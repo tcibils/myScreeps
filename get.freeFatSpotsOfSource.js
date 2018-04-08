@@ -3,6 +3,9 @@
 
 var placesOfSource = require('get.placesOfSource');
 
+// Almost obsolete function.
+// Local fat harvesters do not use it anymore, they use their needOrigin
+// Long distance fat harvesters still use it, but their code is to be re-written... So we can't yet get rid of that.
 
 var freeFatSpotsOfSource = {
     
