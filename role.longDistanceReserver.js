@@ -11,7 +11,7 @@ var longDistanceReserver = {
     
     run: function(creep) {
 		// If the need origin of the creep is defined
-		if(creep.memory.needOriginPos != undefined) {
+		if(creep.memory.needOriginPos != 'undefined') {
 			// If we are in the target room
 			if(creep.room.name == creep.memory.targetRoom) {
 				// If reserving the controller is not in range, we move towards it
@@ -33,7 +33,7 @@ var longDistanceReserver = {
 		}
 		
 		// If it's not defined in memory
-		if(creep.memory.needOriginPos == undefined) {
+		if(creep.memory.needOriginPos == 'undefined') {
 			// If we are in the target room
 			if(creep.room.name == creep.memory.targetRoom) {
 				// We move towards the room controller to reserve it
