@@ -1,5 +1,5 @@
 // Returns number of free spots around the source, minus the number of creeps already attached to it
-
+// Almost obsolete - see get.freeFatSpotsOfSource...
 
 var placesOfSource = require('get.placesOfSource');
 
