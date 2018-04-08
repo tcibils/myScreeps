@@ -1,7 +1,7 @@
 *STATUS - 08-04-2018 - Thomas Cibils*
 
 
-*Data structure :*
+*Global mechanism :*
 
 Data is stored by room, in each room memory. They have stored information in their memory on their needs and attached creeps. This allows modular code : filling information on one hand, and taking decisions with the data structured in the other.
 
@@ -19,7 +19,10 @@ Data is stored by room, in each room memory. They have stored information in the
 This information is filled through the dedicated scripts, that set each room's needs. 
 For long distance(energy & power), raw information is gathered by scouts, then the computations are done in dedicated screeps (process.), and then transposed in a dedicated script to set each room's needs.
  
-Based on this informations, we cross it with a priorities tables in the main, to know which creeps to spawn in priority. There is then one block of code to spawn creeps, in a standardized way, with standard memory (easier to manage). This code manages multiple spawns.
+Based on this informations, we cross it with a priorities tables in the main, to know which creeps to spawn in priority. There is then one block of code in the main to spawn creeps, in a standardized way, with standard memory (easier to manage). This code manages multiple spawns.
+
+Finally, each creep follows its own role, each role having a dedicated script file.
+
  
 
 *Room leveling :*
@@ -34,7 +37,7 @@ Based on this informations, we cross it with a priorities tables in the main, to
  
 *Markets :* Automatic harvesting if terminal + extractor. Automatic sale of K,U,H,O,L. Just selling, no lab etc., stacking credits. Also selling energy if too much.
 
-*Defense :* Tower(s) will be refilled to max ASAP and will only focus on destroying ennemies[0]. Lame. Automatic safe mode if > 4 ennemies attack parts in the room. Walls and ramparts are shit.
+*Defense :* Tower(s) will be refilled to max ASAP and will only focus on destroying ennemies[0]. Lame AF. Automatic safe mode if > 4 ennemies attack parts in the room. Walls and ramparts are shit.
 
 *Attack  :* "PureFighter" available, just plain attacking code based on flags. Lame. No nuke code.
 
