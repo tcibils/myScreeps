@@ -74,6 +74,7 @@ Finally, there is a small "power spreading creep" that passes the power from sto
  - fastmovers should deposit straight in storage if there is an efficient spreader
  - LDFHarvesters sometime do not get over their container
  - Better management of ramparts and walls
+ - Rewrite the withdraw source script in the same way as the deposit source script - it's currently terrible
  
  *Additional - Grunt*
  
