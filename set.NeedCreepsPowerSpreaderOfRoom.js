@@ -1,29 +1,29 @@
 var setNeedCreepsPowerSpreaderOfRoom = {
     run: function(treatedRoom) {
 		
-		myRooms[currentRoomIndex].memory.labels.push('Power Spreader');
+		treatedRoom.memory.labels.push('Power Spreader');
 		
-		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]) != undefined) {
-			if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_POWER] > 0) {
-				myRooms[currentRoomIndex].memory.need.push(1);
+		if(Game.getObjectById(treatedRoom.memory.storages[0]) != undefined) {
+			if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_POWER] > 0) {
+				treatedRoom.memory.need.push(1);
 			}
 			else {
-				myRooms[currentRoomIndex].memory.need.push(0);
+				treatedRoom.memory.need.push(0);
 			}
 		}
 		else {
-			myRooms[currentRoomIndex].memory.need.push(0);
+			treatedRoom.memory.need.push(0);
 		}
 		
-        var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == myRooms[currentRoomIndex].name));
-        myRooms[currentRoomIndex].memory.attached.push(spreadersPowerExisting.length);
+        var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == treatedRoom.name));
+        treatedRoom.memory.attached.push(spreadersPowerExisting.length);
 		
-        myRooms[currentRoomIndex].memory.role.push('spreaderPower');
-        myRooms[currentRoomIndex].memory.unity.push('number of creeps');
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
-        myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
+        treatedRoom.memory.role.push('spreaderPower');
+        treatedRoom.memory.unity.push('number of creeps');
+        treatedRoom.memory.targetRoom.push('undefined')
+        treatedRoom.memory.needOrigin.push('undefined');
+        treatedRoom.memory.needOriginPos.push('undefined');
+        treatedRoom.memory.criticalNeed.push(false);
 
 
     }
