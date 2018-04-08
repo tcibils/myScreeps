@@ -129,9 +129,20 @@ var setLDHEnergyNeedOfRoom = {
 						treatedRoom.memory.role.push('roomReserver');
 						treatedRoom.memory.unity.push('Number of creeps');
 						treatedRoom.memory.targetRoom.push(roomInMemory);
-						treatedRoom.memory.needOrigin.push('undefined');
-						treatedRoom.memory.needOriginPos.push('undefined');
-						treatedRoom.memory.criticalNeed.push(false);			
+						if(treatedRoom.memory.controller != undefined) {
+							treatedRoom.memory.needOrigin.push(treatedRoom.memory.controller);
+						}
+						else {
+							treatedRoom.memory.needOrigin.push('undefined');
+						}
+						
+						if(treatedRoom.memory.controllerPos != undefined) {
+							treatedRoom.memory.needOriginPos.push(treatedRoom.memory.controllerPos);
+						}
+						else {
+							treatedRoom.memory.needOriginPos.push('undefined');
+						}
+							treatedRoom.memory.criticalNeed.push(false);			
 					}
 				}
 			}	
