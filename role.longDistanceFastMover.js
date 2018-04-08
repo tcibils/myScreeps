@@ -34,7 +34,10 @@ var longDistanceFastMover = {
 		if(creep.memory.firstJobDone == undefined) {
 			creep.memory.firstJobDone = false;
 		}
-
+		if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
+				creep.memory.firstJobDone = true;
+		}
+		
         // If he does not know where to deposit it
         if(Game.getObjectById(creep.memory.depositTarget) == null && creep.memory.homeRoom == creep.room.name && creep.memory.firstJobDone) {
             // We convert the sender links memorized positions
