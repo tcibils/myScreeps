@@ -64,7 +64,12 @@ var roleSpreaderPower = {
 
 				if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 					creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
-				}				
+				}
+				else if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_ENERGY) == ERR_FULL) {
+					if(creep.transfer(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
+					}
+				}
 			}
 			
 			// If the creep is empty
