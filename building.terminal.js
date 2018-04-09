@@ -10,7 +10,37 @@
 var buildingTerminal = {
     run: function(terminal) {
         let energyLimit = 50000;
+		let helpingEnergyForPowerQuantity = 15000;
+		let criticalEnergyLevelAllyStorage = 5000;
+		
+		// Here we help energy having powers but struggling with low energy
+		if(Game.time % 30 == 0) {
+			// We take our rooms
+			let myRooms = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my);
+			// We iterate over them
+			for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {
+				// If the room in question has a terminal, and a storage
+				if(myRooms[currentRoomIndex].terminal != undefined && Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]) != undefined) {
+					// We look at the energy in the terminal, and at the resources stored in the storage
+					let receievingTerminalEnergy = myRooms[currentRoomIndex].terminal.store[RESOURCE_ENERGY];
+					let storagePower = Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_POWER];
+					let storageEnergy = Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_ENERGY];
+					let currentTerminalEnergy = terminal.store[RESOURCE_ENERGY];
+					
+					// If :
+					// 1. We have enough energy (not taking into account the transfer cost but oh well)
+					// 2. The storage of target room is low on energy and stores power
+					// 3. And the terminal of the target room is short of energy
+					if(currentTerminalEnergy > helpingEnergyForPowerQuantity && storageEnergy < criticalEnergyLevelAllyStorage && storagePower > 0 && receievingTerminalEnergy < helpingEnergyForPowerQuantity ) {
+						// Then we send some energy to the room.
+						terminal.send(RESOURCE_ENERGY, helpingEnergyForPowerQuantity, myRooms[currentRoomIndex].name);
+					}
+				}
+			}
+		}
+		
         if(Game.time % 200 == 0) {
+			
             if(terminal.store[RESOURCE_KEANIUM] > 0) {
                 let buyOrdersKeanium = Game.market.getAllOrders(order => order.resourceType == RESOURCE_KEANIUM && order.type == ORDER_BUY && order.price > 0.129);
                 _.sortBy(buyOrdersKeanium, ['price']);
