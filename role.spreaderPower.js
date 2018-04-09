@@ -26,19 +26,44 @@ var roleSpreaderPower = {
 		if(creep.memory.gathering) {
 			// If we'ew under our capacity
 			if(_.sum(creep.carry) < creep.carryCapacity) {
+				// If we're gathering power
 				if(creep.memory.gatheringPower) {
-					// We withdraw some
+					// We withdraw some from the deposit
 					if(creep.withdraw(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
 						// If we're too far we move towards the storage.
 						creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
 					}
 				}
+				// If we're gathering energy
 				if(creep.memory.gatheringEnergy) {
-					// We withdraw some
-					if(creep.withdraw(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+					// We check the energy in the storage
+					let energyInRoomStorage = 0;
+					if(Game.getObjectById(creep.room.memory.storages[0]) != undefined) {
+						energyInRoomStorage = Game.getObjectById(creep.room.memory.storages[0]).store[RESOURCE_ENERGY];
+					}
+					// If there's enought
+					if(energyInRoomStorage > 100) {
+						// we try to withdraw from the storage
+						if(creep.withdraw(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 						// If we're too far we move towards the storage.
-						creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
-					}					
+							creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
+						}
+					}
+					// If there's not enough
+					else {
+						// The idea here, long term, is that other rooms might send energy to the terminal.
+						// (also that my rooms currently stacked energy in terminals and I want to use it ^^)
+						// If we have a terminal
+						if(creep.room.terminal != undefined) {
+							// And there is some energy
+							if(creep.room.terminal.store[RESOURCE_ENERGY) > 100) {
+								// We withdraw this energy
+								if(creep.withdraw(creep.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+									creep.moveTo(creep.room.terminal);
+								}
+							}
+						}
+					}
 				}
 			}
 			
