@@ -6,7 +6,21 @@ var setNeedCreepsPowerSpreaderOfRoom = {
 		// If we have a storage
 		if(Game.getObjectById(treatedRoom.memory.storages[0]) != undefined) {
 			// If we have some power and enough energy in the room, we need a spreader
-			if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_POWER] > 0 && Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY] > 5000) {
+			
+			// We check how much power and energy to use we have
+			let powerStored = 0;
+			let energyStoredDeposit = 0;
+			let energyStoredTerminal = 0;
+			if(Game.getObjectById(treatedRoom.memory.storages[0]) != undefined) {
+				powerStored = Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_POWER];
+				energyStoredDeposit = Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY];
+			}
+			if(treatedRoom.terminal != undefined) {
+				energyStoredTerminal = treatedRoom.terminal.store[RESOURCE_ENERGY];
+			}
+
+			// If we have power, but also enough energy, we need a spreader.
+			if(powerStored > 0 && (energyStoredDeposit > 5000 || energyStoredTerminal > 5000)) {
 				treatedRoom.memory.need.push(1);
 			}
 			else {
