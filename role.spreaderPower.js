@@ -56,7 +56,7 @@ var roleSpreaderPower = {
 						// If we have a terminal
 						if(creep.room.terminal != undefined) {
 							// And there is some energy
-							if(creep.room.terminal.store[RESOURCE_ENERGY) > 100) {
+							if(creep.room.terminal.store[RESOURCE_ENERGY] > 100) {
 								// We withdraw this energy
 								if(creep.withdraw(creep.room.terminal, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 									creep.moveTo(creep.room.terminal);
