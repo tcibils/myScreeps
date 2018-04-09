@@ -43,6 +43,12 @@ var scout = {
         // This will avoid that the creep tries to update the room memory the whole time it's in it, and do it just once
 		// current room memory will be different from creep room only the first time it gets in a new room
         if(creep.memory.currentRoom != creep.room.name) {
+			
+			// let myRooms = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my);
+			// let minimalDistance = 1000;
+			// for loop on my rooms to find the closest one with getRoomLinearDistance
+			// if minimal distance is lower than 4, then do the following.
+			
             // Storing sources of the room : ID, position and maxEnergy - only if undefined, as it won't change in time...
             if(creep.room.memory.sources == undefined || creep.room.memory.sourcesPos == undefined || creep.room.memory.sourcesMax == undefined) {
                 creep.room.memory.sources = [];
