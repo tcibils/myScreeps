@@ -264,7 +264,7 @@ var processLDEnergyInfo = {
 					}
 					
 					// Or we don't already have a home room, and we need to find one, and we iterate over everything
-					else {
+					else if (Memory.rooms[roomInMemory].sourcesHomeRooms.length == 0) {
 						// So, for each source in the room
 						for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sources.length; sourceIndex++) {						
 							
@@ -365,6 +365,10 @@ var processLDEnergyInfo = {
 							}
 							
 						}
+					}
+					
+					else {
+						console.log('ENERGY PROCESSING ISSUE. Distant room ' + roomInMemory + ' has ' + Memory.rooms[roomInMemory].sourcesHomeRooms + ' home rooms, but ' + Memory.rooms[roomInMemory].sources.length + ' sources. Length of home rooms should be 0 or equal to number of sources' )
 					}
 				}
 				

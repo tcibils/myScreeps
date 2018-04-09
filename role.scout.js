@@ -6,6 +6,9 @@
  * var mod = require('role.scout');
  * mod.thing == 'a thing'; // true
  */
+ 
+ // Pré-filtrer les rooms quand on y rentre pour n'enregistrer de l'info que pour celles à 3-4 rooms de distance à vol d'oiseau des miennes
+ 
 
 var scout = {
     run: function(creep) {
