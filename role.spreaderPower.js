@@ -83,16 +83,24 @@ var roleSpreaderPower = {
 			// If we have some resource
 			if(_.sum(creep.carry) > 0) {
 				// We try to transfer it to the power spawn
-				if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
+				if(creep.carry[RESOURCE_POWER] > 0) {
+					if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
+					}
 				}
-
-				if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
-				}
-				else if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_ENERGY) == ERR_FULL) {
-					if(creep.transfer(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-						creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
+				if(creep.carry[RESOURCE_ENERGY] > 0) {
+					let energyInPowerSpawn = Game.getObjectById(creep.room.memory.powerSpawningPoints[0]).energy;
+					let maxEnergyInPowerSpawn = Game.getObjectById(creep.room.memory.powerSpawningPoints[0]).energyCapacity;
+					
+					if(energyInPowerSpawn < maxEnergyInPowerSpawn) {
+						if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
+						}
+					}
+					if(energyInPowerSpawn == maxEnergyInPowerSpawn) {
+						if(creep.transfer(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
+						}
 					}
 				}
 			}
