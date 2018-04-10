@@ -35,7 +35,7 @@ var longDistanceFatHarvester = {
 					creep.moveTo(Game.getObjectById(creep.memory.attachedContainer));
 				}
 				// If we are exactly above the container
-				if(creep.pos == Game.getObjectById(creep.memory.attachedContainer).pos) {
+				if(creep.pos.x == Game.getObjectById(creep.memory.attachedContainer).pos.x && creep.pos.y == Game.getObjectById(creep.memory.attachedContainer).pos.y && creep.pos.roomName == Game.getObjectById(creep.memory.attachedContainer).pos.roomName) {
 					// If we are not repairing
 					if(!creep.memory.repairing) {
 						// If we are at capacity
