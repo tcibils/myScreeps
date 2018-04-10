@@ -42,6 +42,7 @@ var longDistanceFatHarvester = {
 							if(Game.getObjectById(creep.memory.attachedContainer).hits < Game.getObjectById(creep.memory.attachedContainer).hitsMax) {
 								// Then we repair it
 								creep.memory.repairing = true;
+								creep.say('repairing')
 							}
 						}
 						// Anyway, we wanna harvest the source. No conditions on the creep capacity, it'll go in the container if creep is full
@@ -56,6 +57,7 @@ var longDistanceFatHarvester = {
 						// If we're empty or if the container is full HP, we stop repairing
 						if(creep.carry[RESOURCE_ENERGY] == 0 || Game.getObjectById(creep.memory.attachedContainer).hits == Game.getObjectById(creep.memory.attachedContainer).hitsMax) {
 							creep.memory.repairing = false;
+							creep.say('harvesting')
 						}
 					}
 				}
@@ -71,6 +73,7 @@ var longDistanceFatHarvester = {
 					creep.memory.attachedContainer = potentialContainers[0].id; // We attach the container
 					creep.memory.attachedConstructionContainer = null; // No need to construct anything
                     creep.memory.building = false; // And we are not building.
+					creep.say('created')
 				}
 				// If there is none
 				if(potentialContainers.length == 0) {
@@ -84,6 +87,7 @@ var longDistanceFatHarvester = {
 						creep.memory.attachedConstructionContainer = targetEnergySourcePos.findInRange(FIND_STRUCTURES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}})[0].id; // Find it
 						creep.memory.attachedContainer = null; // We have no container
 						creep.memory.building = true; // And we need to build it
+						creep.say('Cont atta')
 					}
 				}
 			}
@@ -101,6 +105,7 @@ var longDistanceFatHarvester = {
 					if(creep.carry[RESOURCE_ENERGY] == 0 || Game.getObjectById(creep.memory.attachedConstructionContainer) == undefined) {
 						creep.memory.building = false;
 						creep.memory.attachedConstructionContainer = null;
+						creep.say('harvestB')
 					}
 				}
 				
@@ -115,6 +120,7 @@ var longDistanceFatHarvester = {
 					if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
 						// We build the container
 						creep.memory.building = true;
+						creep.say('building')
 					}
 				}
 				
@@ -124,6 +130,7 @@ var longDistanceFatHarvester = {
 					// We attach it, and we'll go to third case.
 					creep.memory.attachedContainer = potentialContainers[0].id;
 					creep.memory.attachedConstructionContainer = null;
+					creep.say('Cont atta2')
 				}
 			}
 		}
