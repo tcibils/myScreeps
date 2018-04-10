@@ -84,8 +84,13 @@ var roleSpreaderPower = {
 			if(_.sum(creep.carry) > 0) {
 				// We try to transfer it to the power spawn
 				if(creep.carry[RESOURCE_POWER] > 0) {
-					if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
-						creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
+					if(creep.room.memory.powerSpawningPoints.length > 0) {
+						if(creep.transfer(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]));
+						}
+					}
+					else {
+						console.log('Room ' + creep.room.name + ', creep ' + creep.name + ' : ISSUE : POWER SPREADER BUT NO POWER SPAWNING POINT !')
 					}
 				}
 				if(creep.carry[RESOURCE_ENERGY] > 0) {
