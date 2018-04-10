@@ -67,7 +67,7 @@ var longDistanceFatHarvester = {
 			}
 			
 			// Second case, we do not have a container attached, and no construction site, we need to create the construction site.
-			if(Game.getObjectById(creep.memory.attachedContainer) == 'null' && Game.getObjectById(creep.memory.attachedConstructionContainer == 'null')) {
+			if(Game.getObjectById(creep.memory.attachedContainer) === 'null' && Game.getObjectById(creep.memory.attachedConstructionContainer === 'null')) {
 				// We try to find a container near the source
 				let potentialContainers = targetEnergySourcePos.findInRange(FIND_STRUCTURES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}});
 				// If there is one
