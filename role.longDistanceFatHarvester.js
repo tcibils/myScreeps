@@ -86,7 +86,7 @@ var longDistanceFatHarvester = {
 					// And create a construction site just near the source
 					else {
 						creep.pos.createConstructionSite(STRUCTURE_CONTAINER);	// Creation construction site
-						creep.memory.attachedConstructionContainer = creep.pos.lookFor(FIND_CONSTRUCTION_SITES).id; // Find it
+						creep.memory.attachedConstructionContainer = creep.pos.lookFor(FIND_CONSTRUCTION_SITES)[0].id; // Find it
 						creep.memory.attachedContainer = undefined; // We have no container
 						creep.memory.building = true; // And we need to build it
 						creep.say('Cont atta')
