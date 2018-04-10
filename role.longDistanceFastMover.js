@@ -20,8 +20,11 @@ var longDistanceFastMover = {
 		if(creep.memory.attachedContainer == undefined) {creep.memory.attachedContainer = null;}
 		if(creep.memory.nearEnergySource == undefined) {creep.memory.nearEnergySource = false;}
 		
-		if(creep.pos.getRangeTo(targetEnergySourcePos) < 4 && !creep.memory.nearEnergySource) {
+		if(creep.pos.getRangeTo(targetEnergySourcePos) < 4) {
 			creep.memory.nearEnergySource = true;
+		}
+		else {
+			creep.memory.nearEnergySource = false;
 		}
         
 		
