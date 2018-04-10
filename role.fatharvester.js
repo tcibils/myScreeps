@@ -1,4 +1,3 @@
-var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
 var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 
 var roleFatHarvester = {
