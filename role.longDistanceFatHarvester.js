@@ -93,6 +93,7 @@ var longDistanceFatHarvester = {
 						creep.say('Cont atta')
 					}
 				}
+				console.log('room ' + creep.room.name + ' creep ' + creep.name + ' potentialContainers : ' + potentialContainers)
 			}
 			
 			
@@ -135,7 +136,6 @@ var longDistanceFatHarvester = {
 					creep.memory.attachedConstructionContainer = undefined;
 					creep.say('Cont atta2')
 				}
-				console.log('room ' + creep.room.name + ' creep ' + creep.name + ' potentialContainers : ' + potentialContainers)
 			}
 		}
     }
