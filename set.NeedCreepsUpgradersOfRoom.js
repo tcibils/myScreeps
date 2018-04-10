@@ -1,8 +1,5 @@
 var setNeedCreepsUpgradersOfRoom = {
     run: function(treatedRoom) {
-		let naturallyDeadTime = 100;
-		        // UPAGREDERS
-
 
         treatedRoom.memory.labels.push('Upgraders')
         treatedRoom.memory.role.push('upgrader')
@@ -20,13 +17,27 @@ var setNeedCreepsUpgradersOfRoom = {
         // Max harvesters in order not to clog the room
         let maxUpgraders = 4;
 		
-		// à améliorer : upgrader "lite" ?
+		// Time after which we consider the upgraders as non-existing
+		let naturallyDeadTime = 100;
+		
+		// If the controller time to downgrade gets under this (room level 8), we force the need for an upgrader
+		let tickLimitsToDowngrade = 2000;
+		
+		// If room is level 8
         if(treatedRoom.controller.level == 8) {
-			if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY] > baseUnitUpgradersNeed) {
+			// If the controller is going to get downgraded, we absolutely need an upgrader
+			if(treatedRoom.controller.ticksToDowngrade < tickLimitsToDowngrade) {
 				treatedRoom.memory.need.push(1);
 			}
+			// If there's no problem with the timer
 			else {
-				treatedRoom.memory.need.push(0);
+				// We only spawn one if we have enough energy to feed it.
+				if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY] > baseUnitUpgradersNeed) {
+					treatedRoom.memory.need.push(1);
+				}
+				else {
+					treatedRoom.memory.need.push(0);
+				}
 			}
 		}
 
