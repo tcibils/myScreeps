@@ -22,7 +22,7 @@ var longDistanceFatHarvester = {
 		// If we are not near our energy source, in any rom
 		if(!creep.memory.nearEnergySource) {
 			// We move towards it
-			creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#ffbc11'}});
+			creep.moveTo(targetEnergySourcePos, {visualizePathStyle: {stroke: '#ffbc11'}, reusePath: 10});
 		}
 		
 		// If we are near the energy source
