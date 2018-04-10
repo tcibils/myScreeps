@@ -11,7 +11,9 @@ var processLDPowerInfo = {
 			let maxPowerSourceToRoomSpawnDistance = 200;
 			// minimum energy we require the potential home room to have.
 			let minimumEnergyNecessary = 45000;
-				
+			// If set to true, will display power sources found in console
+			let displayPowerSources = true;
+			
 			let myRoomsLevelEight = _.filter(Game.rooms, (currentRoom) => currentRoom.controller != undefined && currentRoom.controller.my && currentRoom.controller.level >= 8 && currentRoom.memory.spawningPoints.length > 0);
 			
 			// Starting now :
@@ -51,7 +53,7 @@ var processLDPowerInfo = {
 						
 						// For each power source
 						for(let powerSourceIndex = 0; powerSourceIndex < Memory.rooms[roomInMemory].powerSources.length; powerSourceIndex++) {
-							console.log('room ' + roomInMemory + ' power bank ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] )
+							
 							// We need to assess if we will harvest it.
 							
 							// Condition 1 : will it live long enough for us to have the time to harvest it ?
@@ -89,11 +91,15 @@ var processLDPowerInfo = {
 								powerSourceFinished = true;
 							}
 							
-							if(Game.time > expiryTick + 750) {
+							if(Game.time > expiryTick + 350) {
 								powerSourceFinishedTotal = true;
 							}
 							
-							console.log('Before setting needs of attack and heal : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
+							if(displayPowerSources) {
+								console.log('Room ' + roomInMemory + ', power bank ' + Memory.rooms[roomInMemory].powerSources[powerSourceIndex] + ': living long enough: ' + powerSourceLivingLongEngough + ',  free spots: ' + Memory.rooms[roomInMemory].powerSourceFreeSpots[powerSourceIndex])
+							}
+							
+							// console.log('Before setting needs of attack and heal : living long enought (T) : ' + powerSourceLivingLongEngough + ', space (T) ' + powerSourceEnoughSpace + ', room attached (T) : ' + powerSourceAttachedRoomAlready + ', room already treated (F) ' + powerSourceAlreadyTreated + ', source finished (F) : ' + powerSourceFinished)
 							// If we have the above conditions
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceAlreadyTreated && !powerSourceFinished) {
 								// We first reset all tables								
@@ -226,7 +232,7 @@ var processLDPowerInfo = {
 							// For the power creeps, we have fewer conditions - especially not the "powerSourceAlreadyTreated"
 							// Indeed, the carrys need would be set to 0, and never changed again. So we need to check more often
 							// This shouldn't be a problem as we wont call any expensive function here.
-							console.log('now setting carry needs : T T T - F needed')
+							// console.log('now setting carry needs : T T T - F needed')
 							if(powerSourceLivingLongEngough && powerSourceEnoughSpace && powerSourceAttachedRoomAlready && !powerSourceFinishedTotal	) {
 								Memory.rooms[roomInMemory].powerSourcesCarryNeed = [];
 								
@@ -235,8 +241,8 @@ var processLDPowerInfo = {
 								let currentHits = Memory.rooms[roomInMemory].powerSourcesHits[powerSourceIndex];
 								let maxHitsPowerSource = Memory.rooms[roomInMemory].powerSourcesHitsMax[powerSourceIndex];
 								let hitsTreshold = maxHitsPowerSource/4;
-								console.log('current hits : ' + currentHits + ', max ' + maxHitsPowerSource + ', tresh : ' + hitsTreshold)
-								console.log('if ' + currentHits + '<' + hitsTreshold + ' then need ' + Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000) )
+								// console.log('current hits : ' + currentHits + ', max ' + maxHitsPowerSource + ', tresh : ' + hitsTreshold)
+								// console.log('if ' + currentHits + '<' + hitsTreshold + ' then need ' + Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000) )
 								if( currentHits< hitsTreshold) {
 									Memory.rooms[roomInMemory].powerSourcesCarryNeed.push(Math.ceil(Memory.rooms[roomInMemory].powerSourcesMax / 1000));
 								}
