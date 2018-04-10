@@ -1,26 +1,28 @@
 var setLDHEnergyNeedOfRoom = {
     run: function(treatedRoom) {
 		
-        // Ajouter un "every X tick" ?
-		
+		// Parameters to get info in the console
 		var showLDHEnergyDigest = false;
-		var showLDHEnergySpecificRoomDigest = false;
+		var showLDHEnergySpecificRoomDigest = false; // For distant rooms
 		var showLDHEnergySpecificRoomDigestTarget = 'W43N43';
+		
 		
 		// For every room we have in memory
 		for(var roomInMemory in Memory.rooms) {
 			// If the sources have home rooms defined
 			if(Memory.rooms[roomInMemory].sourcesHomeRooms != undefined) {
 				
+				// Console log printing for specific distant room
 				if(showLDHEnergySpecificRoomDigest) {
 					if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
-
 						console.log('Distant room ' + roomInMemory + ' Digest : ');
 					}
 				}
+				
 				// For each of these sources
 				for(let sourceIndex = 0; sourceIndex < Memory.rooms[roomInMemory].sourcesHomeRooms.length; sourceIndex++) {
 					
+					// Console log printing for specific distant room
 					if(showLDHEnergySpecificRoomDigest) {
 						if(roomInMemory == showLDHEnergySpecificRoomDigestTarget) {
 							console.log('Source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex]);
@@ -30,11 +32,10 @@ var setLDHEnergyNeedOfRoom = {
 					// If the home room is the room we're treating - for home rooms and distant rooms, it will never be true
 					if(Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] == treatedRoom.name) {
 						
+						// Console log for all rooms.
 						if(showLDHEnergyDigest) {
 							console.log('Distant room ' + roomInMemory + ', source ' + Memory.rooms[roomInMemory].sources[sourceIndex] + ', home room found : ' + Memory.rooms[roomInMemory].sourcesHomeRooms[sourceIndex] + ', distance : ' + Memory.rooms[roomInMemory].sourcesHomeRoomsDistance[sourceIndex])	
 						}
-						
-
 						
 						// We count the existing LDHarvesters for target room AND target source
 						 let LDFHarvestersOfSource = _.filter(Game.creeps, (creep) =>
@@ -99,9 +100,9 @@ var setLDHEnergyNeedOfRoom = {
 						treatedRoom.memory.criticalNeed.push(false);
 						
 						
-						// Reserver creep for the room as well ?
+						// Finally, reservers
 						
-						// We count the existing LDSecurity for target room
+						// We count the existing reservers for target room
 						let LDReserverOfRoom = _.filter(Game.creeps, (creep) =>
 							creep.memory.role == 'roomReserver' &&
 							creep.memory.targetRoom == roomInMemory &&
@@ -123,14 +124,27 @@ var setLDHEnergyNeedOfRoom = {
 							reserversNeeded = 1
 						}
 						
+						// and we set the rest of the info
 						treatedRoom.memory.labels.push('LDReserver target room ' + roomInMemory)
 						treatedRoom.memory.need.push(reserversNeeded);
 						treatedRoom.memory.attached.push(LDReserverOfRoom);
 						treatedRoom.memory.role.push('roomReserver');
 						treatedRoom.memory.unity.push('Number of creeps');
 						treatedRoom.memory.targetRoom.push(roomInMemory);
-						treatedRoom.memory.needOrigin.push('undefined');
-						treatedRoom.memory.needOriginPos.push('undefined');
+						// The need origin will be the controller, in order to move towards it directly
+						if(treatedRoom.memory.controller != undefined) {
+							treatedRoom.memory.needOrigin.push(treatedRoom.memory.controller);
+						}
+						else {
+							treatedRoom.memory.needOrigin.push('undefined');
+						}
+						
+						if(treatedRoom.memory.controllerPos != undefined) {
+							treatedRoom.memory.needOriginPos.push(treatedRoom.memory.controllerPos);
+						}
+						else {
+							treatedRoom.memory.needOriginPos.push('undefined');
+						}
 						treatedRoom.memory.criticalNeed.push(false);			
 					}
 				}

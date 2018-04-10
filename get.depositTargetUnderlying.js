@@ -7,9 +7,13 @@
  * mod.thing == 'a thing'; // true
  */
  
+ // This function defines the deposit target of the creep.
+ // The logic of knowing wheter this is needed is done in another file.
+ 
  var depositTargetUnderlying = {
      run: function(creep) {
         
+		// debugging log.
         var activateLog = false;
         
         // Control variables leting us set the maximum in each type of storage before moving on to the extensions and spawn
@@ -20,6 +24,21 @@
         // keeping this high should ensure us that when spawning an upgrader creep, we will have enough to feed him for a loong time.
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DEPOSITTARGET
         
+		
+		// Current priority order :
+		// 1. Towers with non-maxed energy
+		// 2. Extension and spaws not filled
+		// 3. Containers under storage limit
+		// 4. Storage under maximumFillingOfStorageOne limit (40k minimum for an upgrader)
+		// 5. Terminal under maximumFillingOfTerminal limit (energy for selling minerals)
+		// 6. Power spawn not yet filled
+		// 7. Storage under maximumFillingOfStorageTwo - will be its maximum filling
+		// 8. Terminal not filled. Once filled, will dump energy on market, so this will never be completed.
+		
+		// Global logic is to find priority, if null, move to next one, etc.
+		
+		
+		
         var mainTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
         filter: (structure) => {
             return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;

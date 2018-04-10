@@ -35,12 +35,13 @@ var rolePowerAttacker = {
 			if(creep.attack(Game.getObjectById(creep.memory.needOrigin)) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(Game.getObjectById(creep.memory.needOrigin));
 			}
-			
-			// We also update the hits in our memory, in order to be able to take a decision on carrying creeps.
-			for(let powerSourceIndex = 0; powerSourceIndex < creep.room.memory.powerSources.length; powerSourceIndex++) {
-				if(creep.room.memory.powerSources[powerSourceIndex] == creep.memory.needOrigin) {
-					if(Game.getObjectById(creep.memory.needOrigin) != undefined) {
-						creep.room.memory.powerSourcesHits[powerSourceIndex] = Game.getObjectById(creep.memory.needOrigin).hits;
+			if(creep.room.memory.powerSources != undefined) {
+				// We also update the hits in our memory, in order to be able to take a decision on carrying creeps.
+				for(let powerSourceIndex = 0; powerSourceIndex < creep.room.memory.powerSources.length; powerSourceIndex++) {
+					if(creep.room.memory.powerSources[powerSourceIndex] == creep.memory.needOrigin) {
+						if(Game.getObjectById(creep.memory.needOrigin) != undefined) {
+							creep.room.memory.powerSourcesHits[powerSourceIndex] = Game.getObjectById(creep.memory.needOrigin).hits;
+						}
 					}
 				}
 			}

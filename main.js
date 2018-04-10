@@ -5,13 +5,10 @@ var roleFatHarvester = require('role.fatharvester');
 var roleFastMover = require('role.fastmover');
 var placesOfSource = require('get.placesOfSource');
 var freeSpotsOfSource = require('get.freeSpotsOfSource');
-var ennemyAroundSource = require('get.ennemyAroundSource');
 var rolePureFighter = require('role.pureFighter');
-var freeFatSpotsOfSource = require('get.freeFatSpotsOfSource');
 var functionLink = require('building.link');
 var functionTower = require('building.tower');
 var functionTerminal = require('building.terminal');
-var spreaderNeededOfLink = require('get.spreaderNeededOfLink');
 var roleLongDistanceFatHarvester = require('role.longDistanceFatHarvester');
 var roleLongDistanceFastMover = require('role.longDistanceFastMover');
 var roleLongDistanceSecurity = require('role.longDistanceSecurity');
@@ -40,6 +37,7 @@ var setNeedCreepsBuildingsOfRoom = require('set.NeedCreepsBuildingsOfRoom')
 var setNeedCreepsMineralExtractorsOfRoom = require('set.NeedCreepsMineralExtractorsOfRoom')
 var setNeedCreepsUpgradersOfRoom = require('set.NeedCreepsUpgradersOfRoom')
 var setNeedCreepsScoutOfRoom = require('set.NeedCreepsScoutOfRoom')
+var setNeedCreepsPowerSpreaderOfRoom = require('set.NeedCreepsPowerSpreaderOfRoom')
 var setNeedCreepsAdHocHarvestersOfRoom = require('set.NeedCreepsAdHocHarvestersOfRoom')
 var setExistingBuildingsOfRoom = require('set.ExistingBuildingsOfRoom')
 /*
@@ -68,13 +66,7 @@ module.exports.loop = function () {
     var showRoomDashboardCreeps = false;
     var showRoomDashboardCreepToDisplay = 'W43N51';
 
-    // Room to pillage. To be emptied manually when finished.
-    var longDistancePillageRooms = [];
-    // Warriors not needed for storage looting. For terminals ?
-    var longDistancePillageRoomsWarriorNeeded = [];
-    // Cannot compute automatically carry needed, due to visibility. Please input manually here.
-    var longDistancePillageRoomsCarryNeeded = [];
-
+	
     // Input table for building rooms. Can be used for claiming new room or re-building a destroyed room
     var longDistanceBuildRooms = ['W37N47'];
     // Pas s'emmerder avec l'automatique, c'est Ã  changer anyway
@@ -205,34 +197,8 @@ module.exports.loop = function () {
 		setNeedCreepsUpgradersOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsScoutOfRoom.run(myRooms[currentRoomIndex]);
 		setNeedCreepsAdHocHarvestersOfRoom.run(myRooms[currentRoomIndex]);
-		
-		
-
-        myRooms[currentRoomIndex].memory.labels.push('Power Spreader');
-		
-		if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]) != undefined) {
-			if(Game.getObjectById(myRooms[currentRoomIndex].memory.storages[0]).store[RESOURCE_POWER] > 0 && Game.getObjectById(myRooms[currentRoomIndex].memory.powerSpawningPoints[0]).store[RESOURCE_ENERGY] > 1000) {
-				myRooms[currentRoomIndex].memory.need.push(1);
-			}
-			else {
-				myRooms[currentRoomIndex].memory.need.push(0);
-			}
-		}
-		else {
-			myRooms[currentRoomIndex].memory.need.push(0);
-		}
-		
-        var spreadersPowerExisting = _.filter(Game.creeps, (creep) => (creep.memory.role == 'spreaderPower' && creep.memory.homeRoom == myRooms[currentRoomIndex].name));
-        myRooms[currentRoomIndex].memory.attached.push(spreadersPowerExisting.length);
-		
-        myRooms[currentRoomIndex].memory.attached.push();
-        myRooms[currentRoomIndex].memory.role.push('spreaderPower');
-        myRooms[currentRoomIndex].memory.unity.push('number of creeps');
-        myRooms[currentRoomIndex].memory.targetRoom.push('undefined')
-        myRooms[currentRoomIndex].memory.needOrigin.push('undefined');
-        myRooms[currentRoomIndex].memory.needOriginPos.push('undefined');
-        myRooms[currentRoomIndex].memory.criticalNeed.push(false);
-
+		setNeedCreepsPowerSpreaderOfRoom.run(myRooms[currentRoomIndex]);
+	
 		// Using scout info to define the LD Harvesting needs
 		setLDHEnergyNeedOfRoom.run(myRooms[currentRoomIndex]);
 		
@@ -269,10 +235,6 @@ module.exports.loop = function () {
     // -------------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------- LONG DISTANCE ---------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------------
-
-    var longDistancePillageRoomsHomeRooms = [];
-    var longDistancePillageRoomsWarriorAttached = [];
-    var longDistancePillageRoomsCarryAttached = [];
 
     // For each room,
     for(let currentRoomIndex = 0; currentRoomIndex < myRooms.length; currentRoomIndex++) {

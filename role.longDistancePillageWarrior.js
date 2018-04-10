@@ -6,6 +6,9 @@
  * var mod = require('role.longDistancePillageWarrior');
  * mod.thing == 'a thing'; // true
  */
+ 
+ // INCOMPLETE - WORK IN PROGRESS
+ // The goal is to go to a target room, destroy target for carry pillage creeps to pick it up.
 
 var longDistancePillageWarrior = {
     run: function(creep) {

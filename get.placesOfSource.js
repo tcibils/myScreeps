@@ -2,6 +2,8 @@
 // Fatharvester va juste prendre ce paramètre pour prendre la source en mémoire et la miner ou non
 // Harvester va prendre ce paramètre, moins les creeps ayant déjà cette source en mémoire (harvester ou fatharvesters)
 
+// Almost obsolete, see get.freeFatSpotsOfSource...
+
 var placesOfSource = {
 
     run: function(toBeAssessed) {

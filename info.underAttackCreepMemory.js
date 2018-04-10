@@ -6,6 +6,11 @@
  * var mod = require('info.underAttackCreepMemory');
  * mod.thing == 'a thing'; // true
  */
+ 
+ // Global behaviour script that can be used on long distance creeps
+ // If they get attacked, they'll remember on which room they've been attacked
+ // This will later be used to define security creeps that will punch the sucker
+ 
 var underAttackCreepMemory = {
     run: function(creep) {
         if(creep.memory.underAttack == undefined) {

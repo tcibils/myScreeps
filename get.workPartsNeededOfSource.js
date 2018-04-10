@@ -1,6 +1,10 @@
 // Returns the number of "WORK" body parts needed to optimaly exploit the source, minus the number of "WORK" body parts already attached to the source
 // We do not take into account the creeps that are gonna die (say, less than 150 ticks to live)
 
+// Obsolete code from when I started screeps
+// Computes the max number of working parts needed, minus the quantity attached, and returns that for decision taking
+// Replaced by the data structure mainly... But LDFHarvesters still use this >.<
+
 var workPartsNeededOfSource = {
     run: function(toBeAssessed) {
         // time it takes to get refilled, divided by 2 because each work body part takes 2 per turn...
