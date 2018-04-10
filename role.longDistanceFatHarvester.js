@@ -133,7 +133,7 @@ var longDistanceFatHarvester = {
 				}
 				
 				// If there is a constructer build around our energy source
-				let potentialContainers = targetEnergySourcePos.findInRange(FIND_STRUCTURES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}})[0].id;
+				let potentialContainers = targetEnergySourcePos.findInRange(FIND_STRUCTURES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}});
 				if(potentialContainers.length > 0) {
 					// We attach it, and we'll go to third case.
 					creep.memory.attachedContainer = potentialContainers[0].id;
