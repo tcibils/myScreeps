@@ -16,7 +16,9 @@ var longDistanceFatHarvester = {
 		
 		if(creep.memory.building == undefined) {creep.memory.building = false;}
 		if(creep.memory.repairing == undefined) {creep.memory.repairing = false;}
-
+		if(creep.memory.attachedContainer == undefined) {creep.memory.attachedContainer = null;}
+		if(creep.memory.attachedConstructionContainer == undefined) {creep.memory.attachedConstructionContainer = null;}
+		
 		// If we are not near our energy source, in any rom
 		if(!creep.memory.nearEnergySource) {
 			// We move towards it
