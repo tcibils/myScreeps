@@ -27,11 +27,8 @@ var longDistanceFatHarvester = {
 		
 		// If we are near the energy source
 		if(creep.memory.nearEnergySource) {
-			console.log('Room ' + creep.room.name + ', creep ' + creep.name + ' : container ' + Game.getObjectById(creep.memory.attachedContainer) + ', construction site : ' + Game.getObjectById(creep.memory.attachedConstructionContainer))
-			
 			// First case, basic and most common, we have a container.
 			if(Game.getObjectById(creep.memory.attachedContainer) != undefined) {
-				console.log('case 1')
 				// If we are not exactly above the container
 				if(creep.pos != Game.getObjectById(creep.memory.attachedContainer).pos) {
 					// We move on the container. Important to make the energy drop in it.
@@ -69,8 +66,7 @@ var longDistanceFatHarvester = {
 			}
 			
 			// Second case, we do not have a container attached, and no construction site, we need to create the construction site.
-			if(Game.getObjectById(creep.memory.attachedContainer) == undefined && Game.getObjectById(creep.memory.attachedConstructionContainer) == undefined) {
-				console.log('case 2')
+			else if(Game.getObjectById(creep.memory.attachedContainer) == undefined && Game.getObjectById(creep.memory.attachedConstructionContainer) == undefined) {
 				// We try to find a container near the source
 				let potentialContainers = targetEnergySourcePos.findInRange(FIND_STRUCTURES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}});
 				// If there is one
@@ -90,7 +86,7 @@ var longDistanceFatHarvester = {
 					// And create a construction site just near the source
 					else {
 						creep.pos.createConstructionSite(STRUCTURE_CONTAINER);	// Creation construction site
-						creep.memory.attachedConstructionContainer = targetEnergySourcePos.findInRange(FIND_CONSTRUCTION_SITES, 1, {filter: (structure) => {return (structure.structureType == STRUCTURE_CONTAINER)}})[0].id; // Find it
+						creep.memory.attachedConstructionContainer = creep.pos.lookFor(FIND_CONSTRUCTION_SITES).id; // Find it
 						creep.memory.attachedContainer = undefined; // We have no container
 						creep.memory.building = true; // And we need to build it
 						creep.say('Cont atta')
@@ -101,8 +97,7 @@ var longDistanceFatHarvester = {
 			
 			
 			// Third case, we have a construction site, but no container, and we need to build it
-			if(Game.getObjectById(creep.memory.attachedContainer) == undefined && Game.getObjectById(creep.memory.attachedConstructionContainer) != undefined) {
-				console.log('case 3')
+			else if(Game.getObjectById(creep.memory.attachedContainer) == undefined && Game.getObjectById(creep.memory.attachedConstructionContainer) != undefined) {
 				// If we are building
 				if(creep.memory.building) {
 					// While we have some energy, we build
@@ -112,7 +107,6 @@ var longDistanceFatHarvester = {
 					// And if we're empty, or if the construction site disapeared, we stop
 					if(creep.carry[RESOURCE_ENERGY] == 0 || Game.getObjectById(creep.memory.attachedConstructionContainer) == undefined) {
 						creep.memory.building = false;
-						creep.memory.attachedConstructionContainer = undefined;
 						creep.say('harvestB')
 					}
 				}
