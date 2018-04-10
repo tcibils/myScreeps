@@ -51,7 +51,7 @@ var longDistanceFastMover = {
 					}
 					
 					// If we do not know where to deposit this energy, or if the target is full
-					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax) {
+					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_STORAGE) {
 						// We list the possibilities
 						// First, the non-full links
 						let potentialDepositTargets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return (object.structureType == STRUCTURE_LINK && object.energy < object.energyCapacity)}});
