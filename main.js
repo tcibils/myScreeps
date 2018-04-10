@@ -61,7 +61,7 @@ module.exports.loop = function () {
     // Information display in console variables
     var showLongDistanceDashboard = false;
     var showRoomSpawn = false;
-    var showScoutsPositions = true;
+    var showScoutsPositions = false;
 	
     var showRoomDashboardBuildings = false;
     var showRoomDashboardBuildingsToDisplay = 'W43N51';

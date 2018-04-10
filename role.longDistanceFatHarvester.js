@@ -25,7 +25,7 @@ var longDistanceFatHarvester = {
 		
 		// If we are near the energy source
 		if(creep.memory.nearEnergySource) {
-			console.log('Room ' + creep.room.name + ', creep ' + creep.name + ' : container ' + Game.getObjectById(creep.memory.attachedContainer) + ', construction site : ' + Game.getObjectById(creep.memory.attachedConstructionContainer))
+			// console.log('Room ' + creep.room.name + ', creep ' + creep.name + ' : container ' + Game.getObjectById(creep.memory.attachedContainer) + ', construction site : ' + Game.getObjectById(creep.memory.attachedConstructionContainer))
 			// First case, basic and most common, we have a container.
 			if(Game.getObjectById(creep.memory.attachedContainer) != undefined) {
 				// If we are not exactly above the container
@@ -133,6 +133,7 @@ var longDistanceFatHarvester = {
 					creep.memory.attachedConstructionContainer = undefined;
 					creep.say('Cont atta2')
 				}
+				console.log('room ' + creep.room.name + ' creep ' + creep.name + ' potentialContainers : ' + potentialContainers)
 			}
 		}
     }
