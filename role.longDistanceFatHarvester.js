@@ -7,7 +7,9 @@ var longDistanceFatHarvester = {
 		
 		let targetEnergySourcePos = new RoomPosition(creep.memory.needOriginPos.x, creep.memory.needOriginPos.y, creep.memory.needOriginPos.roomName);
 		
-		let creep.memory.nearEnergySource = false;
+		if(creep.memory.nearEnergySource == undefined) {
+			creep.memory.nearEnergySource = false;
+		}
 		if(creep.pos.getRangeTo(targetEnergySourcePos) < 4 && !creep.memory.nearEnergySource) {
 			creep.memory.nearEnergySource = true;
 		}
