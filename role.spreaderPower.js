@@ -104,7 +104,6 @@ var roleSpreaderPower = {
 					}
 				}
 				if(Game.getObjectById(creep.room.memory.powerSpawningPoints[0]).energy < 100) {
-					console.log('ere')
 					if(creep.transfer(Game.getObjectById(creep.room.memory.storages[0]), RESOURCE_POWER) == ERR_NOT_IN_RANGE) {
 						creep.moveTo(Game.getObjectById(creep.room.memory.storages[0]));
 					}
