@@ -62,11 +62,13 @@ var longDistanceFastMover = {
 						// We also add the deposit - assume here's never full
 						// If we were physicians, we could say "we assume that 1 million is close to infinity"
 						// But no. We'll just make sure with the rest of the code that it never gets full xD
+						/*
 						if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
 							if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
 								potentialDepositTargets.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
 							}
 						}
+						*/
 						
 						// And we take the closest of the objects.
 						var potentialTarget = creep.pos.findClosestByPath(potentialDepositTargets);
