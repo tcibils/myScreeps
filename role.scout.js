@@ -239,12 +239,22 @@ var scout = {
 						creep.moveTo(creep.room.controller);
 					}
 				}
+				else {
+					if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
+						creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+					}
+				}	
 			}
 			// Or if it's not signed already
-			else {
+			else if(creep.room.controller.sign == undefined) {
 				// Then we sign it =)
 				if(creep.signController(creep.room.controller, "Join #overlords alliance, find us on Slack! Also, fuck Quorum's auto-signing room bot.") == ERR_NOT_IN_RANGE) {
 					creep.moveTo(creep.room.controller);
+				}
+				else {
+					if(creep.moveTo(creep.memory.targetLocalExit) == ERR_INVALID_TARGET) {
+						creep.moveTo(creep.pos.findClosestByRange(creep.memory.targetRoomDirection));
+					}
 				}
 			}
 			// If it is already signed, we move towards the exit.
