@@ -53,30 +53,39 @@ var longDistanceFastMover = {
 						}
 					}
 					
+					let depositTargetType = Game.getObjectById(creep.memory.depositTarget).structureType;
+					
 					// If we do not know where to deposit this energy, or if the target is full
-					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_STORAGE) {
-						// We list the possibilities
-						// First, the non-full links
-						let potentialDepositTargets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return (object.structureType == STRUCTURE_LINK && object.energy < object.energyCapacity)}});
+					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || depositTargetType == STRUCTURE_STORAGE || depositTargetType == STRUCTURE_TERMINAL) {
+						
+						if(_.sum(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).store) < STORAGE_CAPACITY * 0.95) {
+							// We list the possibilities
+							// First, the non-full links
+							let potentialDepositTargets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return (object.structureType == STRUCTURE_LINK && object.energy < object.energyCapacity)}});
 
-						// We also add the deposit - assume here's never full
-						// If we were physicians, we could say "we assume that 1 million is close to infinity"
-						// But no. We'll just make sure with the rest of the code that it never gets full xD
-						/*
-						if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
-							if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
-								potentialDepositTargets.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
+							// We also add the deposit - assume here's never full
+							// If we were physicians, we could say "we assume that 1 million is close to infinity"
+							// But no. We'll just make sure with the rest of the code that it never gets full xD
+							/*
+							if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
+								if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
+									potentialDepositTargets.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
+								}
+							}
+							*/
+							
+							// And we take the closest of the objects.
+							var potentialTarget = creep.pos.findClosestByPath(potentialDepositTargets);
+
+						
+							// If it exists
+							if(potentialTarget != null) {
+								// We set it as final target.
+								creep.memory.depositTarget = potentialTarget.id;
 							}
 						}
-						*/
-						
-						// And we take the closest of the objects.
-						var potentialTarget = creep.pos.findClosestByPath(potentialDepositTargets);
-						
-						// If it exists
-						if(potentialTarget != null) {
-							// We set it as final target.
-							creep.memory.depositTarget = potentialTarget.id;
+						else {
+							creep.memory.depositTarget = creep.room.terminal.id;
 						}
 					}
 					
