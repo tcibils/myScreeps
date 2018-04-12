@@ -41,7 +41,7 @@ var setRoomThreatLevel = {
 		
 		// This will be a conservative estimate of the firing power we have - worst case distance.
 		let totalFirePower = 0;
-		if(treatedRoom.memory.towersOfRoom.length > 0) {
+		if(numberOfTowers.length > 0) {
 			totalFirePower = numberOfTowers * TOWER_POWER_ATTACK * (1 - TOWER_FALLOFF);
 		}
 		
