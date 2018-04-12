@@ -6,7 +6,7 @@ var setRoomThreatLevel = {
 		if(treatedRoom.memory.threatLevel == undefined) {treatedRoom.memory.threatLevel = 0;}
 		
 		// Variables used definition
-		let numberOfTowers = treatedRoom.memory.towersOfRoom.length;
+		let numberOfTowers = treatedRoom.memory.towers.length;
 		let ennemyCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS);
 		let ennemyInvaderCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.owner == "invader")}});
 		let ennemyCreepsWithHeal = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.getActiveBodyparts(HEAL) > 0)}});
