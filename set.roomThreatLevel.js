@@ -6,7 +6,6 @@ var setRoomThreatLevel = {
 		if(treatedRoom.memory.threatLevel == undefined) {treatedRoom.memory.threatLevel = 0;}
 		
 		// Variables used definition
-		let roomLevel = treatedRoom.controller.level;
 		let numberOfTowers = treatedRoom.memory.towersOfRoom.length;
 		let ennemyCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS);
 		let ennemyInvaderCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.owner == "invader")}});
@@ -43,7 +42,7 @@ var setRoomThreatLevel = {
 		// This will be a conservative estimate of the firing power we have - worst case distance.
 		let totalFirePower = 0;
 		if(treatedRoom.memory.towersOfRoom.length > 0) {
-			totalFirePower = treatedRoom.memory.towersOfRoom.length * TOWER_POWER_ATTACK * (1 - TOWER_FALLOFF);
+			totalFirePower = numberOfTowers * TOWER_POWER_ATTACK * (1 - TOWER_FALLOFF);
 		}
 		
 		// To be improved : boolean invaders yes/no
