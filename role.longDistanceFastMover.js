@@ -39,21 +39,22 @@ var longDistanceFastMover = {
 					// First define the deposit amounts
 					let depositTargetEnergy = 0;
 					let depositTargetEnergyMax = 0;
+					let depositTargetType = 'null';
 					// Then we fill the variables if we have a deposit target
 					if(Game.getObjectById(creep.memory.depositTarget) != undefined) {
+						depositTargetType = Game.getObjectById(creep.memory.depositTarget).structureType;
 						// First case,it's a storage
-						if(Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_STORAGE) {
+						if(depositTargetType == STRUCTURE_STORAGE) {
 							depositTargetEnergy = _.sum(Game.getObjectById(creep.memory.depositTarget).store);
 							depositTargetEnergyMax = Game.getObjectById(creep.memory.depositTarget).storeCapacity;
 						}
 						// Second case, it's a link
-						if(Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_LINK) {
+						if(depositTargetType == STRUCTURE_LINK) {
 							depositTargetEnergy = Game.getObjectById(creep.memory.depositTarget).energy;
 							depositTargetEnergyMax = Game.getObjectById(creep.memory.depositTarget).energyCapacity;
 						}
 					}
 					
-					let depositTargetType = Game.getObjectById(creep.memory.depositTarget).structureType;
 					
 					// If we do not know where to deposit this energy, or if the target is full
 					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || depositTargetType == STRUCTURE_STORAGE || depositTargetType == STRUCTURE_TERMINAL) {
