@@ -8,7 +8,7 @@ var setRoomThreatLevel = {
 		// Variables used definition
 		let numberOfTowers = treatedRoom.memory.towers.length;
 		let ennemyCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS);
-		let ennemyInvaderCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.owner == "invader")}});
+		let ennemyInvaderCreeps = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.owner.username == "Invader")}});
 		let ennemyCreepsWithHeal = treatedRoom.find(FIND_HOSTILE_CREEPS, {filter: function(ennemyCreep) {return (ennemyCreep.getActiveBodyparts(HEAL) > 0)}});
 		
 		
@@ -61,11 +61,11 @@ var setRoomThreatLevel = {
 			treatedRoom.memory.threatLevel = 2;
 		}
 		// If the total heal power of ennemies is above our firepower, but it's invaders, it's an issue but not so much
-		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps > 0) {
+		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length > 0) {
 			treatedRoom.memory.threatLevel = 3;
 		}
 		// If the total heal power of ennemies is above our firepower, and it's not invaders, that's a big issue
-		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps == 0) {
+		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 4;
 		}
 		
