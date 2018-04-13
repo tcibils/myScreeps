@@ -32,7 +32,7 @@ var setRoomThreatLevel = {
 						// If there is a boost
 						else {
 							// Then we factor in the boost factor, and add the it to our counter.
-							totalEnnemyHealPower += (HEAL_POWER * BOOSTS[heal][ennemyCreepsWithHeal[ennemyCreepIndex].body[ennemyCreepBodyIndex].boost]);
+							totalEnnemyHealPower += (HEAL_POWER * BOOSTS[HEAL][ennemyCreepsWithHeal[ennemyCreepIndex].body[ennemyCreepBodyIndex].boost][HEAL]);
 						}
 					}
 				}
