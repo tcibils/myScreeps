@@ -39,42 +39,54 @@ var longDistanceFastMover = {
 					// First define the deposit amounts
 					let depositTargetEnergy = 0;
 					let depositTargetEnergyMax = 0;
+					let depositTargetType = 'null';
 					// Then we fill the variables if we have a deposit target
 					if(Game.getObjectById(creep.memory.depositTarget) != undefined) {
+						depositTargetType = Game.getObjectById(creep.memory.depositTarget).structureType;
 						// First case,it's a storage
-						if(Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_STORAGE) {
+						if(depositTargetType == STRUCTURE_STORAGE) {
 							depositTargetEnergy = _.sum(Game.getObjectById(creep.memory.depositTarget).store);
 							depositTargetEnergyMax = Game.getObjectById(creep.memory.depositTarget).storeCapacity;
 						}
 						// Second case, it's a link
-						if(Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_LINK) {
+						if(depositTargetType == STRUCTURE_LINK) {
 							depositTargetEnergy = Game.getObjectById(creep.memory.depositTarget).energy;
 							depositTargetEnergyMax = Game.getObjectById(creep.memory.depositTarget).energyCapacity;
 						}
 					}
 					
+					
 					// If we do not know where to deposit this energy, or if the target is full
-					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || Game.getObjectById(creep.memory.depositTarget).structureType == STRUCTURE_STORAGE) {
-						// We list the possibilities
-						// First, the non-full links
-						let potentialDepositTargets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return (object.structureType == STRUCTURE_LINK && object.energy < object.energyCapacity)}});
+					if(Game.getObjectById(creep.memory.depositTarget) == undefined || depositTargetEnergy == depositTargetEnergyMax || depositTargetType == STRUCTURE_STORAGE || depositTargetType == STRUCTURE_TERMINAL) {
+						
+						if(_.sum(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]).store) < STORAGE_CAPACITY * 0.95) {
+							// We list the possibilities
+							// First, the non-full links
+							let potentialDepositTargets = creep.room.find(FIND_MY_STRUCTURES, {filter: function(object) {return (object.structureType == STRUCTURE_LINK && object.energy < object.energyCapacity)}});
 
-						// We also add the deposit - assume here's never full
-						// If we were physicians, we could say "we assume that 1 million is close to infinity"
-						// But no. We'll just make sure with the rest of the code that it never gets full xD
-						if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
-							if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
-								potentialDepositTargets.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
+							// We also add the deposit - assume here's never full
+							// If we were physicians, we could say "we assume that 1 million is close to infinity"
+							// But no. We'll just make sure with the rest of the code that it never gets full xD
+							/*
+							if(Memory.rooms[creep.memory.homeRoom].storages.length > 0) {
+								if(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]) != undefined) {
+									potentialDepositTargets.push(Game.getObjectById(Memory.rooms[creep.memory.homeRoom].storages[0]));
+								}
+							}
+							*/
+							
+							// And we take the closest of the objects.
+							var potentialTarget = creep.pos.findClosestByPath(potentialDepositTargets);
+
+						
+							// If it exists
+							if(potentialTarget != null) {
+								// We set it as final target.
+								creep.memory.depositTarget = potentialTarget.id;
 							}
 						}
-						
-						// And we take the closest of the objects.
-						var potentialTarget = creep.pos.findClosestByPath(potentialDepositTargets);
-						
-						// If it exists
-						if(potentialTarget != null) {
-							// We set it as final target.
-							creep.memory.depositTarget = potentialTarget.id;
+						else {
+							creep.memory.depositTarget = creep.room.terminal.id;
 						}
 					}
 					

@@ -29,6 +29,8 @@ var senderLinkCloseToSource = require('info.senderLinkCloseToSource');
 var processLDEnergyInfo = require('process.LDEnergyInfo');
 var processLDPowerInfo = require('process.LDPowerInfo');
 
+var setroomThreatLevel = require('set.roomThreatLevel');
+
 var setLDHEnergyNeedOfRoom = require('set.LDHEnergyNeedOfRoom');
 var setLDHPowerNeedOfRoom = require('set.LDHPowerNeedOfRoom')
 var setNeedCreepsEnergyHarvestingOfRoom = require('set.NeedCreepsEnergyHarvestingOfRoom')
@@ -309,6 +311,8 @@ module.exports.loop = function () {
             myRooms[currentRoomIndex].controller.activateSafeMode();
             Game.notify('Room : ' + myRooms[currentRoomIndex].name + ', trying to activate safe mode. Ennemies in room.')
         }
+		
+		setroomThreatLevel.run(myRooms[currentRoomIndex]);
 
        // Then we start with the spawning queue
 
