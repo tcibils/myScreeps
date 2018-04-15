@@ -38,7 +38,7 @@ var depositTarget = {
             }
 			
 			// If the room is under threat
-			if(tower.room.memory.threatLevel > 0) {
+			if(creep.room.memory.threatLevel > 0) {
 				// If the target is not a tower
 				if(currentDepositTargetType != STRUCTURE_TOWER) {
 					// We want a tower, we run the script
@@ -81,7 +81,7 @@ var depositTarget = {
                 }
             }
 			
-			if(currentDepositTargetType == STRUCTURE_TOWER && tower.room.memory.threatLevel == 0) {
+			if(currentDepositTargetType == STRUCTURE_TOWER && creep.room.memory.threatLevel == 0) {
 				if(currentDepositTarget.energy == currentDepositTarget.energyCapacity || energyAvailableTooLow) {
 					depositTargetUnderlying.run(creep);
 				}
