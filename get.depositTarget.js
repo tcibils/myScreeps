@@ -9,6 +9,10 @@ var depositTarget = {
         let maximumFillingOfContainer = 1750;
         let maximumFillingOfStorage = 37500; 
         let maximumFillingOfTerminal = 20000;
+		
+		// Control variable to fill towers in priority if eneded
+		let minimumFillingOfRepairingTower = TOWER_CAPACITY/3;
+		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.25;
         // keeping this high should ensure us that when spawning an upgrader creep, we will have enough to feed him for a loong time.
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DESPOSITTARGETUNDERLYING
         
@@ -32,6 +36,23 @@ var depositTarget = {
             if(creep.room.energyAvailable < (creep.room.energyCapacityAvailable / fractionOfCapacity)) {
                 energyAvailableTooLow = true;
             }
+			
+			// If the room is under threat
+			if(tower.room.memory.threatLevel > 0) {
+				// If the target is not a tower
+				if(currentDepositTargetType != STRUCTURE_TOWER) {
+					// We want a tower, we run the script
+					depositTargetUnderlying.run(creep);
+				}
+				// If it is a tower
+				if(currentDepositTargetType == STRUCTURE_TOWER) {
+					// If we filled it
+					if(currentDepositTarget.energy == currentDepositTarget.energyCapacity) {
+						// We'll go to next tower in need
+						depositTargetUnderlying.run(creep);
+					}
+				}
+			}
             
             
             // We change deposit target if the structures are filled above the treshold, or if the energy in room is too low
@@ -59,9 +80,15 @@ var depositTarget = {
                     depositTargetUnderlying.run(creep);
                 }
             }
+			
+			if(currentDepositTargetType == STRUCTURE_TOWER && tower.room.memory.threatLevel == 0) {
+				if(currentDepositTarget.energy == currentDepositTarget.energyCapacity || energyAvailableTooLow) {
+					depositTargetUnderlying.run(creep);
+				}
+			}
             
-            // Just for spawns, extenions and towers, we don't change if energy available is too low
-            if(currentDepositTargetType == STRUCTURE_SPAWN || currentDepositTargetType == STRUCTURE_EXTENSION || currentDepositTargetType == STRUCTURE_TOWER) {
+            // Just for spawns and extenions, we don't change if energy available is too low
+            if(currentDepositTargetType == STRUCTURE_SPAWN || currentDepositTargetType == STRUCTURE_EXTENSION) {
 				// In order to avoid going to a far away target missing 10 energy, we reset the deposit target if target has >0 energy.
                 if(currentDepositTarget.energy > 0) {
                     depositTargetUnderlying.run(creep);
