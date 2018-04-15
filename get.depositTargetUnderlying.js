@@ -45,12 +45,22 @@
 		
 		var mainTarget = null;
 		
+		// If there is a threat
 		if(creep.room.memory.threatLevel > 0) {
-			mainTarget = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-			filter: (structure) => {
-				return (structure.structureType == STRUCTURE_TOWER) && structure.energy < minimumFillingOfAttackingTower;
+			// We look for the lowest-energy tower
+			let finalTower = 0;
+			let finalTowerEnergy = 10000;
+			// We iterate over the room towers
+			for(let towerIndex = 0; towerIndex < creep.room.memory.towers.length; towerIndex++) {
+				let towerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
+				// If we found one with less energy than we had so far
+				if(towerEnergy < finalTowerEnergy && towerEnergy < minimumFillingOfAttackingTower) {
+					// Then it's gonna be the one
+					finalTowerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
+					finalTower = creep.room.memory.towers[towerIndex];
 				}
-			});
+			}
+			mainTarget = finalTower;
 		}
         if(mainTarget != null) {
             if(activateLog) {
