@@ -1,6 +1,8 @@
 var setRoomThreatLevel = {
     run: function(treatedRoom) {
 		// Parameters
+		let alwaysDisplayRoomThreatLevel = true;
+		let displayAttackedRoomThreatLevel = false;
 		
 		// Initializing memory
 		if(treatedRoom.memory.threatLevel == undefined) {treatedRoom.memory.threatLevel = 0;}
@@ -67,6 +69,15 @@ var setRoomThreatLevel = {
 		// If the total heal power of ennemies is above our firepower, and it's not invaders, that's a big issue
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 4;
+		}
+		
+		if(alwaysDisplayRoomThreatLevel) {
+			console.log('Room ' + treatedRoom.name + ', threat level : ' + treatedRoom.memory.threatLevel);
+		}
+		if(displayAttackedRoomThreatLevel) {
+			if(treatedRoom.memory.threatLevel > 0) {
+				console.log('Room ' + treatedRoom.name + ', threat level : ' + treatedRoom.memory.threatLevel);
+			}
 		}
 		
     }
