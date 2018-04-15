@@ -41,11 +41,11 @@ var towerRole = {
 				
 				// We first target containers
 				if(contTargetsRepair.length > 0) {
-					tower.room.repairTarget = contTargetsRepair[0];
+					tower.room.repairTarget = contTargetsRepair[0].id;
 				}
 				// If all containers are OK, we check roads
 				if(contTargetsRepair.length == 0 && roadTargetsRepair.length > 0) {
-					tower.room.repairTarget = roadTargetsRepair[0];
+					tower.room.repairTarget = roadTargetsRepair[0].id;
 				}
 				// If both are OK, we reset repair target
 				if(contTargetsRepair.length == 0 && roadTargetsRepair.length == 0) {
@@ -68,6 +68,7 @@ var towerRole = {
 			let finalTarget = 0;
 			
 			// First the ones with heal body parts, then all of them
+			// Issue here - If creep has destroyed body parts, it will not fire at him. Which is wrong, as it could be healed by a buddy and return to healing.
 			var firstTargetAttack = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {filter: function(object) {return object.getActiveBodyparts(HEAL)>0}});
 			var secondTargetAttack = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 			
