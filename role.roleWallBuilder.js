@@ -22,8 +22,13 @@ var roleWallBuilder = {
 		let roomLevel = creep.room.controller.level;
 		
 		// Parameters changeable by player
-		let activateLog = false;
-		// This is the level the walls and ramparts will be reaching. 640'000 at level 4, 2'160'000 at level 6, 5'120'000 at level 8.
+		let activateLog = true;
+		// This is the level the walls and ramparts will be reaching. 
+		// 0'640'000 at level 4
+		// 1'250'000 at level 5
+		// 2'160'000 at level 6
+		// 3'430'000 at level 7
+		// 5'120'000 at level 8.
 		let workingTargetHPGoal = 10000 * roomLevel * roomLevel * roomLevel;
 		// And we will repair target when they fall below this treshold
 		let rampartTolerance = 0.75;
@@ -72,7 +77,7 @@ var roleWallBuilder = {
 								// We use the opportunity to find the most decayed rampart
 								if(rampartsOfRoom[rampartIndex].hits < worstRampartDecayedHP) {
 									worstRampartDecayed = rampartsOfRoom[rampartIndex].id;
-									worstRampartDecayedHP = rampartsOfRoom[rampartIndex].hits
+									worstRampartDecayedHP = rampartsOfRoom[rampartIndex].hits;
 								}
 							}
 						}
