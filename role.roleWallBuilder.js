@@ -24,12 +24,12 @@ var roleWallBuilder = {
 		// Parameters changeable by player
 		let activateLog = true;
 		// This is the level the walls and ramparts will be reaching. 
-		// 0'640'000 at level 4
-		// 1'250'000 at level 5
-		// 2'160'000 at level 6
-		// 3'430'000 at level 7
-		// 5'120'000 at level 8.
-		let workingTargetHPGoal = 10000 * roomLevel * roomLevel * roomLevel;
+		// 0'307'000 at level 4
+		// 0'937'500 at level 5
+		// 2'332'800 at level 6
+		// 5'042'100 at level 7
+		// 9'830'400 at level 8.
+		let workingTargetHPGoal = 300 * roomLevel * roomLevel * roomLevel * roomLevel * roomLevel;
 		// And we will repair target when they fall below this treshold
 		let rampartTolerance = 0.75;
 		

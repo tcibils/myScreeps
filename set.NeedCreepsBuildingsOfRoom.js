@@ -54,15 +54,14 @@ var setNeedCreepsBuildingsOfRoom = {
         treatedRoom.memory.needOriginPos.push('undefined')
         treatedRoom.memory.criticalNeed.push(false);
 
-        // Repairer needed
+        // Wall builders needed only if room is level 4 - lets not stop the development before.
 		if(treatedRoom.controller.level >= 4) {
 			treatedRoom.memory.need.push(1);
 		}
 		else {
 			treatedRoom.memory.need.push(0);
 		}
-        // Repairer attached
-
+        // Wall builders attached
         treatedRoom.memory.attached.push(_.filter(Game.creeps, (creep) => (creep.memory.role == 'wallBuilder' && creep.memory.homeRoom == treatedRoom.name)).length);
 
     }

@@ -400,11 +400,11 @@ module.exports.loop = function () {
 
                                 // OK for spawning prototype - role only
                                 if(myRooms[currentRoomIndex].memory.role[needIndex] == 'wallBuilder') {
-                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 250) && j < 4; j++) {
-                                        creepBody.push(WORK);
-                                       creepBody.push(CARRY);
-                                        creepBody.push(MOVE);
-                                       creepBody.push(MOVE);
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 250) && j < 10; j++) {
+										creepBody.push(WORK);
+										creepBody.push(CARRY);
+										creepBody.push(MOVE);
+										creepBody.push(MOVE);
                                     }
                                 }
 
