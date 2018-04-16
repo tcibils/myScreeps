@@ -47,7 +47,7 @@ var depositTarget = {
 				// If it is a tower
 				if(currentDepositTargetType == STRUCTURE_TOWER) {
 					// If we filled it
-					if(currentDepositTarget.energy == currentDepositTarget.energyCapacity) {
+					if(currentDepositTarget.energy > minimumFillingOfAttackingTower) {
 						// We'll go to next tower in need
 						depositTargetUnderlying.run(creep);
 					}

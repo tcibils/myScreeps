@@ -67,14 +67,12 @@ var towerRole = {
 			// We find the closest enemy creep
 			let finalTarget = 0;
 			
-			// First the ones with heal body parts, then all of them
-			// Issue here - If creep has destroyed body parts, it will not fire at him. Which is wrong, as it could be healed by a buddy and return to healing.
-			var firstTargetAttack = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS, {filter: function(object) {return object.getActiveBodyparts(HEAL)>0}});
-			var secondTargetAttack = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+			// It's not a good idea here to attack healing creeps first. 
+			// He could just drop a self-healing creep far from towers to drain them, while an attack creep destroys town.
+			// Better focus fire on closest one ? Or try to keep focus to destroy one, to avoid his creeps moving back and forth ?
+			var targetAttack = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 			
-			// If there's a healing one, we take it as a target
-			if		(firstTargetAttack != null)  {finalTarget = firstTargetAttack;}
-			else if (secondTargetAttack != null) {finalTarget = secondTargetAttack;}
+			if (targetAttack != null) {finalTarget = targetAttack;}
 			
 			// And fire
 			if(finalTarget != null) {
