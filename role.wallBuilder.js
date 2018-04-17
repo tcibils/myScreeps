@@ -53,6 +53,7 @@ var roleWallBuilder = {
 				let noTargetDefined = false;
 				let targetFilled = false;
 				let thereIsworstRampartDecayed = false;
+				let thereIsARampartToBuild = false;
 				let worstRampartDecayed = 0;
 				let worstRampartDecayedHP = 1000000000;
 				
@@ -84,8 +85,15 @@ var roleWallBuilder = {
 					}
 				}
 				
+				// ISSUE HERE We need only look for new ramparts to build if we're not already building one
+				// Building them all at once would simply cause them to decay away...
+				if(rampartsToBuild.length > 0) {
+					thereIsARampartToBuild = true;
+				}
+				
+				
 				// So, if needed we get a new working target
-				if(noTargetDefined || targetFilled || thereIsworstRampartDecayed) {
+				if(noTargetDefined || targetFilled || thereIsworstRampartDecayed || thereIsARampartToBuild) {
 					if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', we found that theres a need for new target. No target defined : ' + noTargetDefined + ', targetFilled : ' + targetFilled + ', rampart decayed ' + thereIsworstRampartDecayed);}
 					
 					// If we have a rampart decayed defined, we already found which one it is. It's gonna be the target.
@@ -112,8 +120,13 @@ var roleWallBuilder = {
 							else {
 								// We find the closest wall with less HP than intended.
 								let potentialWallTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_WALL && s.hits < workingTargetHPGoal});
-								if(potentialWallTarget != undefined) {creep.memory.workTarget = potentialWallTarget.id;}
-								if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', ramparts are OK and no wall or rampart to build. Wall target : ' + creep.memory.workTarget + ', pos ' + Game.getObjectById(creep.memory.workTarget).pos);}
+								if(potentialWallTarget != undefined) {
+									creep.memory.workTarget = potentialWallTarget.id;
+									if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', ramparts are OK and no wall or rampart to build. Wall target : ' + creep.memory.workTarget + ', pos ' + Game.getObjectById(creep.memory.workTarget).pos);}
+								}
+								else {
+									if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', ramparts are OK and no wall or rampart to build, neither to build up.');}
+								}
 							}
 						}
 					}
@@ -124,14 +137,18 @@ var roleWallBuilder = {
 					// Either it's a construction sites, so it has progress attributes
 					if(Game.getObjectById(creep.memory.workTarget).progress < Game.getObjectById(creep.memory.workTarget).progressTotal) {
 						// And we build it
-						creep.build(Game.getObjectById(creep.memory.workTarget));
+						if(creep.build(Game.getObjectById(creep.memory.workTarget)) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(Game.getObjectById(creep.memory.workTarget));
+						}
 						if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', building target ' + Game.getObjectById(creep.memory.workTarget) + ' in ' + Game.getObjectById(creep.memory.workTarget).pos);}
 					}
 					// Or it doesn't have such attributes - I hope - and we get here
 					else {
 						// And we need to "repair" the target.
-						creep.repair(Game.getObjectById(creep.memory.workTarget));
-						if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', repairing target ' + Game.getObjectById(creep.memory.workTarget) + ' in ' + Game.getObjectById(creep.memory.workTarget).pos + ', HP : ' + Game.getObjectById(creep.memory.workTarget) + '/' + workingTargetHPGoal);}
+						if(creep.repair(Game.getObjectById(creep.memory.workTarget)) == ERR_NOT_IN_RANGE) {
+							creep.moveTo(Game.getObjectById(creep.memory.workTarget));
+						}
+						if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', repairing target ' + Game.getObjectById(creep.memory.workTarget) + ' in ' + Game.getObjectById(creep.memory.workTarget).pos + ', HP : ' + Game.getObjectById(creep.memory.workTarget).hits + '/' + workingTargetHPGoal);}
 					}
 				}
 			}
@@ -153,7 +170,7 @@ var roleWallBuilder = {
 				// We look for a withdraw source
 				withdrawSource.run(creep);
 				// If we're too far from it
-				if(creep.withdraw(Game.getObjectById(creep.memory.targetRefill)) == ERR_NOT_IN_RANGE) {
+				if(creep.withdraw(Game.getObjectById(creep.memory.targetRefill), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 					// We move towards it
 					creep.moveTo(Game.getObjectById(creep.memory.targetRefill));
 				}
