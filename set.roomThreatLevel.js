@@ -1,7 +1,7 @@
 var setRoomThreatLevel = {
     run: function(treatedRoom) {
 		// Parameters
-		let alwaysDisplayRoomThreatLevel = true;
+		let alwaysDisplayRoomThreatLevel = false;
 		let displayAttackedRoomThreatLevel = false;
 		
 		// Initializing memory
