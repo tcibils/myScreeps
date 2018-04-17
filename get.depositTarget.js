@@ -12,7 +12,7 @@ var depositTarget = {
 		
 		// Control variable to fill towers in priority if eneded
 		let minimumFillingOfRepairingTower = TOWER_CAPACITY/3;
-		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.25;
+		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.05;
         // keeping this high should ensure us that when spawning an upgrader creep, we will have enough to feed him for a loong time.
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DESPOSITTARGETUNDERLYING
         
