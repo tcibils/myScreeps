@@ -25,7 +25,7 @@
 		
 		// Control variable to fill towers in priority if eneded
 		let minimumFillingOfRepairingTower = TOWER_CAPACITY/3;
-		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.25;
+		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.05;
 		
         
 		
@@ -52,7 +52,7 @@
 			let finalTowerEnergy = 10000;
 			// We iterate over the room towers
 			for(let towerIndex = 0; towerIndex < creep.room.memory.towers.length; towerIndex++) {
-				let towerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
+				let towerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy; 
 				// If we found one with less energy than we had so far
 				if(towerEnergy < finalTowerEnergy && towerEnergy < minimumFillingOfAttackingTower) {
 					// Then it's gonna be the one
