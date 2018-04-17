@@ -53,7 +53,7 @@ var roleWallBuilder = {
 				let noTargetDefined = false;
 				let targetFilled = false;
 				let thereIsworstRampartDecayed = false;
-				let thereIsARampartToBuild = false;
+				let letsBuildRamparts = false;
 				let worstRampartDecayed = 0;
 				let worstRampartDecayedHP = 1000000000;
 				
@@ -67,7 +67,7 @@ var roleWallBuilder = {
 					if(Game.getObjectById(creep.memory.workTarget).hits >= workingTargetHPGoal) {
 						targetFilled = true;
 					}
-					// If our target type isn't a rampart, we better check that there's not one decaying somewhere
+					// If our target type isn't a rampart, we better check that there's not one decaying somewhere or if we need to build one
 					if(Game.getObjectById(creep.memory.workTarget).structureType != STRUCTURE_RAMPART) {
 						// We take all ramparts
 						for(let rampartIndex = 0; rampartIndex < rampartsOfRoom.length; rampartIndex++) {
@@ -82,18 +82,19 @@ var roleWallBuilder = {
 								}
 							}
 						}
+						// We need only look for new ramparts to build if we're not already building one
+						// Building them all at once would simply cause them to decay away...
+						if(rampartsToBuild.length > 0) {
+							letsBuildRamparts = true;
+						}
 					}
 				}
 				
-				// ISSUE HERE We need only look for new ramparts to build if we're not already building one
-				// Building them all at once would simply cause them to decay away...
-				if(rampartsToBuild.length > 0) {
-					thereIsARampartToBuild = true;
-				}
+
 				
 				
 				// So, if needed we get a new working target
-				if(noTargetDefined || targetFilled || thereIsworstRampartDecayed || thereIsARampartToBuild) {
+				if(noTargetDefined || targetFilled || thereIsworstRampartDecayed || letsBuildRamparts) {
 					if(activateLog) {console.log('Room ' + creep.room.name + ', creep ' + creep.name + ', we found that theres a need for new target. No target defined : ' + noTargetDefined + ', targetFilled : ' + targetFilled + ', rampart decayed ' + thereIsworstRampartDecayed);}
 					
 					// If we have a rampart decayed defined, we already found which one it is. It's gonna be the target.
