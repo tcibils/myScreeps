@@ -14,7 +14,7 @@
      run: function(creep) {
         
 		// debugging log.
-        var activateLog = true;
+        var activateLog = false;
         
         // Control variables leting us set the maximum in each type of storage before moving on to the extensions and spawn
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DEPOSITTARGET

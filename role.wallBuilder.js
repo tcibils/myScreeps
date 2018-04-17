@@ -22,7 +22,7 @@ var roleWallBuilder = {
 		let roomLevel = creep.room.controller.level;
 		
 		// Parameters changeable by player
-		let activateLog = true;
+		let activateLog = false;
 		// This is the level the walls and ramparts will be reaching. 
 		// 0'307'000 at level 4
 		// 0'937'500 at level 5
