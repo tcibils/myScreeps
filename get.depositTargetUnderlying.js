@@ -56,21 +56,36 @@
 				// We'll look for a better-than-we-have-so-far toarget
 				let towerIsBetter = false;
 				
-				// If we found one with the same energy than we had so far
-				if(Game.getObjectById(finalTower) != undefined) {
-					if(towerEnergy == finalTowerEnergy) {
-						// But our new tower is closer
-						if(creep.pos.getRangeTo(Game.getObjectById(creep.room.memory.towers[towerIndex])) < creep.pos.getRangeTo(Game.getObjectById(finalTower))) {
-							// Then we found a better target
-							towerIsBetter = true;
+				// We look for creeps that are already attached to the tower parsed, and delivering energy to it
+				let creepsAlreadyAttached = _.filter(Game.creeps, (creep) => (
+					creep.memory.gathering == false &&
+					creep.memory.depositTarget == creep.room.memory.towers[towerIndex]
+					));
+				
+				// If there is none, we consider the tower as a potential deposit, and do the following
+				if(creepsAlreadyAttached.length == 0) {
+					// If we found one with the same energy than we had so far
+					if(Game.getObjectById(finalTower) != undefined) {
+						if(towerEnergy == finalTowerEnergy) {
+							// But our new tower is closer
+							if(creep.pos.getRangeTo(Game.getObjectById(creep.room.memory.towers[towerIndex])) < creep.pos.getRangeTo(Game.getObjectById(finalTower))) {
+								// Then we found a better target
+								towerIsBetter = true;
+							}
 						}
 					}
+					// And we found another with less energy, then it is simply better - that is the priority.
+					if(towerEnergy <= finalTowerEnergy && towerEnergy <= minimumFillingOfAttackingTower) {
+						towerIsBetter = true;
+					}
 				}
-				// And we found another with less energy, then it is simply better - that is the priority.
-				if(towerEnergy <= finalTowerEnergy && towerEnergy <= minimumFillingOfAttackingTower) {
-					towerIsBetter = true;
-				}
+				
 				// So if we found a better target
+				// Meaning here :
+				// - There is no other creep delivering energy there so far, we do not consider those already having a creep in our computations
+				// For all such towers :
+				// - It is the lowest energy bearing target
+				// - In case there's two lowest energy bearing target, we take the closest one
 				if(towerIsBetter) {
 					// Then it's gonna be the one
 					finalTowerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
