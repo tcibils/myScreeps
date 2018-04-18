@@ -69,12 +69,12 @@ var setRoomThreatLevel = {
 		// If the total heal power of ennemies is above our firepower, but it's invaders, it's an issue but not so much
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length > 0) {
 			treatedRoom.memory.threatLevel = 3;
-			treatedRoom.memory.healDelta = (totalFirePower - totalEnnemyHealPower);
+			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
 		}
 		// If the total heal power of ennemies is above our firepower, and it's not invaders, that's a big issue
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 4;
-			treatedRoom.memory.healDelta = (totalFirePower - totalEnnemyHealPower);
+			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
 		}
 		
 		if(alwaysDisplayRoomThreatLevel) {
