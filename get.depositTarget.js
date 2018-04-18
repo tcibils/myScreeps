@@ -39,19 +39,8 @@ var depositTarget = {
 			
 			// If the room is under threat
 			if(creep.room.memory.threatLevel > 0) {
-				// If the target is not a tower
-				if(currentDepositTargetType != STRUCTURE_TOWER) {
-					// We want a tower, we run the script
-					depositTargetUnderlying.run(creep);
-				}
-				// If it is a tower
-				if(currentDepositTargetType == STRUCTURE_TOWER) {
-					// If we filled it
-					if(currentDepositTarget.energy > minimumFillingOfAttackingTower) {
-						// We'll go to next tower in need
-						depositTargetUnderlying.run(creep);
-					}
-				}
+				// We will constantly look for the best target, without saving on CPU. Best target finding is done in the underlying.
+				depositTargetUnderlying.run(creep);
 			}
             
             

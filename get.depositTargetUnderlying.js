@@ -53,20 +53,39 @@
 			// We iterate over the room towers
 			for(let towerIndex = 0; towerIndex < creep.room.memory.towers.length; towerIndex++) {
 				let towerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy; 
-				// If we found one with less energy than we had so far
-				if(towerEnergy < finalTowerEnergy && towerEnergy < minimumFillingOfAttackingTower) {
+				// We'll look for a better-than-we-have-so-far toarget
+				let towerIsBetter = false;
+				
+				// If we found one with the same energy than we had so far
+				if(Game.getObjectById(finalTower) != undefined) {
+					if(towerEnergy == finalTowerEnergy) {
+						// But our new tower is closer
+						if(creep.pos.getRangeTo(Game.getObjectById(creep.room.memory.towers[towerIndex])) < creep.pos.getRangeTo(Game.getObjectById(finalTower))) {
+							// Then we found a better target
+							towerIsBetter = true;
+						}
+					}
+				}
+				// And we found another with less energy, then it is simply better - that is the priority.
+				if(towerEnergy <= finalTowerEnergy && towerEnergy <= minimumFillingOfAttackingTower) {
+					towerIsBetter = true;
+				}
+				// So if we found a better target
+				if(towerIsBetter) {
 					// Then it's gonna be the one
 					finalTowerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
 					finalTower = creep.room.memory.towers[towerIndex];
 				}
+				
 			}
+			// It's already an ID !
 			mainTarget = finalTower;
 		}
         if(mainTarget != null) {
             if(activateLog) {
                 console.log('Room ' +creep.room.name + ', creep ' + creep.name + ', we take non null main target, ' + mainTarget)
             }
-            creep.memory.depositTarget = mainTarget.id;
+            creep.memory.depositTarget = mainTarget;
         }
         
         
