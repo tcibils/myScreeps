@@ -50,25 +50,25 @@
 			// We look for the lowest-energy tower
 			let finalTower = 0;
 			let finalTowerEnergy = 10000;
+			let roomTowers = creep.room.memory.towers;
 			// We iterate over the room towers
-			for(let towerIndex = 0; towerIndex < creep.room.memory.towers.length; towerIndex++) {
-				let towerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy; 
+			for(let towerIndex = 0; towerIndex < roomTowers.length; towerIndex++) {
+				let towerEnergy = Game.getObjectById(roomTowers[towerIndex]).energy; 
 				// We'll look for a better-than-we-have-so-far toarget
 				let towerIsBetter = false;
 				
 				// We look for creeps that are already attached to the tower parsed, and delivering energy to it
-				let creepsAlreadyAttached = _.filter(Game.creeps, (creep) => (
-					creep.memory.gathering == false &&
-					creep.memory.depositTarget == creep.room.memory.towers[towerIndex]
+				let creepsAlreadyAttached = _.filter(Game.creeps, (testedCreep) => (
+					!testedCreep.memory.gathering &&
+					testedCreep.memory.depositTarget == roomTowers[towerIndex]
 					));
-				
 				// If there is none, we consider the tower as a potential deposit, and do the following
 				if(creepsAlreadyAttached.length == 0) {
 					// If we found one with the same energy than we had so far
 					if(Game.getObjectById(finalTower) != undefined) {
 						if(towerEnergy == finalTowerEnergy) {
 							// But our new tower is closer
-							if(creep.pos.getRangeTo(Game.getObjectById(creep.room.memory.towers[towerIndex])) < creep.pos.getRangeTo(Game.getObjectById(finalTower))) {
+							if(creep.pos.getRangeTo(Game.getObjectById(roomTowers[towerIndex])) < creep.pos.getRangeTo(Game.getObjectById(finalTower))) {
 								// Then we found a better target
 								towerIsBetter = true;
 							}
@@ -88,8 +88,8 @@
 				// - In case there's two lowest energy bearing target, we take the closest one
 				if(towerIsBetter) {
 					// Then it's gonna be the one
-					finalTowerEnergy = Game.getObjectById(creep.room.memory.towers[towerIndex]).energy;
-					finalTower = creep.room.memory.towers[towerIndex];
+					finalTowerEnergy = Game.getObjectById(roomTowers[towerIndex]).energy;
+					finalTower = roomTowers[towerIndex];
 				}
 				
 			}

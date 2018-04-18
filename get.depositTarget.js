@@ -39,8 +39,12 @@ var depositTarget = {
 			
 			// If the room is under threat
 			if(creep.room.memory.threatLevel > 0) {
-				// We will constantly look for the best target, without saving on CPU. Best target finding is done in the underlying.
-				depositTargetUnderlying.run(creep);
+                // We will look for the best target while gathering, without saving on CPU. Best target finding is done in the underlying.
+                // Doing so that once target is locked, we deliver to it, and once creep is empty, we get a new one
+                // This is linked with the logic in underlying function, as we do not take into considerations tower with a non-gathering creep already attached
+                if(creep.memory.gathering || currentDepositTarget.energy > minimumFillingOfAttackingTower) {
+                    depositTargetUnderlying.run(creep);
+                }
 			}
             
             
