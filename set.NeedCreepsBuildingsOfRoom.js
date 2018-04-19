@@ -55,7 +55,7 @@ var setNeedCreepsBuildingsOfRoom = {
         treatedRoom.memory.criticalNeed.push(false);
 
         // Wall builders needed only if room is level 4 - lets not stop the development before.
-		if(treatedRoom.controller.level >= 4) {
+		if(treatedRoom.controller.level > 4) {
 			treatedRoom.memory.need.push(1);
 		}
 		else {
