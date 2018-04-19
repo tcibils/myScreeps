@@ -11,7 +11,7 @@ var depositTarget = {
         let maximumFillingOfTerminal = 20000;
 		
 		// Control variable to fill towers in priority if eneded
-		let minimumFillingOfRepairingTower = TOWER_CAPACITY/3;
+		let minimumFillingOfRepairingTower = TOWER_CAPACITY/1.5; // MUST BE ALIGNED WITH TOWER SCRIPT
 		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.05;
         // keeping this high should ensure us that when spawning an upgrader creep, we will have enough to feed him for a loong time.
         // MUST BE ALIGNED WITH THE SAME CONSTANT IN DESPOSITTARGETUNDERLYING

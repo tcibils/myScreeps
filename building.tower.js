@@ -4,8 +4,8 @@ var towerRole = {
     /** @param {Creep} creep **/
     run: function(tower) {
 		
-		// Towers will no repair under this level of energy
-		let limitMinimumFilling = tower.energyCapacity/3;
+		// Towers will no repair under this level of energy - MUST BE ALIGNED WITH DEPOSIT TARGET FILES
+		let limitMinimumFilling = tower.energyCapacity/1.5;
 		// Roads will get repaired if they reach hitsMax/(this variable) HP
 		let acceptableLifeRatioRoad = 3;
 		// Containers will get repaired if they reach hitsMax/(this variable) HP
@@ -54,7 +54,7 @@ var towerRole = {
 			}
 			
 			// Now, if we have a valid target to repair
-			if(Game.getObjectById(tower.room.repairTarget) != undefined) {
+			if(Game.getObjectById(tower.room.memory.repairTarget) != undefined) {
 				// If the tower has enough energy
 				if(tower.energy > limitMinimumFilling) {
 					tower.repair(Game.getObjectById(tower.room.memory.repairTarget));

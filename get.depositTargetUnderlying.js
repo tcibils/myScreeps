@@ -24,7 +24,7 @@
         let maximumFillingOfTerminal = 20000;
 		
 		// Control variable to fill towers in priority if eneded
-		let minimumFillingOfRepairingTower = TOWER_CAPACITY/3;
+		let minimumFillingOfRepairingTower = TOWER_CAPACITY/1.5;	//  MUST BE ALIGNED WITH TOWER SCRIPT
 		let minimumFillingOfAttackingTower = TOWER_CAPACITY/1.05;
 		
         
