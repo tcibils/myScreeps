@@ -14,7 +14,7 @@ var roleLongDistanceFastMover = require('role.longDistanceFastMover');
 var roleLongDistanceSecurity = require('role.longDistanceSecurity');
 var roleLongDistanceBuilder = require('role.longDistanceBuilder');
 var roleRoomClaimer = require('role.roomClaimer');
-var roleRepairer = require('role.repairer');
+var roleWallBuilder = require('role.wallBuilder');
 var roleSlacker = require('role.slacker');
 var roleScout = require('role.scout');
 var roleSpreaderEfficient = require('role.spreaderEfficient');
@@ -171,7 +171,7 @@ module.exports.loop = function () {
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceFastMover');
         myRooms[currentRoomIndex].memory.priorities.push('builder');
         myRooms[currentRoomIndex].memory.priorities.push('longDistanceBuilder');
-        myRooms[currentRoomIndex].memory.priorities.push('repairer');
+        myRooms[currentRoomIndex].memory.priorities.push('wallBuilder');
         myRooms[currentRoomIndex].memory.priorities.push('extractor');
         myRooms[currentRoomIndex].memory.priorities.push('upgrader');
         myRooms[currentRoomIndex].memory.priorities.push('scout');
@@ -406,12 +406,12 @@ module.exports.loop = function () {
                                 }
 
                                 // OK for spawning prototype - role only
-                                if(myRooms[currentRoomIndex].memory.role[needIndex] == 'repairer') {
-                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 250) && j < 4; j++) {
-                                        creepBody.push(WORK);
-                                       creepBody.push(CARRY);
-                                        creepBody.push(MOVE);
-                                       creepBody.push(MOVE);
+                                if(myRooms[currentRoomIndex].memory.role[needIndex] == 'wallBuilder') {
+                                    for(let j = 0; j< Math.floor((capacityToBeUsed) / 250) && j < 10; j++) {
+										creepBody.push(WORK);
+										creepBody.push(CARRY);
+										creepBody.push(MOVE);
+										creepBody.push(MOVE);
                                     }
                                 }
 

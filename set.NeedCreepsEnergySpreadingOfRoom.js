@@ -55,7 +55,7 @@ var setNeedCreepsEnergySpreadingOfRoom = {
 
                 // Need a spreader efficient as long as we have a storage
 
-                if(treatedRoom.name == 'W42N48') {
+                if(Game.getObjectById(treatedRoom.memory.storages[0]).store[RESOURCE_ENERGY] > STORAGE_CAPACITY * 0.90) {
                     treatedRoom.memory.need.push(3);
                 }
                 else if(treatedRoom.controller.level >= 8) {

@@ -50,7 +50,7 @@ var buildingTerminal = {
             }            
                 // Automated keanium sale
             if(terminal.store[RESOURCE_HYDROGEN] > 0) {
-                let buyOrdersHydrogen = Game.market.getAllOrders(order => order.resourceType == RESOURCE_HYDROGEN && order.type == ORDER_BUY && order.price > 0.305);
+                let buyOrdersHydrogen = Game.market.getAllOrders(order => order.resourceType == RESOURCE_HYDROGEN && order.type == ORDER_BUY && order.price > 0.2);
                 _.sortBy(buyOrdersHydrogen, ['price']);
                 if(!terminal.cooldown && buyOrdersHydrogen.length > 0) {
                     console.log('Selling ' + Math.min(buyOrdersHydrogen[0].amount, terminal.store[RESOURCE_HYDROGEN]) + ' Hydrogen, at price ' + buyOrdersHydrogen[0].price +', result : ' + Game.market.deal(buyOrdersHydrogen[0].id, Math.min(buyOrdersHydrogen[0].amount, terminal.store[RESOURCE_HYDROGEN]), terminal.room.name))

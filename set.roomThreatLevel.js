@@ -1,9 +1,12 @@
 var setRoomThreatLevel = {
     run: function(treatedRoom) {
 		// Parameters
+		let alwaysDisplayRoomThreatLevel = false;
+		let displayAttackedRoomThreatLevel = false;
 		
 		// Initializing memory
 		if(treatedRoom.memory.threatLevel == undefined) {treatedRoom.memory.threatLevel = 0;}
+		if(treatedRoom.memory.healDelta == undefined) {treatedRoom.memory.healDelta = 0;}
 		
 		// Variables used definition
 		let numberOfTowers = treatedRoom.memory.towers.length;
@@ -51,22 +54,37 @@ var setRoomThreatLevel = {
 		// No ennemies => no danger.
 		if(ennemyCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 0;
+			treatedRoom.memory.healDelta = 0;
 		}
 		// If there's an ennemy, but no heal, level 1, just shoot it down.
 		if(ennemyCreeps.length > 0 && totalEnnemyHealPower == 0) {
 			treatedRoom.memory.threatLevel = 1;
+			treatedRoom.memory.healDelta = 0;
 		}
 		// If there's ennemies with healpower, we're in trouble.
 		if(totalEnnemyHealPower > 0) {
 			treatedRoom.memory.threatLevel = 2;
+			treatedRoom.memory.healDelta = 0;
 		}
 		// If the total heal power of ennemies is above our firepower, but it's invaders, it's an issue but not so much
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length > 0) {
 			treatedRoom.memory.threatLevel = 3;
+			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
 		}
 		// If the total heal power of ennemies is above our firepower, and it's not invaders, that's a big issue
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 4;
+			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
+			treatedRoom.controller.activateSafeMode();
+		}
+		
+		if(alwaysDisplayRoomThreatLevel) {
+			console.log('Room ' + treatedRoom.name + ', threat level : ' + treatedRoom.memory.threatLevel + ', heal delta ' + treatedRoom.memory.healDelta);
+		}
+		if(displayAttackedRoomThreatLevel) {
+			if(treatedRoom.memory.threatLevel > 0) {
+				console.log('Room ' + treatedRoom.name + ', threat level : ' + treatedRoom.memory.threatLevel + ', heal delta ' + treatedRoom.memory.healDelta);
+			}
 		}
 		
     }
