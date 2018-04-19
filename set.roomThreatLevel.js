@@ -75,6 +75,7 @@ var setRoomThreatLevel = {
 		if(totalEnnemyHealPower > totalFirePower && ennemyInvaderCreeps.length == 0) {
 			treatedRoom.memory.threatLevel = 4;
 			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
+			treatedRoom.controller.activateSafeMode();
 		}
 		
 		if(alwaysDisplayRoomThreatLevel) {
