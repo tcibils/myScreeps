@@ -698,8 +698,8 @@ module.exports.loop = function () {
     CPUusageBefore = Game.cpu.getUsed();
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if(creep.memory.role == 'repairer') {
-            roleRepairer.run(creep);
+        if(creep.memory.role == 'wallBuilder') {
+            roleWallBuilder.run(creep);
 
         //console.log('Step 20 : ' + Game.cpu.getUsed() + ', creep ' + creep.name + ', after setting longDistanceBuilder, before roomClaimer')
         }
@@ -707,7 +707,7 @@ module.exports.loop = function () {
     
     CPUusageAfter = Game.cpu.getUsed();
     result = CPUusageAfter - CPUusageBefore;
-    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', Repairers, CPU used' )
+    console.log('Room '  /* + myRooms[currentRoomIndex].name */  + ', ' + result + ', wallBuilder, CPU used' )
 
     CPUusageBefore = Game.cpu.getUsed();
     for(var name in Game.creeps) {
