@@ -19,14 +19,14 @@ var towerRole = {
 			// First, do we need a new target to repair
 			let weNeedNewRepairTarget = false;
 			// If the one we have is undefined
-			if(Game.getObjectById(tower.room.repairTarget) == undefined) {
+			if(Game.getObjectById(tower.room.memory.repairTarget) == undefined) {
 				// Then yes
 				weNeedNewRepairTarget = true;
 			}
 			// If it's defined
-			if(Game.getObjectById(tower.room.repairTarget) != undefined) {
+			if(Game.getObjectById(tower.room.memory.repairTarget) != undefined) {
 				// But is full HP
-				if(Game.getObjectById(tower.room.repairTarget).hits == Game.getObjectById(tower.room.repairTarget).hitsMax) {
+				if(Game.getObjectById(tower.room.memory.repairTarget).hits == Game.getObjectById(tower.room.memory.repairTarget).hitsMax) {
 					// Then yes as well
 					weNeedNewRepairTarget = true;
 				}
@@ -41,15 +41,15 @@ var towerRole = {
 				
 				// We first target containers
 				if(contTargetsRepair.length > 0) {
-					tower.room.repairTarget = contTargetsRepair[0].id;
+					tower.room.memory.repairTarget = contTargetsRepair[0].id;
 				}
 				// If all containers are OK, we check roads
 				if(contTargetsRepair.length == 0 && roadTargetsRepair.length > 0) {
-					tower.room.repairTarget = roadTargetsRepair[0].id;
+					tower.room.memory.repairTarget = roadTargetsRepair[0].id;
 				}
 				// If both are OK, we reset repair target
 				if(contTargetsRepair.length == 0 && roadTargetsRepair.length == 0) {
-					tower.room.repairTarget = 0;
+					tower.room.memory.repairTarget = 0;
 				}
 			}
 			
@@ -57,7 +57,7 @@ var towerRole = {
 			if(Game.getObjectById(tower.room.repairTarget) != undefined) {
 				// If the tower has enough energy
 				if(tower.energy > limitMinimumFilling) {
-					tower.repair(Game.getObjectById(tower.room.repairTarget));
+					tower.repair(Game.getObjectById(tower.room.memory.repairTarget));
 				}
 			}				
 		}
