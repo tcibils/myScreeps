@@ -1,4 +1,4 @@
-*STATUS - 08-04-2018 - Thomas Cibils*
+*STATUS - 22-04-2018 - Thomas Cibils*
 
 
 *Global mechanism :*
@@ -30,14 +30,14 @@ Finally, each creep follows its own role, each role having a dedicated script fi
  - First level : simple harvesters to start the machine and bring some energy.
  - Second level : using fat harvesters and fast movers to bring the energy back to the spawn, extensions and containers - containers used by upgraders to upgrade the room - get them space around !
  - Third level : using fat harvesters to stack energy in links, which send the energy to another link near a deposit. From there, spread to spawn and extenions by spreaderEfficient
- - Long distance harvest. : using long distance fat harvesters and movers to long-distance harvest, based on 4 input tables by player. Requires at leat one sender link in the room.
+ - Long distance harvest. : using long distance fat harvesters and movers to long-distance harvest, based on 4 input tables by player. Requires at leat one sender link in the room - carefull, CPU expensive, and one spawn can not be enough to spawn all creeps needed !
  - Creep sizes are automatically defined in body building loops, depending especially on the room capacity for most, to make them as big as possible
- - Deposit and withdraw target are for most creeps defined in dedicated modules. Always towers first, then spawn and extensions - keep them filled !
+ - Deposit and withdraw target are for most creeps defined in dedicated modules. Include refilling tower in priority in case of attack.
 
  
 *Markets :* Automatic harvesting if terminal + extractor. Automatic sale of K,U,H,O,L. Just selling, no lab etc., stacking credits. Also selling energy if too much.
 
-*Defense :* Tower(s) will be refilled to max ASAP and will only focus on destroying ennemies[0]. Lame AF. Automatic safe mode if > 4 ennemies attack parts in the room. Walls and ramparts are shit.
+*Defense :* Room threat level automatically detected. Towers refilled by spreadersEfficients efficiently. Tower focus closest ennemy to maximize damage. Walls are getting build up to 10M HP at room level 8. Correct defense. If a player attacks the room and I can't defeat it, safe mode and email notification.
 
 *Attack  :* "PureFighter" available, just plain attacking code based on flags. Lame. No nuke code.
 
@@ -59,7 +59,7 @@ Finally, there is a small "power spreading creep" that passes the power from sto
 
 
 *TODO LIST - IMPROVEMENTS*
- - Defense code - currently I rely on my alliance to slap persons trying to wipe my rooms (Nyoom)
+ - Defense code - spawning defensive creeps if needed, using the heal delta (ennemy heal capacity - tower fire power)
  - CPU Management - spikes currently and stops sometimes. creep.moveTo is probably too expensive. Git branch existing to measure each role total cost.
  - Creating long-distance code to harvest buildings from dead players.
  - Multi-my-room management : energy simply get sold when room is level 8, to get credits, but I should transfer it to close rooms who still need level up
@@ -74,14 +74,9 @@ Finally, there is a small "power spreading creep" that passes the power from sto
 
 *TODO LIST - BUGS*
  - take into account the mineral amount available for extractor need
- - fastmovers should deposit straight in storage if there is an efficient spreader
- - LDFHarvesters sometime do not get over their container
- - Better management of ramparts and walls
  - Rewrite the withdraw source script in the same way as the deposit source script - it's currently terrible
  
- *TODO LIST - To be finished*
- - LDFHarvesters should use their needOrigin
- 
+
  
  *Additional - Grunt*
  
