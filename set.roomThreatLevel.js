@@ -76,6 +76,7 @@ var setRoomThreatLevel = {
 			treatedRoom.memory.threatLevel = 4;
 			treatedRoom.memory.healDelta = (totalEnnemyHealPower - totalFirePower);
 			treatedRoom.controller.activateSafeMode();
+			Game.notify("Room " + treatedRoom.name + " under critical attack, at time " + Game.time + ", by player " + ennemyCreeps[0].owner.username + ' !!! ', 10	);
 		}
 		
 		if(alwaysDisplayRoomThreatLevel) {

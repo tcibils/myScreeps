@@ -621,6 +621,8 @@ module.exports.loop = function () {
             }
         }
 
+        creep.notifyWhenAttacked(false);
+
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }

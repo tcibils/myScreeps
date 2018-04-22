@@ -55,7 +55,9 @@ var roleFatHarvester = {
 				// If we're at capacity
 				if(creep.carry[RESOURCE_ENERGY] == creep.carryCapacity) {
 					// We transfer
-					creep.transfer(Game.getObjectById(creep.memory.attachedLink), RESOURCE_ENERGY);
+					if(creep.transfer(Game.getObjectById(creep.memory.attachedLink), RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(Game.getObjectById(creep.memory.attachedLink));
+					}
 				}
 			}
 		}
